@@ -1,0 +1,10 @@
+# Plugin directories
+plugged/
+.local/
+
+# Swap and backup files
+*.swp
+*.swo
+*~
+.netrwhist
+

@@ -1,0 +1,17 @@
+# Ignore plugin directories
+.vim/plugged/
+.config/nvim/plugged/
+
+# Ignore vim-plug installation
+.vim/autoload/
+.local/
+
+# Ignore swap and backup files
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Ignore undo files
+*.un~
+
