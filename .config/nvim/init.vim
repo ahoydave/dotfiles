@@ -6,9 +6,6 @@ source ~/.vimrc
 " Enable full colour support
 set termguicolors
 
-" Keep cursor away from edges when scrolling
-set scrolloff=8
-
 " -------------------------------------------------
 " Disable folding in Markdown
 " -------------------------------------------------
@@ -78,34 +75,9 @@ nnoremap <leader>r :History<CR>
 nnoremap <leader>s :Rg<CR>
 
 " -------------------------------------------------
-" Buffer management
+" FZF buffer management (override .vimrc for fuzzy find)
 " -------------------------------------------------
 nnoremap <leader>bb :Buffers<CR>
-nnoremap <leader>bj :bnext<CR>
-nnoremap <leader>bk :bprevious<CR>
-nnoremap <leader>bd :bdelete<CR>
-nnoremap <leader>bx :bdelete<CR>
-
-" -------------------------------------------------
-" Scrolling keybindings
-" -------------------------------------------------
-nnoremap <C-j> <C-e>
-nnoremap <C-k> <C-y>
-nnoremap <C-S-j> <C-d>
-nnoremap <C-S-k> <C-u>
-
-" -------------------------------------------------
-" Window management
-" -------------------------------------------------
-nnoremap <leader>ws :split<CR>
-nnoremap <leader>wv :vsplit<CR>
-nnoremap <leader>wc :close<CR>
-nnoremap <leader>wo :only<CR>
-nnoremap <leader>w= <C-w>=
-nnoremap <leader>wh <C-w>h
-nnoremap <leader>wj <C-w>j
-nnoremap <leader>wk <C-w>k
-nnoremap <leader>wl <C-w>l
 
 " -------------------------------------------------
 " FZF configuration: ignore junk directories
