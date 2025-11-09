@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod:*)",
+      "WebFetch(domain:code.claude.com)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch",
+      "Read(**)",
+      "Write(**)",
+      "Edit(**)",
+      "Glob(**)",
+      "Grep"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(rm -rf:*)",
+      "Bash(sudo:*)"
+    ],
+    "deny": [],
+    "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Output JSON with your token usage: {\"decision\": \"approve\", \"usedTokens\": X, \"maxTokens\": Y, \"remainingTokens\": Z} using your actual current numbers"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline-command.sh"
+  },
+  "alwaysThinkingEnabled": true
+}

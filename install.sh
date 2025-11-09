@@ -10,8 +10,8 @@ echo ""
 DOTFILES_DIR="$HOME/dotfiles"
 
 # Check if we're in the right directory
-if [ ! -f "$DOTFILES_DIR/.vimrc" ]; then
-    echo "Error: Could not find $DOTFILES_DIR/.vimrc"
+if [ ! -f "$DOTFILES_DIR/vim/vimrc" ]; then
+    echo "Error: Could not find $DOTFILES_DIR/vim/vimrc"
     echo "Make sure this repo is cloned to ~/dotfiles"
     exit 1
 fi
@@ -37,12 +37,55 @@ rm -f "$HOME/.vimrc"
 rm -rf "$HOME/.config/nvim"
 
 # Create new symlinks
-ln -sf "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
-echo "  ~/.vimrc -> $DOTFILES_DIR/.vimrc"
+ln -sf "$DOTFILES_DIR/vim/vimrc" "$HOME/.vimrc"
+echo "  ~/.vimrc -> $DOTFILES_DIR/vim/vimrc"
 
 mkdir -p "$HOME/.config"
-ln -sf "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim"
-echo "  ~/.config/nvim -> $DOTFILES_DIR/.config/nvim"
+ln -sf "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
+echo "  ~/.config/nvim -> $DOTFILES_DIR/nvim"
+
+# Claude Code configuration
+echo ""
+echo "Setting up Claude Code configuration..."
+
+# Create .claude directory structure in dotfiles if it doesn't exist
+mkdir -p "$DOTFILES_DIR/claude/commands"
+
+# Ensure ~/.claude directory exists
+mkdir -p "$HOME/.claude"
+
+# Backup existing settings.json if it's not a symlink
+if [ -f "$HOME/.claude/settings.json" ] && [ ! -L "$HOME/.claude/settings.json" ]; then
+    mv "$HOME/.claude/settings.json" "$HOME/.claude/settings.json.backup.$(date +%Y%m%d_%H%M%S)"
+    echo "  Backed up ~/.claude/settings.json"
+fi
+
+# Backup existing commands directory if it's not a symlink
+if [ -d "$HOME/.claude/commands" ] && [ ! -L "$HOME/.claude/commands" ]; then
+    mv "$HOME/.claude/commands" "$HOME/.claude/commands.backup.$(date +%Y%m%d_%H%M%S)"
+    echo "  Backed up ~/.claude/commands"
+fi
+
+# Backup existing statusline script if it's not a symlink
+if [ -f "$HOME/.claude/statusline-command.sh" ] && [ ! -L "$HOME/.claude/statusline-command.sh" ]; then
+    mv "$HOME/.claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh.backup.$(date +%Y%m%d_%H%M%S)"
+    echo "  Backed up ~/.claude/statusline-command.sh"
+fi
+
+# Remove old symlinks if they exist
+rm -f "$HOME/.claude/settings.json"
+rm -f "$HOME/.claude/commands"
+rm -f "$HOME/.claude/statusline-command.sh"
+
+# Create symlinks
+ln -sf "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
+echo "  ~/.claude/settings.json -> $DOTFILES_DIR/claude/settings.json"
+
+ln -sf "$DOTFILES_DIR/claude/commands" "$HOME/.claude/commands"
+echo "  ~/.claude/commands -> $DOTFILES_DIR/claude/commands"
+
+ln -sf "$DOTFILES_DIR/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
+echo "  ~/.claude/statusline-command.sh -> $DOTFILES_DIR/claude/statusline-command.sh"
 
 # Install vim-plug for vim
 echo ""
@@ -81,8 +124,17 @@ echo "  2. For full neovim experience, install dependencies:"
 echo "     brew install neovim fzf fd ripgrep lazygit"
 echo "     brew install pyright typescript-language-server"
 echo ""
-echo "  3. Check the documentation:"
-echo "     cat ~/.config/nvim/README.md"
-echo "     cat ~/.config/nvim/QUICKREF.md"
+echo "  3. Create custom Claude Code commands:"
+echo "     cd ~/dotfiles/claude/commands"
+echo "     cat > example.md << 'EOF'"
+echo "---"
+echo "description: Example custom command"
+echo "---"
+echo "This is an example command. Use \$1 for arguments."
+echo "EOF"
+echo ""
+echo "  4. Check the documentation:"
+echo "     cat ~/dotfiles/nvim/README.md"
+echo "     cat ~/dotfiles/nvim/QUICKREF.md"
 echo ""
 
