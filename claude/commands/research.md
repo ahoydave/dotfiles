@@ -37,6 +37,7 @@ You are a looped agent instance. Your context is precious:
 
 **Allowed documentation files ONLY**:
 - `spec/CURRENT_SYSTEM.md` (you own this)
+- `spec/FEATURE_TESTS.md` (you own this - verify and update test status)
 - `spec/RESEARCH_STATUS.md` (you own this)
 - `spec/QUESTIONS.md` (if you need human input)
 
@@ -49,6 +50,7 @@ You are a looped agent instance. Your context is precious:
 
 **If you need to document something**:
 - System understanding → `spec/CURRENT_SYSTEM.md`
+- Feature verification results → `spec/FEATURE_TESTS.md`
 - Research progress → `spec/RESEARCH_STATUS.md`
 - Questions for human → `spec/QUESTIONS.md`
 - Investigation notes → They don't persist. Put essential findings in CURRENT_SYSTEM.md only.
@@ -91,12 +93,45 @@ You are a looped agent instance. Your context is precious:
 This applies to:
 - Missing YAML frontmatter → Add it
 - Missing UML diagrams for architecture → Add them
+- **Inline PlantUML diagrams** → Extract to `spec/diagrams/*.puml` files, generate SVGs, update references
 - Old section structure → Rewrite to current template
 - Any deviation from current standards → Fix it
 
 **Don't ask permission, don't preserve old format "for compatibility" - just update it.**
 
 The current format represents our latest understanding of what works. Every document should use it. This rule applies to ALL format improvements, not just current ones.
+
+#### Migrating Inline PlantUML to Separate Files
+
+**If you find inline PlantUML code blocks in markdown:**
+
+1. Extract each diagram to `spec/diagrams/<descriptive-name>.puml`
+2. Generate SVG: `plantuml spec/diagrams/*.puml -tsvg`
+3. Replace inline code block with image reference: `![Description](diagrams/<name>.svg)`
+4. Add source link: `*[View/edit source](diagrams/<name>.puml)*`
+
+This improves human review dramatically - they see diagrams immediately without copy-pasting to renderers.
+
+## Git Commands - Pre-Approved
+
+**You have permission to run these git commands without asking:**
+
+**Read-only commands (ALWAYS safe):**
+- `git rev-parse HEAD` (get current commit SHA for YAML frontmatter)
+- `git status` (check working tree state)
+- `git log` (view history to understand recent changes)
+- `git diff` (see recent changes)
+- `git show` (view specific commits)
+- `git branch` (list branches)
+- `git remote -v` (list remotes)
+- Any other read-only git inspection commands
+
+**FORBIDDEN without explicit user approval:**
+- ❌ `git push` (changes remote data)
+- ❌ `git add` / `git commit` (you research, you don't modify code)
+- ❌ Any commands that modify the repository
+
+**Why:** You need read-only git commands to understand the system (history, recent changes, current state) and to populate YAML frontmatter. You should never modify the repository.
 
 ## CRITICAL: User-Referenced Documents
 **If the user referenced specific documents before this prompt, read those FIRST and in their ENTIRETY unless explicitly told otherwise. They take precedence over the entry point below.**
@@ -124,12 +159,14 @@ You're part of a repeating cycle:
 
 **You (Researcher) read:**
 - `spec/RESEARCH_STATUS.md` - Previous researcher's progress
+- `spec/FEATURE_TESTS.md` - Existing features and how to verify them
 - `spec/QUESTIONS.md` - Any human responses to previous questions
 - `README.md` - Project overview
 - `spec/CURRENT_SYSTEM.md` - What's already documented
 
 **You (Researcher) own and must keep current:**
 - `spec/CURRENT_SYSTEM.md` - System understanding (planners read this!)
+- `spec/FEATURE_TESTS.md` - Feature test registry (run tests, update status, document gaps)
 - `spec/RESEARCH_STATUS.md` - Your progress, for next researcher
 - `spec/QUESTIONS.md` - Questions for humans (if needed)
 
@@ -143,9 +180,11 @@ You're part of a repeating cycle:
 
 2. Read `spec/RESEARCH_STATUS.md` in full if it exists - it contains your progress so far
 
-3. Read `README.md` completely for project overview
+3. Read `spec/FEATURE_TESTS.md` in full if it exists - features and their verification methods
 
-4. Read `spec/CURRENT_SYSTEM.md` in full for what's already documented
+4. Read `README.md` completely for project overview
+
+5. Read `spec/CURRENT_SYSTEM.md` in full for what's already documented
 
 ## System Documentation Principles - CRITICAL
 
@@ -247,6 +286,21 @@ spec/
 
 Visual diagrams dramatically improve human comprehension and reduce ambiguity for future agents. LLMs generate PlantUML reliably, and humans can render it easily.
 
+**CRITICAL: Use separate diagram files with generated SVGs:**
+
+1. Create `.puml` files in `spec/diagrams/` directory
+2. Generate SVGs: `plantuml spec/diagrams/*.puml -tsvg`
+3. Reference SVGs in markdown: `![Component Overview](diagrams/component-overview.svg)`
+4. Add source link below image: `*[View/edit source](diagrams/component-overview.puml)*`
+
+**Why separate files + SVGs:**
+- Humans see diagrams immediately in markdown viewers (GitHub, VS Code, etc.)
+- No copy-pasting to external renderers needed
+- Source files remain editable and version-controlled
+- Git diffs show what changed in diagram source
+
+**Always generate SVGs after creating or editing diagrams.** This is not optional.
+
 #### When to Use Diagrams
 
 **Component Diagrams** - ALWAYS include for systems with 3+ major components:
@@ -270,7 +324,9 @@ Visual diagrams dramatically improve human comprehension and reduce ambiguity fo
 
 #### PlantUML Syntax Examples
 
-**Component Diagram:**
+**These are file contents for `.puml` files - NOT inline code blocks in markdown.**
+
+**Component Diagram** (`spec/diagrams/component-overview.puml`):
 ```plantuml
 @startuml
 !theme plain
@@ -294,7 +350,7 @@ end note
 @enduml
 ```
 
-**Sequence Diagram:**
+**Sequence Diagram** (`spec/diagrams/auth-sequence.puml`):
 ```plantuml
 @startuml
 !theme plain
@@ -315,7 +371,7 @@ FE --> User: Redirect to Dashboard
 @enduml
 ```
 
-**Class/Interface Diagram:**
+**Class/Interface Diagram** (`spec/diagrams/payment-interface.puml`):
 ```plantuml
 @startuml
 !theme plain
@@ -337,9 +393,14 @@ end note
 @enduml
 ```
 
+**After creating/editing .puml files, ALWAYS run:**
+```bash
+plantuml spec/diagrams/*.puml -tsvg
+```
+
 #### Where to Place Diagrams in CURRENT_SYSTEM.md
 
-**Typical structure:**
+**Typical structure with separate diagram files:**
 
 ```markdown
 # System Overview
@@ -348,9 +409,9 @@ end note
 ## Architecture
 
 ### Component Overview
-```plantuml
-[High-level component diagram showing all major components]
-```
+
+![Component Overview](diagrams/component-overview.svg)
+*[View/edit source](diagrams/component-overview.puml)*
 
 **Key Components:**
 - Frontend: React SPA, handles UI/UX
@@ -361,9 +422,9 @@ end note
 ### Critical Data Flows
 
 #### User Authentication Flow
-```plantuml
-[Sequence diagram showing auth flow]
-```
+
+![Authentication Flow](diagrams/auth-sequence.svg)
+*[View/edit source](diagrams/auth-sequence.puml)*
 
 **Critical constraints:**
 - Auth token expires in 24h (hardcoded in Auth Service)
@@ -371,16 +432,16 @@ end note
 - Frontend must handle token refresh transparently
 
 #### Payment Processing Flow
-```plantuml
-[Sequence diagram showing payment flow]
-```
+
+![Payment Processing](diagrams/payment-sequence.svg)
+*[View/edit source](diagrams/payment-sequence.puml)*
 
 ## Integration Points
 
 ### External Services
-```plantuml
-[Component diagram focusing on external integrations]
-```
+
+![External Integrations](diagrams/external-integrations.svg)
+*[View/edit source](diagrams/external-integrations.puml)*
 
 - **Payment API**: Stripe
   - Webhooks: /api/webhooks/stripe (signature verification required)
@@ -394,15 +455,21 @@ end note
 ### Key Interfaces
 
 #### PaymentProcessor Interface
-```plantuml
-[Class diagram showing interface]
-```
+
+![PaymentProcessor Interface](diagrams/payment-interface.svg)
+*[View/edit source](diagrams/payment-interface.puml)*
 
 **Critical**: Any new payment method must implement this interface. Breaking changes require:
 1. Major version bump
 2. Migration plan for existing integrations
 3. Backward compatibility layer
 ```
+
+**Workflow:**
+1. Create/edit `.puml` files in `spec/diagrams/`
+2. Run `plantuml spec/diagrams/*.puml -tsvg`
+3. Reference SVGs in markdown with `![Description](diagrams/name.svg)`
+4. Add source link: `*[View/edit source](diagrams/name.puml)*`
 
 #### Balance: Diagrams + Prose
 
@@ -411,13 +478,9 @@ end note
 - **Prose explains CONTEXT**: Why decisions were made, constraints, gotchas
 
 **Example of good balance:**
-```plantuml
-@startuml
-component API
-component Auth
-API --> Auth : gRPC
-@enduml
-```
+
+![API Authentication](diagrams/api-auth-connection.svg)
+*[View/edit source](diagrams/api-auth-connection.puml)*
 
 **Critical constraint**: Auth service is external OAuth2 provider managed by security team. Cannot be replaced, modified, or bypassed (business and compliance requirement). All user authentication MUST go through this service. The gRPC connection uses mutual TLS with certificates rotated quarterly by ops team.
 
@@ -438,13 +501,23 @@ API --> Auth : gRPC
 - Visual diff shows what changed
 - Easier to maintain than rewriting prose
 
-#### Rendering Options for Humans
+#### Viewing Diagrams
 
-Documents will contain PlantUML code blocks. Humans can render them:
-- **VSCode**: PlantUML extension, Alt+D to preview
-- **Online**: plantuml.com, planttext.com, plantuml-editor.kkeisuke.com
-- **CLI**: Install PlantUML jar, run `plantuml file.md`
-- **Browser**: Some extensions render inline in GitHub
+**Humans see SVG diagrams immediately** in any markdown viewer:
+- **GitHub**: Renders inline automatically
+- **VSCode**: Displays in markdown preview
+- **Any markdown viewer**: Standard image rendering
+
+**To edit diagrams:**
+1. Open the `.puml` source file (linked below each diagram)
+2. Edit the PlantUML code
+3. Run `plantuml spec/diagrams/*.puml -tsvg` to regenerate
+4. View updated SVG in markdown
+
+**PlantUML installation** (if not already installed):
+- **macOS**: `brew install plantuml`
+- **Linux**: `apt-get install plantuml` or `yum install plantuml`
+- **Manual**: Download from https://plantuml.com/download
 
 ## Process
 1. **Explore** the codebase systematically using Task agents:
@@ -459,12 +532,64 @@ Documents will contain PlantUML code blocks. Humans can render them:
    - Launch agent to explore recent changes based on previously recorded git SHA
    - Keep only the insights in YOUR context, not the search process
 
-2. **Document** findings in `spec/CURRENT_SYSTEM.md`:
+2. **Find and run the test suite** to verify system state:
+
+   **CRITICAL: Don't just verify "code exists" - verify features WORK by running tests.**
+
+   **Use FEATURE_TESTS.md as your test registry**:
+   - If `spec/FEATURE_TESTS.md` exists: This is your checklist of what to test
+   - Run each test listed in FEATURE_TESTS.md
+   - Update test status and dates in FEATURE_TESTS.md
+   - Document any new features you discover (add to FEATURE_TESTS.md)
+
+   **If FEATURE_TESTS.md doesn't exist yet**:
+   - CREATE it as you discover features
+   - Check for `tests/` directory with automated tests
+   - Check for `tools/verify_*.sh` verification scripts
+   - Check README for documented test procedures
+   - Document each feature and how to verify it
+
+   **Run the test suite**:
+   ```bash
+   # Automated tests
+   pytest tests/                    # Python
+   npm test                         # JavaScript
+   cargo test                       # Rust
+   go test ./...                    # Go
+
+   # Verification scripts
+   ./tools/verify_*.sh              # Run all verification scripts
+   ```
+
+   **Document results in FEATURE_TESTS.md**:
+   - Update status for each feature tested (✅ Verified or ❌ Failed)
+   - Update verification dates
+   - Paste test output in CURRENT_SYSTEM.md verification section
+   - Document gap analysis: features without tests
+
+   **Also summarize in CURRENT_SYSTEM.md**:
+   - Overview of test coverage
+   - Link to FEATURE_TESTS.md for full registry
+   - What features are tested, what lacks tests
+
+   **If tests fail**:
+   - Mark feature as ❌ Failed in FEATURE_TESTS.md with date
+   - Document failures in CURRENT_SYSTEM.md
+   - Note: "System state unclear - tests failing"
+   - Don't assume implementations work if tests fail
+
+   **If no tests exist for a feature**:
+   - Mark as ❌ No test in FEATURE_TESTS.md
+   - Document gap in CURRENT_SYSTEM.md
+   - Recommend: Next implementor should add verification
+
+3. **Document** findings in `spec/CURRENT_SYSTEM.md`:
    - Follow "System Documentation Principles" above
    - Behavior and integration points (not implementation details)
    - Token-efficient: bullet lists > prose paragraphs
    - Include file:line references for key code locations
    - Use tables for structured information (configs, data flows, APIs)
+   - **Create UML diagrams** in `spec/diagrams/*.puml` and generate SVGs
    - If exceeding ~800-1000 lines: split into spec/system/ subdocs
    - The current git SHA or any relevant status
 
@@ -504,22 +629,60 @@ components: [list, of, major, components]
 
 **Structure for single file** (~800 lines):
 - System Overview (what it does, who uses it)
-- Architecture (components, data flows) - **Include UML diagrams**
-- Integration Points (APIs, external systems, data formats) - **Include UML diagrams**
+- Architecture (components, data flows) - **Include UML diagrams as SVGs**
+- Integration Points (APIs, external systems, data formats) - **Include UML diagrams as SVGs**
 - Key Constraints (technical limits, must-preserve behaviors)
+- **Verification** (test suite location, how to run tests, test results, gaps)
 - File Reference (where to find major components)
 
 **Structure for multi-file** (>1000 lines):
 - `spec/CURRENT_SYSTEM.md`: Overview + navigation (200-300 lines) with YAML frontmatter
-- `spec/system/architecture.md`: Components and data flows with UML diagrams
-- `spec/system/integration-points.md`: APIs, external systems, contracts with UML diagrams
+- `spec/system/architecture.md`: Components and data flows with UML diagrams as SVGs
+- `spec/system/integration-points.md`: APIs, external systems, contracts with UML diagrams as SVGs
 - `spec/system/constraints.md`: Technical debt, limitations, dependencies
+- `spec/diagrams/*.puml`: PlantUML source files (shared across all markdown docs)
+- `spec/diagrams/*.svg`: Generated diagrams (committed to git)
+
+**Diagram workflow** (REQUIRED):
+1. Create `.puml` files in `spec/diagrams/` for component, sequence, and interface diagrams
+2. Run `plantuml spec/diagrams/*.puml -tsvg` to generate SVGs
+3. Reference in markdown: `![Description](diagrams/name.svg)` with source link
+4. Commit both `.puml` and `.svg` files
+
+**Verification Section Example**:
+```markdown
+## Verification
+
+**Feature Test Registry**: See `spec/FEATURE_TESTS.md` for complete list of features and verification methods.
+
+**Test Suite Location**: `tests/` directory + `tools/verify_*.sh` scripts
+
+**Test Status Summary** (verified 2025-11-09):
+- ✅ Screenshot search: Verified via `./tools/verify_screenshots.sh`
+- ✅ Document search: Verified via `./tools/verify_search.sh`
+- ✅ Chatbot help: Verified via agent-interactive procedure (see FEATURE_TESTS.md)
+- ❌ Export feature: No tests (implementation unverified)
+- ❌ Import feature: No tests (implementation unverified)
+
+**Recent Test Output**:
+```
+$ pytest tests/
+======================== 45 passed in 2.3s ========================
+
+$ ./tools/verify_screenshots.sh
+✓ Screenshot search working
+```
+
+**Recommendation**: Next implementor should add tests for export/import features (see gaps in FEATURE_TESTS.md).
+```
 
 **Quality checks**:
-- CREATE on first research session with YAML frontmatter and UML diagrams
-- UPDATE on subsequent sessions with new discoveries (update frontmatter dates)
+- CREATE on first research session with YAML frontmatter and UML diagrams (separate files + SVGs)
+- UPDATE on subsequent sessions with new discoveries (update frontmatter dates, regenerate SVGs)
 - Keep current as system evolves
+- **RUN test suite** to verify system state (not just read code)
 - Test: Could planner design features without missing critical constraints?
+- Verify: Can humans view diagrams immediately in markdown viewers?
 
 ### `spec/RESEARCH_STATUS.md`
 **Purpose**: Track your research progress for next researcher

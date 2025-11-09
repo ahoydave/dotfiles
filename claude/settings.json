@@ -10,7 +10,70 @@
       "Write(**)",
       "Edit(**)",
       "Glob(**)",
-      "Grep"
+      "Grep",
+
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git remote:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git reset:*)",
+      "Bash(git stash:*)",
+
+      "Bash(npm test:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm install:*)",
+      "Bash(npm ci:*)",
+
+      "Bash(pytest:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(python -m unittest:*)",
+
+      "Bash(cargo test:*)",
+      "Bash(cargo build:*)",
+      "Bash(cargo check:*)",
+      "Bash(cargo run:*)",
+
+      "Bash(go test:*)",
+      "Bash(go build:*)",
+      "Bash(go run:*)",
+
+      "Bash(make test:*)",
+      "Bash(make build:*)",
+      "Bash(make:*)",
+
+      "Bash(mvn test:*)",
+      "Bash(gradle test:*)",
+
+      "Bash(jest:*)",
+      "Bash(vitest:*)",
+      "Bash(mocha:*)",
+
+      "Bash(brew install:*)",
+
+      "Bash(plantuml:*)",
+
+      "Bash(bash:*)",
+      "Bash(sh:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(node:*)",
+
+      "Bash(ls:*)",
+      "Bash(pwd:*)",
+      "Bash(cd:*)",
+      "Bash(find:*)",
+      "Bash(which:*)",
+      "Bash(test:*)",
+      "Bash([:*)"
     ],
     "ask": [
       "Bash(git push:*)",

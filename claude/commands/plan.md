@@ -39,6 +39,7 @@ You are a looped agent instance. Your context is precious:
 - `spec/PLANNING_STATUS.md` (you own this)
 - `spec/QUESTIONS.md` (you own this)
 - `spec/CURRENT_SYSTEM.md` (read-only, researcher owns)
+- `spec/FEATURE_TESTS.md` (read-only, researcher/implementor own - read to understand existing features)
 
 **FORBIDDEN**:
 - ❌ PLANNING_NOTES.md
@@ -97,12 +98,42 @@ You are a looped agent instance. Your context is precious:
 This applies to:
 - Missing YAML frontmatter → Add it
 - Missing UML diagrams for feature changes → Add them
+- **Inline PlantUML diagrams** → Extract to `spec/diagrams/*.puml` files, generate SVGs, update references
 - Old section structure → Rewrite to current template
 - Any deviation from current standards → Fix it
 
 **Don't ask permission, don't preserve old format "for compatibility" - just update it.**
 
 The current format represents our latest understanding of what works. Every document should use it. This rule applies to ALL format improvements, not just current ones.
+
+#### Migrating Inline PlantUML to Separate Files
+
+**If you find inline PlantUML code blocks in markdown:**
+
+1. Extract each diagram to `spec/diagrams/<descriptive-name>.puml`
+2. Generate SVG: `plantuml spec/diagrams/*.puml -tsvg`
+3. Replace inline code block with image reference: `![Description](diagrams/<name>.svg)`
+4. Add source link: `*[View/edit source](diagrams/<name>.puml)*`
+
+This improves human review dramatically - they see diagrams immediately without copy-pasting to renderers.
+
+## Git Commands - Pre-Approved
+
+**You have permission to run these git commands without asking:**
+
+**Read-only commands (ALWAYS safe):**
+- `git rev-parse HEAD` (get current commit SHA for YAML frontmatter)
+- `git status` (check working tree state)
+- `git log` (view history)
+- `git branch` (list branches)
+- Any other read-only git inspection commands
+
+**FORBIDDEN without explicit user approval:**
+- ❌ `git push` (changes remote data)
+- ❌ `git add` / `git commit` (you plan, you don't modify code)
+- ❌ Any commands that modify the repository
+
+**Why:** You need read-only git commands to understand current project state and to populate YAML frontmatter. You should never modify the repository during planning.
 
 ## CRITICAL: User-Referenced Documents
 **If the user referenced specific documents before this prompt, read those FIRST and in their ENTIRETY unless explicitly told otherwise. They take precedence over the entry point below.**
@@ -127,6 +158,7 @@ You're part of a repeating cycle:
 **You (Planner) read:**
 - `spec/QUESTIONS.md` - Check for human responses FIRST
 - `spec/CURRENT_SYSTEM.md` - How system works (from researcher)
+- `spec/FEATURE_TESTS.md` - Existing features and verification methods
 - `spec/PLANNING_STATUS.md` - Previous planner's progress
 - `spec/NEW_FEATURES.md` - What's been planned
 - Human requirements/input
@@ -150,9 +182,16 @@ You're part of a repeating cycle:
 
 3. Read `spec/CURRENT_SYSTEM.md` completely for system understanding
 
-4. Read `spec/NEW_FEATURES.md` in full for what's being planned
+4. Read `spec/FEATURE_TESTS.md` in full if it exists - understand existing features and how they're verified
 
-5. Read any human input or requirements provided completely
+5. Read `spec/NEW_FEATURES.md` in full for what's being planned
+
+6. **Read `spec/MANAGER_PROGRESS.md` if it exists** - review implementor context usage patterns
+   - Check "Context Usage Analysis" section for task sizing feedback
+   - Use historical data to calibrate new task sizes
+   - Aim for tasks that keep implementors in 40-50% context range
+
+7. Read any human input or requirements provided completely
 
 ## Process
 1. **Understand requirements**:
@@ -167,7 +206,7 @@ You're part of a repeating cycle:
    - Clear functional requirements
    - Expected behavior and edge cases
    - Integration points with existing system
-   - Verification approach for each feature
+   - **Verification strategy for each feature** (HOW to test repeatably, not just WHAT to test)
 
 3. **Track planning** in `spec/PLANNING_STATUS.md`:
    - What's been decided (brief)
@@ -279,12 +318,86 @@ features: [list, of, feature, names]
 **Content Requirements**:
 - CREATE initial spec with all planned features
 - UPDATE in subsequent sessions to refine requirements
-- **Include UML diagrams** showing architecture changes
+- **Include UML diagrams as SVGs** showing architecture changes (separate .puml files, generate SVGs)
+- **Include verification strategy** for each feature (how to test repeatably)
 - Mark features as completed (implementor will do this too)
 - Focus on WHAT, not HOW
 - Two implementations should be functionally identical
 - Clear enough for any competent developer
 - Add "PLANNING STATUS: COMPLETE" at top when ready for implementation
+
+**Diagram workflow** (REQUIRED for features touching 2+ components):
+1. Create `.puml` files in `spec/diagrams/` for component/sequence diagrams with change highlighting
+2. Run `plantuml spec/diagrams/*.puml -tsvg` to generate SVGs
+3. Reference in markdown: `![Description](diagrams/name.svg)` with source link
+4. Commit both `.puml` and `.svg` files
+
+**Verification Strategy** (REQUIRED for each feature):
+
+For each feature in your spec, include a section describing how it will be verified. The implementor will add this to `spec/FEATURE_TESTS.md`.
+
+```markdown
+## Feature: Screenshot Search
+
+### Requirements
+[What the feature does from user perspective]
+
+### Verification Strategy
+
+**Test Type**: Verification script (end-to-end)
+**Test Location**: `tools/verify_screenshot_search.sh`
+**FEATURE_TESTS.md Entry**: Implementor will add this feature to registry
+
+**What to Test**:
+1. User asks UI question (e.g., "Where is the Inspector panel?")
+2. Assistant calls search_documentation tool
+3. Tool returns image data from vector DB
+4. Assistant answers using screenshot knowledge
+5. Screenshot filename not mentioned in response
+
+**Success Criteria**:
+- Script exits 0 (all checks pass)
+- Manual review: Answer quality is good
+- Feature works without user seeing implementation details
+
+**Test Creation**:
+Implementor will:
+- Create `tools/verify_screenshot_search.sh` with the checks above
+- Add entry to `spec/FEATURE_TESTS.md` documenting the feature and test
+- Run the test and paste verification output
+```
+
+## Feature: Chatbot Conversation Flow
+
+### Requirements
+[What the feature does from user perspective]
+
+### Verification Strategy
+
+**Test Type**: Agent-Interactive Procedure
+**Test Location**: Documented in `spec/FEATURE_TESTS.md`
+
+**What to Test**:
+1. Agent starts chatbot: `./chatbot.py`
+2. Sends greeting: "Hello, what can you help with?"
+3. Verifies: Coherent capability summary response
+4. Sends specific request: "Help me with X"
+5. Verifies: Contextually appropriate response
+6. Tests context maintenance across conversation
+
+**Success Criteria**:
+- Agent can complete full flow without errors
+- Responses are coherent and contextually relevant
+- System maintains conversation context correctly
+
+**Test Creation**:
+Implementor will:
+- Document the agent-interactive procedure in `spec/FEATURE_TESTS.md`
+- Run through the procedure and verify expected behaviors
+- Paste conversation transcript showing successful verification
+```
+
+**Why this matters**: Implementors need to know HOW to test, not just WHAT to test. Planning for testability upfront ensures features are verifiable. The verification strategy you define will become the entry in FEATURE_TESTS.md.
 
 ### `spec/PLANNING_STATUS.md`
 **Purpose**: Track planning progress for next planner
@@ -372,6 +485,21 @@ At end of your session:
 
 Visual diagrams make spec review dramatically easier for humans. Instantly seeing which components are affected helps spot scope issues, missing considerations, and integration risks.
 
+**CRITICAL: Use separate diagram files with generated SVGs:**
+
+1. Create `.puml` files in `spec/diagrams/` directory
+2. Generate SVGs: `plantuml spec/diagrams/*.puml -tsvg`
+3. Reference SVGs in markdown: `![Feature Overview](diagrams/feature-name-overview.svg)`
+4. Add source link below image: `*[View/edit source](diagrams/feature-name-overview.puml)*`
+
+**Why separate files + SVGs:**
+- Humans see diagrams immediately in markdown viewers (GitHub, VS Code, etc.)
+- No copy-pasting to external renderers needed
+- Source files remain editable and version-controlled
+- Git diffs show what changed in diagram source
+
+**Always generate SVGs after creating or editing diagrams.** This is not optional.
+
 ### When to Use Diagrams
 
 **Component Diagram with Change Highlighting** - ALWAYS for features touching 2+ components:
@@ -394,7 +522,9 @@ Visual diagrams make spec review dramatically easier for humans. Instantly seein
 
 ### PlantUML Syntax for Planning
 
-**Component Diagram with Changes:**
+**These are file contents for `.puml` files - NOT inline code blocks in markdown.**
+
+**Component Diagram with Changes** (`spec/diagrams/email-notifications-overview.puml`):
 ```plantuml
 @startuml
 !theme plain
@@ -425,7 +555,7 @@ end note
 @enduml
 ```
 
-**Sequence Diagram for New Feature:**
+**Sequence Diagram for New Feature** (`spec/diagrams/password-reset-flow.puml`):
 ```plantuml
 @startuml
 !theme plain
@@ -460,9 +590,14 @@ FE --> User: "Password updated"
 @enduml
 ```
 
+**After creating/editing .puml files, ALWAYS run:**
+```bash
+plantuml spec/diagrams/*.puml -tsvg
+```
+
 ### Where to Place Diagrams in NEW_FEATURES.md
 
-**Typical structure:**
+**Typical structure with separate diagram files:**
 
 ```markdown
 # Feature: Email Notification System
@@ -473,9 +608,9 @@ FE --> User: "Password updated"
 ## Architecture Impact
 
 ### System Changes Overview
-```plantuml
-[Component diagram showing what's being added/modified]
-```
+
+![Email Notifications Architecture](diagrams/email-notifications-overview.svg)
+*[View/edit source](diagrams/email-notifications-overview.puml)*
 
 **Components Affected:**
 - API Server (MODIFIED) - Add email notification endpoints
@@ -483,9 +618,9 @@ FE --> User: "Password updated"
 - Database (MODIFIED) - Add email_queue table
 
 ### New User Flow
-```plantuml
-[Sequence diagram showing the new feature flow]
-```
+
+![Password Reset Flow](diagrams/password-reset-flow.svg)
+*[View/edit source](diagrams/password-reset-flow.puml)*
 
 **Critical Integration Points:**
 - API → Email Service: Uses AMQP (RabbitMQ) for async messaging
@@ -495,6 +630,12 @@ FE --> User: "Password updated"
 ## Technical Approach
 [Implementation phases, data structures, etc.]
 ```
+
+**Workflow:**
+1. Create/edit `.puml` files in `spec/diagrams/`
+2. Run `plantuml spec/diagrams/*.puml -tsvg`
+3. Reference SVGs in markdown with `![Description](diagrams/name.svg)`
+4. Add source link: `*[View/edit source](diagrams/name.puml)*`
 
 ### Benefits for Human Collaboration
 
@@ -534,6 +675,36 @@ When humans review your spec:
 - Could simpler implementation achieve same user value?
 
 **Remember**: Each handoff between implementor sessions is a risk point. Minimize handoffs by designing simpler, more atomic features.
+
+## Task Sizing Based on Historical Context Usage
+
+**If `spec/MANAGER_PROGRESS.md` exists from previous implementation:**
+
+1. **Review "Context Usage Analysis" section** to see how previous tasks performed:
+   - Average implementor context usage
+   - Which tasks stayed in target range (40-50%)
+   - Which tasks exceeded target (>50%)
+
+2. **Use this data to calibrate new tasks:**
+   - If previous tasks averaged 55%+: Your tasks are too large, break them down more
+   - If previous tasks averaged <40%: Your tasks might be too small, consider combining
+   - If previous tasks varied widely (30%-60%): Some tasks were well-sized, others not
+
+3. **Learn from what worked:**
+   - Look at tasks that stayed in 40-50% range
+   - What made those tasks well-sized?
+   - Replicate that granularity in new specs
+
+**Target: Tasks that keep implementors in 40-50% context range**
+
+This leaves room for:
+- Reading system documentation
+- Implementing the feature
+- Thorough testing and verification
+- Documentation updates
+- Unexpected complications
+
+**When no historical data exists:** Start conservative (smaller tasks) and let data accumulate for future calibration.
 
 ## Style
 - Clear, unambiguous language

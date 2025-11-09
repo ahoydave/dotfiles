@@ -1,6 +1,6 @@
 # Meta-Agent: Developing the Looped Agent Workflow System
 
-**Last Updated**: 2025-11-09
+**Last Updated**: 2025-11-09 (Feature test registry - Refinement #37)
 **Your Role**: You are the meta-agent helping develop and refine this looped agent workflow system.
 
 **Read this file completely** - it contains critical context about what we're building, what's working, what fails, and where to continue.
@@ -13,33 +13,44 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 - `commands/research.md` - Research agent prompt (invoke with `/research`)
 - `commands/plan.md` - Planning agent prompt (invoke with `/plan`)
 - `commands/implement.md` - Implementor agent prompt (invoke with `/implement`)
+- `commands/implementation-manager.md` - Manager agent for autonomous multi-task implementation (invoke with `/implementation-manager`)
 - `agent_workflow.md` - User-facing workflow documentation
 - `meta-agent.md` - This file (meta-development context)
 - `ACE-FCA-COMPARISON.md` - Comparison analysis with similar system
 
 ## Current State (2025-11-09)
 
-### Status: Production-Ready with Slash Command Integration
+### Status: Production-Ready with Autonomous Implementation Manager
 
-**Agent prompts**: 31 refinements applied through iterative testing
-**Testing**: All three agents tested on real projects, failures documented and addressed
+**Agent prompts**: 36 refinements applied through iterative testing
+**Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, meta-agent.md for meta-development)
-**Recent focus**: UML/PlantUML diagram integration, YAML frontmatter metadata, context management optimization (40-60% based on ACE-FCA proven thresholds)
+**Recent focus**: Repeatable test suite framework (tests as first-class deliverables), manager-based autonomous implementation, UML/PlantUML diagram integration, YAML frontmatter metadata, context management optimization (40-60% based on ACE-FCA proven thresholds)
 
 ### What's Working
 
-✅ **Researcher**: Clean handoffs, effective exploration, comprehensive system documentation with UML diagrams
-✅ **Planner**: Interactive collaboration via QUESTIONS.md, visual planning with change-highlighted diagrams
-✅ **Implementor**: Clear task boundaries with strengthened verification requirements
+✅ **Researcher**: Clean handoffs, effective exploration, comprehensive system documentation with UML diagrams (separate .puml files + auto-generated SVGs), test suite verification
+✅ **Planner**: Interactive collaboration via QUESTIONS.md, visual planning with change-highlighted diagrams, verification strategy in specs
+✅ **Implementor**: Clear task boundaries, repeatable test creation requirements, end-to-end verification focus
+✅ **Implementation Manager**: Autonomous multi-task orchestration via sub-agents (NEW - Refinement #32)
+  - Eliminates human friction between tasks
+  - Minimal context (stays <30% throughout)
+  - Continues until done, blocked, or context limit
+  - Manager-worker pattern: delegates to `/implement` sub-agents
+  - Graceful restart handling via MANAGER_PROGRESS.md
 ✅ **Sub-agent delegation**: Only results return to context (not exploration process)
 ✅ **Document structure**: Clear ownership, no sprawl (explicit allowed lists)
 ✅ **Token efficiency**: Optimized to 40-60% (aligned with ACE-FCA proven thresholds)
 ✅ **Agent-agnostic**: Works with Claude, GPT-5, Gemini, etc.
 ✅ **System documentation**: Multi-file strategy for large systems (>800-1000 lines)
+✅ **Repeatable test suites**: Tests as first-class deliverables (scripts/automated/documented procedures)
+✅ **Test suite verification**: Researcher runs tests to verify system state, not just reads code
+✅ **End-to-end testing**: Tests verify user experience, not just "code exists"
 ✅ **Proof-required testing**: Implementors must paste actual terminal output as verification
 ✅ **Visual architecture**: PlantUML diagrams for components, sequences, and interfaces
 ✅ **Metadata tracking**: YAML frontmatter for traceability (git SHA, dates, status)
 ✅ **Format migration**: Automatic updates to latest document format standards
+✅ **Permissions**: settings.json controls approvals - agents run dev commands without friction
 
 ### Known Challenges (Monitored)
 
@@ -59,7 +70,7 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 
 ## Development History
 
-### 31 Iterative Refinements (2025-11-01 to 2025-11-09)
+### 36 Iterative Refinements (2025-11-01 to 2025-11-09)
 
 **Key improvements made**:
 1. Documentation is Not History principle (delete obsolete info)
@@ -97,6 +108,63 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
    - Invoked with `/research`, `/plan`, `/implement`
    - Maintains agent-agnostic design (still usable via file references)
    - Deprecates install.sh script (dotfiles handles deployment)
+32. **Implementation Manager (autonomous multi-task orchestration)**
+   - Manager-worker pattern: thin orchestration layer delegates to implementor sub-agents
+   - Eliminates human friction between tasks (continues autonomously until done/blocked)
+   - Minimal manager context (<30%) enables handling 10s-100s of tasks per session
+   - Two-document system: MANAGER_PROGRESS.md (outcomes) + IMPLEMENTOR_PROGRESS.md (technical details)
+   - Graceful restart handling and context overflow recovery
+   - Balances ACE-FCA flow mode with our paranoid testing requirements
+33. **Settings.json permissions (autonomous development operations)**
+   - All standard dev commands pre-approved in settings.json (tests, builds, git)
+   - Agents work autonomously without permission requests for safe operations
+   - Dangerous operations (git push, rm -rf, sudo) still require approval
+   - Eliminates friction for Implementation Manager autonomous flow
+   - Single source of truth: settings.json controls permissions, prompts stay clean
+34. **Context usage tracking (feedback loop for task sizing)**
+   - Implementor sub-agents report final context usage in summaries
+   - Manager tracks context usage per task in MANAGER_PROGRESS.md
+   - Context Usage Analysis section shows statistics (avg, range, distribution)
+   - Planner reviews historical data to calibrate future task sizes
+   - Enables data-driven refinement of planning granularity
+   - Target: Keep implementors in 40-50% context range
+35. **Diagram files with SVG generation (improved human review)**
+   - PlantUML diagrams now in separate `.puml` files in `spec/diagrams/`
+   - Researcher generates SVG files: `plantuml spec/diagrams/*.puml -tsvg`
+   - Markdown references SVGs with source links: `![Desc](diagrams/name.svg)` + `*[View/edit source](diagrams/name.puml)*`
+   - Humans see diagrams immediately in any markdown viewer (GitHub, VS Code, etc.)
+   - No external rendering tools needed (was major friction point)
+   - Format migration rule: convert inline PlantUML to separate files
+   - Both `.puml` sources and `.svg` outputs committed to git
+36. **Repeatable test suite framework (fixes "fake testing" at its root)**
+   - **The problem**: Agents tested once and pasted output, but didn't create repeatable tests
+   - "Code exists" ≠ "Feature works from user perspective"
+   - Researcher couldn't verify implementations (no tests to run)
+   - No accumulation of test coverage as features were built
+   - **The solution**: Tests are now first-class deliverables
+   - Implementor: CREATES repeatable tests (scripts/automated/documented), not just tests once
+   - Implementor: RUNS new tests + existing test suite (regression check)
+   - Implementor: Tests verify END-TO-END user experience, not just code existence
+   - Researcher: RUNS test suite to verify system state (not just reads code)
+   - Researcher: Documents test results, coverage gaps in CURRENT_SYSTEM.md
+   - Planner: Includes verification strategy in specs (HOW to test repeatably)
+   - Test types: Automated tests (tests/), verification scripts (tools/verify_*.sh), documented procedures
+   - Emphasis: "Can another agent run this test?" "Does it test the user experience?"
+   - Closes the gap: Future agents can verify features work by running the test suite
+37. **Feature test registry (FEATURE_TESTS.md - single source of truth)**
+   - **The problem**: Tests scattered (tests/ dir, tools/verify_*.sh, README procedures)
+   - Hard to discover what features exist and how to verify each
+   - No clear coverage visibility (what has tests, what doesn't)
+   - Researcher unclear what to run to verify system state
+   - **The solution**: `spec/FEATURE_TESTS.md` as feature test registry
+   - Single registry: All features + verification methods in one place
+   - Clarified test types: Automated, Verification Script, Agent-Interactive (not "manual")
+   - Agent-interactive testing valid for non-deterministic systems (chatbots, AI, UX)
+   - Implementor: Adds entry to FEATURE_TESTS.md for each feature built
+   - Researcher: Runs tests from FEATURE_TESTS.md, updates status/dates, documents gaps
+   - Planner: References in specs, verification strategy becomes FEATURE_TESTS.md entry
+   - Easy gap analysis: Features without tests immediately visible
+   - Document ownership: Implementor creates, Researcher maintains, Planner references
 
 **See git history for full chronological details.**
 
@@ -146,11 +214,15 @@ This convergence is **strong validation** that we're solving the problem correct
 
 ### What We Kept Different (Our Unique Strengths)
 
-**1. ONE Task Per Session (Implementor)**
+**1. Flow Mode via Implementation Manager (Refinement #32)**
 - **Their approach**: Continue through multiple phases in one session
-- **Our approach**: Stop after each atomic task, clean boundary
-- **Why we keep it**: Prevents error accumulation, easier debugging, cleaner handoffs
-- **Trade-off**: More sessions but more reliable
+- **Our approach (updated)**: Implementation Manager orchestrates autonomous flow via sub-agents
+  - Manager continues through all tasks (like ACE-FCA)
+  - But each task delegated to fresh `/implement` sub-agent
+  - Maintains our paranoid testing (each sub-agent must paste output)
+  - Maintains atomic task boundaries (each sub-agent does ONE task)
+- **Why this works**: Best of both worlds - autonomous flow WITHOUT error accumulation
+- **Trade-off**: More complex (manager + workers) but maintains reliability
 
 **2. Comprehensive System Documentation (CURRENT_SYSTEM.md)**
 - **Their approach**: Targeted, problem-specific research docs (timestamped, archived)
@@ -246,14 +318,22 @@ Agents treat docs like append-only logs.
 Implementors continue to next task when they have context.
 → **Solution**: "ONE TASK PER SESSION" rule with prominent reminders. STOP after one task.
 
-### Problem: Fake verification (CRITICAL)
-Agents claim "works" without testing, or worse, claim they tested when they literally never ran it.
-→ **Solution**:
-- ABSOLUTE RULE: Never claim testing without pasting actual terminal output
-- "I tested X" = UNACCEPTABLE. Paste actual output = REQUIRED
-- Test EXACT commands documented (copy from docs, paste in terminal, run, paste output)
-- If it fails when tested: FIX IT before claiming done
-- Examples in prompt showing acceptable vs unacceptable verification
+### Problem: Fake verification (CRITICAL) - NOW SOLVED AT ROOT CAUSE
+**The deeper issue**: Agents tested once and pasted output, but didn't create REPEATABLE tests
+- "Code exists" ≠ "Feature works from user perspective"
+- Testing in isolation ≠ End-to-end user experience
+- No test suite = Researcher can't verify implementations
+- One-off manual checks = Can't verify feature still works later
+
+→ **Solution (Refinement #36)**:
+- Tests are now FIRST-CLASS DELIVERABLES (not just verification evidence)
+- Implementor CREATES repeatable tests: scripts/automated tests/documented procedures
+- Tests verify END-TO-END user experience, not just "code exists"
+- Implementor RUNS new tests + existing test suite (regression check)
+- Researcher RUNS test suite to verify system state (not just reads code)
+- Planner includes verification strategy in specs (HOW to test repeatably)
+- "Can another agent run this test?" "Does it test user experience?" = key questions
+- STILL REQUIRED: Paste actual terminal output as proof of running tests
 
 ### Problem: Spec reinterpretation
 Agents create _v2 files when spec says "replace".
@@ -286,14 +366,16 @@ Agents invent new docs (SESSION_SUMMARY.md, NOTES.md, etc.) instead of using exi
 - **No documentation sprawl** - Use existing structure, never invent new docs
 - **One task per session** - Clean boundaries, easier debugging
 - **Simple > complex** - 2-3 phase specs beat 5+ phase specs
-- **Test everything** - No claiming "works" without evidence
+- **Tests are first-class deliverables** - Create repeatable tests that verify user experience
+- **Test suite accumulation** - Each feature adds to test suite, researchers verify by running tests
 - **Token efficiency** - Delegate verbose work to sub-agents
 
 ### Document Structure
 Each agent has clear document ownership:
-- **Researcher** owns CURRENT_SYSTEM.md (+ spec/system/*.md if split), RESEARCH_STATUS.md
-- **Planner** owns NEW_FEATURES.md, PLANNING_STATUS.md, QUESTIONS.md
-- **Implementor** owns PROGRESS.md (+ updates NEW_FEATURES.md with completions)
+- **Researcher** owns CURRENT_SYSTEM.md (+ spec/system/*.md if split), FEATURE_TESTS.md (maintains/verifies), RESEARCH_STATUS.md
+- **Planner** owns NEW_FEATURES.md, PLANNING_STATUS.md, QUESTIONS.md (reads FEATURE_TESTS.md)
+- **Implementor** owns IMPLEMENTOR_PROGRESS.md, FEATURE_TESTS.md (creates entries) (+ updates NEW_FEATURES.md with completions)
+- **Implementation Manager** owns MANAGER_PROGRESS.md (high-level outcome tracking)
 
 ### System Documentation Principle
 **For CURRENT_SYSTEM.md**: "Behavior and integration points clear, implementation details minimal"
@@ -313,13 +395,15 @@ Document WHAT the system does and HOW components connect - enough to plan change
 ### Handoff Pattern
 Agents read handoff docs from previous role:
 - Planner reads CURRENT_SYSTEM.md (from researcher)
-- Implementor reads NEW_FEATURES.md (from planner) + CURRENT_SYSTEM.md
-- Next implementor reads PROGRESS.md (from previous implementor)
+- Implementor reads NEW_FEATURES.md (from planner) + CURRENT_SYSTEM.md + IMPLEMENTOR_PROGRESS.md
+- Implementation Manager reads NEW_FEATURES.md (from planner) + MANAGER_PROGRESS.md
+- Next implementor reads IMPLEMENTOR_PROGRESS.md (from previous implementor)
 
 But agents DON'T read internal progress docs from other roles:
-- Planner doesn't read RESEARCH_STATUS.md or PROGRESS.md
-- Implementor doesn't read RESEARCH_STATUS.md or PLANNING_STATUS.md
-- Researcher doesn't read PROGRESS.md or PLANNING_STATUS.md
+- Planner doesn't read RESEARCH_STATUS.md, IMPLEMENTOR_PROGRESS.md, or MANAGER_PROGRESS.md
+- Implementor doesn't read RESEARCH_STATUS.md, PLANNING_STATUS.md, or MANAGER_PROGRESS.md
+- Implementation Manager doesn't read CURRENT_SYSTEM.md, RESEARCH_STATUS.md, PLANNING_STATUS.md, or IMPLEMENTOR_PROGRESS.md
+- Researcher doesn't read IMPLEMENTOR_PROGRESS.md, MANAGER_PROGRESS.md, or PLANNING_STATUS.md
 
 ## Testing Approach
 
@@ -369,9 +453,51 @@ All prompts tested on actual project (this docbot system):
 ## Active Development Areas
 
 ### Recently Completed (2025-11-09)
+✅ **Feature test registry (FEATURE_TESTS.md)** - JUST ADDED (Refinement #37)
+  - Single source of truth for all features and their verification methods
+  - Clarified test types: Automated, Verification Script, Agent-Interactive
+  - Agent-interactive testing explicitly valid for non-deterministic systems (chatbots, AI)
+  - Implementors add entries when building features
+  - Researchers run tests from registry, update status/dates, document gaps
+  - Planners reference in verification strategies
+  - Easy gap analysis: features without tests immediately visible
+  - Solves test discoverability problem (no more scattered verification docs)
+✅ **Repeatable test suite framework** - (Refinement #36)
+  - Tests are now first-class deliverables (not just verification evidence)
+  - Implementors CREATE repeatable tests: automated tests (tests/), verification scripts (tools/verify_*.sh), or documented procedures
+  - Tests verify END-TO-END user experience, not just "code exists"
+  - Implementors RUN new tests + existing test suite (regression check)
+  - Researchers RUN test suite to verify system state (not just read code)
+  - Researchers document test results, coverage gaps in CURRENT_SYSTEM.md
+  - Planners include verification strategy in specs (HOW to test repeatably)
+  - Closes critical gap: Future agents can verify features work by running tests
+  - Solves "fake testing" at root cause: one-off checks → repeatable test suites
+✅ **Diagram files with SVG generation**
+  - Separate `.puml` files in `spec/diagrams/` with generated `.svg` outputs
+  - Humans see diagrams immediately in markdown viewers (no external tools needed)
+  - Researcher always generates SVGs after creating/editing diagrams
+  - Format migration rule: convert inline PlantUML to separate files automatically
+  - Major improvement to human review leverage point
+✅ **Context usage tracking**
+  - Implementors report context usage to manager
+  - Manager aggregates data in MANAGER_PROGRESS.md
+  - Planner uses historical data to calibrate task sizing
+  - Creates feedback loop: planning → implementation → metrics → better planning
+✅ **Settings.json permissions**
+  - Pre-approved all standard dev operations (tests, builds, git local, shell utils)
+  - Enables autonomous Implementation Manager flow without permission interruptions
+  - Dangerous operations (git push, rm -rf, sudo) still require approval
+  - Single source of truth eliminates need for verbose permission lists in prompts
+✅ **Implementation Manager (autonomous multi-task orchestration)** - JUST ADDED
+  - Manager-worker pattern eliminates human friction between tasks
+  - Minimal manager context (<30%) enables 10s-100s of tasks per session
+  - Delegates to `/implement` sub-agents for actual work
+  - Two-document system: MANAGER_PROGRESS.md (outcomes) + IMPLEMENTOR_PROGRESS.md (details)
+  - Graceful restart and context overflow handling
+  - Balances ACE-FCA flow mode with our paranoid testing requirements
 ✅ **Slash command integration** - Claude Code CLI integration via dotfiles
-  - Commands in `~/dotfiles/claude/commands/` (research.md, plan.md, implement.md)
-  - Invoked with `/research`, `/plan`, `/implement` in Claude Code
+  - Commands in `~/dotfiles/claude/commands/` (research.md, plan.md, implement.md, implementation-manager.md)
+  - Invoked with `/research`, `/plan`, `/implement`, `/implementation-manager` in Claude Code
   - Still agent-agnostic (can reference files directly in other agents)
   - Simplified deployment (no install script needed, just dotfiles)
   - Updated all documentation to reference slash commands
@@ -382,13 +508,14 @@ All prompts tested on actual project (this docbot system):
   - Comprehensive syntax examples and placement guidance
   - Human rendering guide in agent_workflow.md
 ✅ **YAML frontmatter metadata** - Traceability and status tracking
-  - All major documents (CURRENT_SYSTEM, NEW_FEATURES, PROGRESS, RESEARCH_STATUS, PLANNING_STATUS)
+  - All major documents (CURRENT_SYSTEM, NEW_FEATURES, IMPLEMENTOR_PROGRESS, MANAGER_PROGRESS, RESEARCH_STATUS, PLANNING_STATUS)
   - Track: git SHA, dates, status, understanding level, context usage
   - Enables searchability, automation, audit trails
 ✅ **Document format migration rule** - Automatic updates to latest standards
   - All agents update old format documents immediately
   - Applies to all future format improvements
   - No permission needed, no backward compatibility preservation
+  - Includes file name migrations (PROGRESS.md → IMPLEMENTOR_PROGRESS.md)
 
 ### Previously Completed (2025-11-05)
 ✅ Agent-agnostic terminology (supports Claude, GPT-5, Gemini, etc.)
@@ -399,17 +526,38 @@ All prompts tested on actual project (this docbot system):
 ✅ Comprehensive system doc guidelines for researchers (when to split, what to include/exclude)
 
 ### Current Status
-**System is stable and production-ready.** Enhanced with visual documentation, metadata tracking, and slash command integration. Prompts now live in `~/dotfiles/claude/commands/` for easy deployment. Continue monitoring agent behavior in real usage. Document new failure patterns as they emerge.
+**System is stable and production-ready.** Enhanced with autonomous Implementation Manager for multi-task orchestration, visual documentation, metadata tracking, and slash command integration. Prompts now live in `~/dotfiles/claude/commands/` for easy deployment. Continue monitoring agent behavior in real usage. Document new failure patterns as they emerge.
+
+**Major workflow improvement**: Implementation Manager eliminates human friction between tasks while maintaining our paranoid testing requirements.
 
 **Deployment**: No install script needed. Prompts are in dotfiles and automatically available via `~/.claude/commands` symlink.
 
 ### Known Issues to Monitor
+- **NEW**: Do implementors add entries to FEATURE_TESTS.md for features they build?
+- **NEW**: Do researchers use FEATURE_TESTS.md as their test checklist?
+- **NEW**: Do researchers update test status/dates in FEATURE_TESTS.md after running tests?
+- **NEW**: Do agents properly distinguish between Automated/Verification Script/Agent-Interactive test types?
+- **NEW**: Do implementors actually CREATE repeatable tests (not just test once)?
+- **NEW**: Do implementors create tests that verify END-TO-END user experience (not just "code exists")?
+- **NEW**: Do implementors run existing test suite (regression check)?
+- **NEW**: Do researchers actually RUN the test suite to verify system state?
+- **NEW**: Do researchers document test results and coverage gaps in CURRENT_SYSTEM.md?
+- **NEW**: Do planners include verification strategies in specs?
 - Do agents actually follow the "paste output" rule, or do they still fake testing?
 - Do agents properly split large CURRENT_SYSTEM.md files using the multi-file strategy?
 - Do agents delete unauthorized documentation, or do they still create sprawl?
-- **NEW**: Do agents generate accurate PlantUML diagrams that compile correctly?
-- **NEW**: Do agents properly update YAML frontmatter each session?
-- **NEW**: Do agents migrate old document formats immediately as instructed?
+- Do researchers create separate .puml files and generate SVGs correctly?
+- Do researchers migrate inline PlantUML to separate files when found?
+- Do agents generate accurate PlantUML diagrams that compile correctly?
+- Do agents properly update YAML frontmatter each session?
+- Do agents migrate old document formats immediately as instructed?
+- Does Implementation Manager correctly delegate to sub-agents and maintain minimal context?
+- Does Implementation Manager properly handle restarts and context overflow scenarios?
+- Do implementor sub-agents provide clear summaries in the expected format?
+- Do settings.json permissions prevent friction during autonomous implementation?
+- Do implementors correctly report context usage in their summaries?
+- Does manager correctly track and aggregate context usage data?
+- Does planner actually use historical context data to calibrate task sizes?
 
 ### Future Considerations
 - Additional agent types (e.g., reviewer, tester)?
