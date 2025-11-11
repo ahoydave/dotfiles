@@ -11,7 +11,6 @@
       "Edit(**)",
       "Glob(**)",
       "Grep",
-
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
@@ -25,48 +24,37 @@
       "Bash(git switch:*)",
       "Bash(git reset:*)",
       "Bash(git stash:*)",
-
       "Bash(npm test:*)",
       "Bash(npm run test:*)",
       "Bash(npm run build:*)",
       "Bash(npm run lint:*)",
       "Bash(npm install:*)",
       "Bash(npm ci:*)",
-
       "Bash(pytest:*)",
       "Bash(python -m pytest:*)",
       "Bash(python -m unittest:*)",
-
       "Bash(cargo test:*)",
       "Bash(cargo build:*)",
       "Bash(cargo check:*)",
       "Bash(cargo run:*)",
-
       "Bash(go test:*)",
       "Bash(go build:*)",
       "Bash(go run:*)",
-
       "Bash(make test:*)",
       "Bash(make build:*)",
       "Bash(make:*)",
-
       "Bash(mvn test:*)",
       "Bash(gradle test:*)",
-
       "Bash(jest:*)",
       "Bash(vitest:*)",
       "Bash(mocha:*)",
-
       "Bash(brew install:*)",
-
       "Bash(plantuml:*)",
-
       "Bash(bash:*)",
       "Bash(sh:*)",
       "Bash(python:*)",
       "Bash(python3:*)",
       "Bash(node:*)",
-
       "Bash(ls:*)",
       "Bash(pwd:*)",
       "Bash(cd:*)",
@@ -75,12 +63,12 @@
       "Bash(test:*)",
       "Bash([:*)"
     ],
+    "deny": [],
     "ask": [
       "Bash(git push:*)",
       "Bash(rm -rf:*)",
       "Bash(sudo:*)"
     ],
-    "deny": [],
     "defaultMode": "acceptEdits"
   },
   "hooks": {

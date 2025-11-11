@@ -26,10 +26,12 @@ Please act as the researcher agent from ~/dotfiles/claude/commands/research.md
 - **research.md** - Research agent prompt (investigates systems, verifies implementations)
 - **plan.md** - Planning agent prompt (designs specs collaboratively with humans)
 - **implement.md** - Implementor agent prompt (builds one atomic task per session)
+- **implementation-manager.md** - Manager agent prompt (autonomous multi-task orchestration)
+- **meta-agent.md** - Meta-agent prompt (for refining the system itself)
 
 ### Documentation
 - **agent_workflow.md** - User guide: how to use the system
-- **meta-agent.md** - Meta-development context: for refining the system itself
+- **meta_status.md** - System state, development history, what's working/failing
 - **ACE-FCA-COMPARISON.md** - Analysis comparing with similar systems
 
 ### Configuration
@@ -82,7 +84,8 @@ spec/
 ## Links
 
 - **Full guide**: See `agent_workflow.md`
-- **Meta-development**: See `meta-agent.md`
+- **System status**: See `meta_status.md`
+- **Meta-agent prompt**: See `commands/meta-agent.md`
 - **Comparison study**: See `ACE-FCA-COMPARISON.md`
 
 ## Deployment

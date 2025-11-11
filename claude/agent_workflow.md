@@ -57,12 +57,14 @@ Repeating cycle with flexibility to jump to any agent as needed:
 
 ```
 ~/dotfiles/claude/commands/
-  research.md         - Research agent prompt (invoke with /research)
-  plan.md             - Planning agent prompt (invoke with /plan)
-  implement.md        - Implementor agent prompt (invoke with /implement)
+  research.md                - Research agent prompt (invoke with /research)
+  plan.md                    - Planning agent prompt (invoke with /plan)
+  implement.md               - Implementor agent prompt (invoke with /implement)
+  implementation-manager.md  - Manager agent prompt (invoke with /implementation-manager)
+  meta-agent.md              - Meta-agent prompt (invoke with /meta-agent)
 
 agent_workflow.md     - This file (how to use the system)
-meta-agent.md         - Meta-development context
+meta_status.md        - System state and development history
 
 spec/
   CURRENT_SYSTEM.md    - How system works (researcher owns)
