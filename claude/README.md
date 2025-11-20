@@ -1,6 +1,6 @@
 # Looped Agent Workflow System
 
-Agent prompts for iterative software development using Claude Code or other coding agents.
+Five specialized agents for iterative software development using Claude Code or other coding agents.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@ Agent prompts for iterative software development using Claude Code or other codi
 /meta-agent              # Refine the agent system itself
 ```
 
-**Other agents:** Reference command files: `~/dotfiles/claude/commands/research.md`
+**Other agents:** Reference command files in `~/dotfiles/claude/commands/`
 
 ## Contents
 
@@ -33,7 +33,7 @@ Agent prompts for iterative software development using Claude Code or other codi
 
 ## Principles
 
-1. **Specialized agents** with document ownership (researcher owns `spec/`, planner owns `ongoing_changes/new_features.md`, implementor owns `ongoing_changes/implementor_progress.md`)
+1. **Specialized agents** with document ownership (researcher owns `spec/`, planner/implementor/manager own `ongoing_changes/`)
 2. **ONE task per session** (implementor) - atomic boundaries prevent drift
 3. **Context budget** - 40-50% wrap up, 60% hard stop
 4. **Sub-agent delegation** - verbose exploration kept out of main context
@@ -44,19 +44,20 @@ Agent prompts for iterative software development using Claude Code or other codi
 ## Document Structure
 
 ```
-spec/
-  current_system.md         - System understanding (researcher)
-  feature_tests.md          - Feature verification registry (researcher)
-  research_status.md        - Research progress (researcher)
-ongoing_changes/
-  new_features.md           - What to build (planner)
-  planning_status.md        - Planning progress (planner)
-  questions.md              - Human Q&A (planner, temporary)
-  implementor_progress.md   - What's done/next (implementor)
-  manager_progress.md       - Task tracking (manager)
+spec/                           - Permanent system documentation
+  current_system.md             - System understanding (researcher)
+  feature_tests.md              - Feature verification registry (researcher)
+  research_status.md            - Research progress (researcher)
+
+ongoing_changes/                - Temporary work-in-progress documents
+  new_features.md               - What to build (planner)
+  planning_status.md            - Planning progress (planner)
+  questions.md                  - Human Q&A (planner, temporary)
+  implementor_progress.md       - Implementation state (implementor)
+  manager_progress.md           - Task tracking (manager)
 ```
 
-## Cycle
+## Workflow Cycle
 
 ```
 1. Researcher    → Document system     → spec/current_system.md
@@ -65,6 +66,9 @@ ongoing_changes/
 4. Implementor   → Build next task     → (repeat)
 5. Researcher    → Verify changes      → Update spec/
 6. Loop
+
+Alternative: Manager orchestrates implementor sessions autonomously
+Meta-agent:      Refines the agent prompts and workflow itself
 ```
 
 ## Features

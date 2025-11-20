@@ -9,7 +9,7 @@ Personal development environment configuration.
 - `.config/nvim/` - Full neovim with LSP, plugins, fuzzy finding
 
 **Claude Code Agent System**: Looped agent workflow for software development
-- `claude/` - Agent prompts, documentation, settings for coding agents
+- `claude/` - Five specialized agents (research, plan, implement, manager, meta) with shared documentation
 
 ## Installation
 
@@ -32,7 +32,7 @@ ln -sf ~/dotfiles/claude/commands ~/.claude/commands
 ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
 ```
 
-Use with: `/research`, `/plan`, `/implement` in Claude Code CLI
+Available agents: `/research`, `/plan`, `/implement`, `/implementation-manager`, `/meta-agent`
 
 ## Neovim Configuration
 
@@ -48,7 +48,7 @@ Use with: `/research`, `/plan`, `/implement` in Claude Code CLI
 
 ## Agent System
 
-Specialized prompts for research, planning, and implementation using Claude Code or other coding agents.
+Five specialized agents for iterative software development using Claude Code or other coding agents.
 
 **Agents:**
 - `/research` - Investigate system, verify implementations, document current state
