@@ -9,8 +9,8 @@ You are a **manager, not an implementor**. You delegate implementation work to s
 ## Context Management - CRITICAL
 
 **Your context stays minimal:**
-- `spec/new_features.md` - The plan (what to build)
-- `spec/manager_progress.md` - High-level progress tracking
+- `ongoing_changes/new_features.md` - The plan (what to build)
+- `ongoing_changes/manager_progress.md` - High-level progress tracking
 - **NO CODEBASE DETAILS** - Let sub-agents handle that
 - **NO IMPLEMENTATION CODE** - You never read or write code
 - **NO TEST OUTPUT** - Sub-agents verify, you trust their reports
@@ -33,15 +33,15 @@ Read-only commands are pre-approved via settings.json. Sub-agents handle impleme
 
 **READ THESE DOCUMENTS COMPLETELY:**
 
-1. Read `spec/new_features.md` in full - understand the complete plan
+1. Read `ongoing_changes/new_features.md` in full - understand the complete plan
 
-2. Read `spec/manager_progress.md` if it exists - see what's already done
+2. Read `ongoing_changes/manager_progress.md` if it exists - see what's already done
    - If file doesn't exist: You're starting fresh, create it
    - If file exists: You're resuming, continue from where you left off
 
 **DO NOT READ:**
 - ❌ `spec/current_system.md` - Sub-agents read this, you don't need it
-- ❌ `spec/implementor_progress.md` - Implementation details, not your concern
+- ❌ `ongoing_changes/implementor_progress.md` - Implementation details, not your concern
 - ❌ Code files - Never read code
 - ❌ Test output - Sub-agents verify, you trust their reports
 
@@ -61,7 +61,7 @@ For each task in NEW_FEATURES.md:
 
 **1. Identify Next Task**
 
-Read new_features.md and manager_progress.md to determine:
+Read `ongoing_changes/new_features.md` and `ongoing_changes/manager_progress.md` to determine:
 - What's already complete
 - What's next in sequence
 - Are there any dependencies blocking this task?
@@ -79,14 +79,14 @@ Your task: [Describe the specific task from new_features.md]
 
 Context:
 - Read spec/current_system.md for system understanding
-- Read spec/new_features.md for full feature context
-- Read spec/implementor_progress.md for what's been done
+- Read ongoing_changes/new_features.md for full feature context
+- Read ongoing_changes/implementor_progress.md for what's been done
 - This is task [N] of [Total] in the current implementation plan
 
 After completing this task:
 1. Implement the feature
 2. Verify thoroughly (all tests must pass)
-3. Update spec/implementor_progress.md with full implementation details
+3. Update ongoing_changes/implementor_progress.md with full implementation details
 4. Return a brief IMPLEMENTATION SUMMARY (see /implement prompt for format)
 
 Do not continue to other tasks. Complete this ONE task and return summary."
@@ -103,9 +103,9 @@ When sub-agent returns, it will provide an IMPLEMENTATION SUMMARY with:
 - Tests: pass/fail status
 - Blocker: reason if blocked
 
-**4. Update manager_progress.md**
+**4. Update ongoing_changes/manager_progress.md**
 
-After each sub-agent completes, update manager_progress.md:
+After each sub-agent completes, update `ongoing_changes/manager_progress.md`:
 
 **If success:**
 - Mark task complete ✅
@@ -141,7 +141,7 @@ Sometimes an implementor sub-agent will hit its own context limit mid-task. When
 
 1. Sub-agent will report: "Status: blocked, Blocker: Context limit reached, task incomplete"
 2. You spawn a FRESH `/implement` sub-agent to continue the SAME task
-3. The fresh sub-agent reads implementor_progress.md (which previous agent updated)
+3. The fresh sub-agent reads `ongoing_changes/implementor_progress.md` (which previous agent updated)
 4. Fresh agent continues where previous left off
 
 **Do NOT:**
@@ -158,7 +158,7 @@ Second sub-agent: Reads implementor_progress.md, sees partial work, completes it
 
 ## manager_progress.md Format
 
-**Location:** `spec/manager_progress.md`
+**Location:** `ongoing_changes/manager_progress.md` (temporary - deleted/archived when work complete)
 
 **Purpose:** Track high-level feature progress for manager restarts and human review
 
@@ -253,7 +253,7 @@ Next steps:
 - Consider running end-to-end verification
 - May want to invoke /research to verify system state matches new_features.md
 
-See spec/manager_progress.md for complete details.
+See ongoing_changes/manager_progress.md for complete details.
 ```
 
 **Blocked:**
@@ -273,7 +273,7 @@ This requires human input. Options:
 2. Update new_features.md with clearer specification
 3. Handle this task manually, then restart manager for remaining tasks
 
-See spec/manager_progress.md for what's been completed.
+See ongoing_changes/manager_progress.md for what's been completed.
 ```
 
 **Context Limit:**
@@ -292,14 +292,14 @@ To continue:
 - Simply restart /implementation-manager
 - It will read manager_progress.md and continue from task [X+1]
 
-See spec/manager_progress.md for detailed progress.
+See ongoing_changes/manager_progress.md for detailed progress.
 ```
 
 ## Restart Handling
 
-**When you start and manager_progress.md exists:**
+**When you start and ongoing_changes/manager_progress.md exists:**
 
-1. Read manager_progress.md completely
+1. Read `ongoing_changes/manager_progress.md` completely
 2. Identify last completed task
 3. Identify current/next task
 4. Continue the loop from there
@@ -307,27 +307,27 @@ See spec/manager_progress.md for detailed progress.
 
 **Example:**
 ```
-manager_progress.md shows:
+ongoing_changes/manager_progress.md shows:
 - Tasks 1-5: Complete ✅
 - Task 6: Current 🔄
 - Tasks 7-8: Remaining
 
 You check: Is task 6 actually complete?
-- Read implementor_progress.md to see if it's done
+- Read ongoing_changes/implementor_progress.md to see if it's done
 - If done but not marked: Mark it complete, move to task 7
 - If incomplete: Continue task 6
 ```
 
-**Trust but verify:** manager_progress.md might be slightly stale if previous session stopped unexpectedly. Check implementor_progress.md or new_features.md completion markers to confirm state.
+**Trust but verify:** `ongoing_changes/manager_progress.md` might be slightly stale if previous session stopped unexpectedly. Check `ongoing_changes/implementor_progress.md` or `ongoing_changes/new_features.md` completion markers to confirm state.
 
 ## Critical Rules
 
 ### Absolute Non-Negotiable Rules
 
 1. **NEVER read implementation code** - Wastes your precious context
-2. **NEVER read current_system.md** - Sub-agents read this, you don't need it
+2. **NEVER read `spec/current_system.md`** - Sub-agents read this, you don't need it
 3. **NEVER try to implement code yourself** - Always delegate to `/implement` sub-agents
-4. **ALWAYS update manager_progress.md after each task** - Critical for restarts
+4. **ALWAYS update `ongoing_changes/manager_progress.md` after each task** - Critical for restarts
 5. **STOP on blockers** - Don't skip, don't guess, don't try to work around
 6. **STOP at 40% context** - Never let yourself accumulate bloat
 
@@ -345,7 +345,7 @@ You check: Is task 6 actually complete?
 - ❌ Read code files to "understand" what sub-agent did
 - ❌ Read test output to "verify" sub-agent's claims
 - ❌ Try to debug issues yourself
-- ❌ Rewrite manager_progress.md (append to it)
+- ❌ Rewrite `ongoing_changes/manager_progress.md` (append to it)
 - ❌ Skip tasks because they seem hard
 - ❌ Continue past blockers hoping they'll resolve
 - ❌ Try to break down tasks yourself (planner already did this)
@@ -362,17 +362,17 @@ You check: Is task 6 actually complete?
 
 ```
 Manager starts:
-1. Reads new_features.md (8 tasks planned)
-2. Reads manager_progress.md (tasks 1-3 complete)
+1. Reads `ongoing_changes/new_features.md` (8 tasks planned)
+2. Reads `ongoing_changes/manager_progress.md` (tasks 1-3 complete)
 3. Spawns /implement sub-agent for task 4
 4. Sub-agent returns: "Success, all tests passed"
-5. Updates manager_progress.md: Task 4 ✅
+5. Updates `ongoing_changes/manager_progress.md`: Task 4 ✅
 6. Spawns /implement sub-agent for task 5
 7. Sub-agent returns: "Success, all tests passed"
-8. Updates manager_progress.md: Task 5 ✅
+8. Updates `ongoing_changes/manager_progress.md`: Task 5 ✅
 9. Spawns /implement sub-agent for task 6
 10. Sub-agent returns: "Blocked: Unclear how sessions integrate with Redis"
-11. Updates manager_progress.md: Task 6 🚫
+11. Updates `ongoing_changes/manager_progress.md`: Task 6 🚫
 12. Stops and reports blocker to human
 ```
 

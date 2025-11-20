@@ -1,22 +1,23 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2025-11-11
-git_commit: a612a1c553b63b2e5bba1944ddd11f9e0e448ba9
-refinement_count: 44
+last_updated: 2025-11-14
+git_commit: b2d1b59f3d1ec973d07b40db739f831ae07a7c99
+refinement_count: 46
 status: production-ready
-recent_focus: prompt_verbosity_reduction
+recent_focus: meta_agent_process_improvement
 agent_count: 4
 ---
 
-## Current State (2025-11-11)
+## Current State (2025-11-14)
 
 ### Status: Production-Ready with Autonomous Implementation Manager
 
-**Agent prompts**: 44 refinements applied through iterative testing
+**Agent prompts**: 46 refinements applied through iterative testing
+**Deployment**: Prompts in ~/dotfiles/claude/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
 **Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
-**Recent focus**: Prompt verbosity reduction (consolidated repetitive sections, removed unnecessary examples, cleaner format migration rules)
+**Recent focus**: Meta-agent process improvement (read actual prompts, not secondhand info)
 
 ### What's Working
 
@@ -312,6 +313,48 @@ agent_count: 4
      - Reduced context consumption when agents read their own instructions
      - Maintained all critical rules and examples
      - More prominent placement of essential guidance
+45. **Directory structure clarification (prevents documentation sprawl)**
+   - **The context**: Agent prompts live in ~/dotfiles/claude/commands/ and are invoked via slash commands in ANY project
+   - When `/research`, `/plan`, `/implement` are invoked, agents create docs in the TARGET PROJECT, not in dotfiles
+   - **The problem**: Unclear where agents should put documentation led to sprawl
+   - Temporary docs (planning, implementation progress) scattered at root level
+   - No clear separation between "work in progress" and "permanent system knowledge"
+   - Agents might create docs in random locations
+   - **The solution**: Two-directory structure with clear purposes
+   - **`ongoing_changes/`** (root level) - Temporary work-in-progress documents
+     - Planner creates: `ongoing_changes/new_features.md`, `ongoing_changes/planning_status.md`, `ongoing_changes/questions.md`
+     - Implementor creates: `ongoing_changes/implementor_progress.md`
+     - Manager creates: `ongoing_changes/manager_progress.md`
+     - Deleted/archived when work is complete
+   - **`spec/`** - Permanent system documentation
+     - Researcher creates: `spec/current_system.md`, `spec/system/components/`, `spec/system/flows/`, `spec/diagrams/`, `spec/research_status.md`
+     - Shared registry: `spec/feature_tests.md` (implementor creates entries, researcher maintains)
+     - Never deleted, continuously updated
+   - **Benefits**:
+     - Clear mental model: ongoing_changes = temporary, spec = permanent
+     - Prevents documentation sprawl (only two valid locations)
+     - Easy cleanup: delete entire ongoing_changes/ when project phase complete
+     - Researcher territory (spec/) clearly separated from planner/implementor territory (ongoing_changes/)
+     - Aligns with document lifecycle (temporary vs permanent)
+     - Human comprehension: "Is this describing what exists or what we're building?"
+46. **Meta-agent reads actual prompts, not secondhand info (critical process improvement)**
+   - **The problem**: Meta-agent was instructed to read meta_status.md for context about agent prompts
+   - Relied on secondhand descriptions instead of actual prompt content
+   - Risk of meta_status.md becoming stale or inaccurate
+   - Meta-agent couldn't verify actual state of prompts vs documented state
+   - If prompts were too long for meta-agent to read, that itself was a signal they needed reducing
+   - **The solution**: Meta-agent ALWAYS reads all four agent prompts directly
+   - Updated meta-agent.md Entry Point to require reading research.md, plan.md, implement.md, implementation-manager.md
+   - "If prompts are too long to read comfortably, that's a problem to fix" - length becomes observable signal
+   - Never rely on meta_status.md descriptions - always verify actual prompt content
+   - Firsthand knowledge required for making good refinement decisions
+   - **Benefits**:
+     - Meta-agent sees actual reality, not filtered summaries
+     - Can identify inconsistencies between prompts that meta_status.md misses
+     - Prompt length becomes direct feedback (if too long, agent will notice and can fix)
+     - Better refinement decisions based on actual content
+     - Forces meta-agent to stay grounded in source of truth
+     - Meta_status.md can focus on history/patterns rather than trying to mirror prompt content
 
 **See git history for full chronological details.**
 
@@ -512,15 +555,18 @@ Agents read too much into their context.
 
 ### Problem: Documentation sprawl
 Agents invent new docs (SESSION_SUMMARY.md, NOTES.md, etc.) instead of using existing structure.
-→ **Solution**: "No Documentation Sprawl" section in all prompts. Explicit allowed list. DELETE unauthorized docs.
+→ **Solution (Refinement #45)**: Two-directory structure with clear boundaries
+- Only two valid locations: `ongoing_changes/` (temporary) and `spec/` (permanent)
+- "No Documentation Sprawl" section in all prompts with explicit allowed lists
+- DELETE unauthorized docs outside these directories
 
 ### Problem: Researcher cleanup overreach
 Researcher told to "aggressively delete" docs, but unclear boundaries - could delete other agents' docs.
-→ **Solution (Refinement #38)**: Explicit scope boundaries in researcher prompt.
-- Cleanup authority LIMITED to `spec/` folder only
-- Complete allowed list for spec/ (includes planner-owned docs that researcher must NOT delete)
-- Explicit "NEVER delete" list: implementor_progress.md, manager_progress.md, docs outside spec/
-- Clarifies document ownership boundaries between agents
+→ **Solution (Refinement #38, enhanced by #45)**: Explicit scope boundaries in researcher prompt.
+- Cleanup authority LIMITED to `spec/` folder only (researcher's territory)
+- Complete allowed list for spec/ (all researcher-owned docs)
+- Explicit "NEVER touch" rule: `ongoing_changes/` directory (planner/implementor/manager territory)
+- Two-directory structure (Refinement #45) makes ownership boundaries crystal clear
 
 ## Design Principles
 
@@ -536,12 +582,31 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
 - **Complexity budget** - Treat complexity like precious resource; default to simple
 
 ### Document Structure
-Each agent has clear document ownership:
-- **Researcher** owns current_system.md (+ spec/system/*.md if split), feature_tests.md (maintains/verifies), research_status.md
-- **Planner** owns new_features.md, planning_status.md, questions.md (reads feature_tests.md)
-- **Implementor** owns implementor_progress.md, feature_tests.md (creates entries) (+ updates new_features.md with completions)
-- **Implementation Manager** owns manager_progress.md (high-level outcome tracking)
-- **Meta-Agent** owns meta_status.md (this file), all agent prompts in commands/
+
+**Directory structure** (in target project, not dotfiles):
+- **`ongoing_changes/`** - Temporary work-in-progress documents (deleted when work complete)
+- **`spec/`** - Permanent system documentation (continuously updated, never deleted)
+
+**Agent document ownership**:
+- **Researcher** owns:
+  - `spec/current_system.md` (+ `spec/system/components/*.md`, `spec/system/flows/*.md` if split)
+  - `spec/diagrams/*.puml` + `*.svg`
+  - `spec/feature_tests.md` (maintains/verifies)
+  - `spec/research_status.md`
+- **Planner** owns:
+  - `ongoing_changes/new_features.md`
+  - `ongoing_changes/planning_status.md`
+  - `ongoing_changes/questions.md`
+  - (reads `spec/feature_tests.md`)
+- **Implementor** owns:
+  - `ongoing_changes/implementor_progress.md`
+  - `spec/feature_tests.md` (creates entries)
+  - (updates `ongoing_changes/new_features.md` with completions)
+- **Implementation Manager** owns:
+  - `ongoing_changes/manager_progress.md`
+- **Meta-Agent** owns:
+  - `meta_status.md` (in dotfiles repo, not target projects)
+  - All agent prompts in `~/dotfiles/claude/commands/`
 
 ### System Documentation Principle
 **For current_system.md**: "Behavior and integration points clear, implementation details minimal"
@@ -567,17 +632,17 @@ Document WHAT the system does and HOW components connect - enough to plan change
 
 ### Handoff Pattern
 Agents read handoff docs from previous role:
-- Planner reads current_system.md (from researcher)
-- Implementor reads new_features.md (from planner) + current_system.md + implementor_progress.md
-- Implementation Manager reads new_features.md (from planner) + manager_progress.md
-- Next implementor reads implementor_progress.md (from previous implementor)
-- Meta-agent reads meta_status.md (from previous meta-agent)
+- Planner reads `spec/current_system.md` (from researcher)
+- Implementor reads `ongoing_changes/new_features.md` (from planner) + `spec/current_system.md` + `ongoing_changes/implementor_progress.md`
+- Implementation Manager reads `ongoing_changes/new_features.md` (from planner) + `ongoing_changes/manager_progress.md`
+- Next implementor reads `ongoing_changes/implementor_progress.md` (from previous implementor)
+- Meta-agent reads `meta_status.md` (from previous meta-agent, in dotfiles)
 
 But agents DON'T read internal progress docs from other roles:
-- Planner doesn't read research_status.md, implementor_progress.md, or manager_progress.md
-- Implementor doesn't read research_status.md, planning_status.md, or manager_progress.md
-- Implementation Manager doesn't read current_system.md, research_status.md, planning_status.md, or implementor_progress.md
-- Researcher doesn't read implementor_progress.md, manager_progress.md, or planning_status.md
+- Planner doesn't read `spec/research_status.md`, `ongoing_changes/implementor_progress.md`, or `ongoing_changes/manager_progress.md`
+- Implementor doesn't read `spec/research_status.md`, `ongoing_changes/planning_status.md`, or `ongoing_changes/manager_progress.md`
+- Implementation Manager doesn't read `spec/current_system.md`, `spec/research_status.md`, `ongoing_changes/planning_status.md`, or `ongoing_changes/implementor_progress.md`
+- Researcher doesn't read `ongoing_changes/implementor_progress.md`, `ongoing_changes/manager_progress.md`, or `ongoing_changes/planning_status.md`
 - Meta-agent reads all for system development purposes
 
 ## Testing Approach
@@ -629,8 +694,25 @@ All prompts tested on actual project (this looped agent system):
 
 ## Active Development Areas
 
-### Recently Completed (2025-11-11)
-✅ **Prompt verbosity reduction** - JUST ADDED (Refinement #44)
+### Recently Completed (2025-11-14)
+✅ **Meta-agent reads actual prompts** - JUST ADDED (Refinement #46)
+  - Meta-agent now reads all four agent prompts directly (research.md, plan.md, implement.md, implementation-manager.md)
+  - Never relies on secondhand information from meta_status.md descriptions
+  - Prompt length becomes observable signal (if too long to read, that's a problem to fix)
+  - Firsthand knowledge enables better refinement decisions
+  - Can identify inconsistencies between prompts
+  - Meta_status.md focuses on history/patterns, not mirroring prompt content
+✅ **Directory structure clarification** (Refinement #45)
+  - Two-directory structure: `ongoing_changes/` (temporary) + `spec/` (permanent)
+  - Prevents documentation sprawl by limiting valid locations
+  - Clear separation: work-in-progress vs permanent system knowledge
+  - Planner/implementor/manager docs → `ongoing_changes/`
+  - Researcher docs → `spec/`
+  - Easy cleanup: delete entire `ongoing_changes/` when project phase complete
+  - Clarifies that prompts in ~/dotfiles/claude/commands/ work on ANY project
+
+### Previously Completed (2025-11-11)
+✅ **Prompt verbosity reduction** (Refinement #44)
   - Consolidated "Documentation is Not History" sections (40-50 lines → 15 lines)
   - Simplified format migration instructions (40+ lines → 5 lines)
   - Condensed allowed/forbidden file lists (removed excessive symbols/explanations)
@@ -708,6 +790,16 @@ All prompts tested on actual project (this looped agent system):
 **Deployment**: No install script needed. Prompts are in dotfiles and automatically available via `~/.claude/commands` symlink.
 
 ### Known Issues to Monitor
+- **NEW**: Does meta-agent actually read all four prompts at start of each session?
+- **NEW**: Does reading actual prompts lead to better refinement decisions vs relying on meta_status.md?
+- **NEW**: Can meta-agent identify inconsistencies between prompts that weren't visible in meta_status.md?
+- **NEW**: Does prompt length become a useful observable signal for when reduction is needed?
+- **NEW**: Do agents correctly put docs in `ongoing_changes/` vs `spec/` directories?
+- **NEW**: Do agents understand that prompts are in dotfiles but docs go in target project?
+- **NEW**: Do planners, implementors, and managers put their docs in `ongoing_changes/`?
+- **NEW**: Does the researcher put all their docs in `spec/`?
+- **NEW**: Does the two-directory structure prevent documentation sprawl?
+- **NEW**: Do agents create unauthorized docs outside these two directories?
 - **NEW**: Do agents read and process prompts more efficiently with reduced verbosity?
 - **NEW**: Did we remove any critical instructions that cause issues?
 - **NEW**: Are remaining rules more prominent and easier to follow?

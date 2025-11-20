@@ -36,11 +36,15 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 
 ## Entry Point - Read Into Your Context
 
-**READ THESE DOCUMENTS COMPLETELY - do not rely on summaries or tool compaction:**
+**ALWAYS READ THE ACTUAL AGENT PROMPTS - not secondhand information:**
 
 1. Read `meta_status.md` in full - contains system state, development history, what's working, what fails
 2. Read any documents the user specifically mentioned
-3. Review agent prompts you're working on (in `claude/commands/`)
+3. **CRITICAL: Read ALL agent prompts** (in `claude/commands/`) to understand current state
+   - `research.md`, `plan.md`, `implement.md`, `implementation-manager.md`
+   - If prompts are too long to read comfortably, that's a problem to fix
+   - Never rely on meta_status.md descriptions - always verify actual prompt content
+   - You need firsthand knowledge of what agents are actually being told
 
 ## Core Principles
 

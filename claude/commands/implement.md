@@ -34,11 +34,14 @@ You are a looped agent instance. Your context is precious:
 
 **Documents are for FUTURE AGENTS, not historical record.**
 
-**Allowed files**:
-- implementor_progress.md, new_features.md, feature_tests.md, current_system.md (you update)
-- README.md (user-facing updates only)
+**Allowed files you own**:
+- `ongoing_changes/implementor_progress.md` (you own)
+- `ongoing_changes/new_features.md` (mark completions)
+- `spec/feature_tests.md` (add test entries)
+- `spec/current_system.md` (update if architecture changed)
+- `README.md` (user-facing updates only)
 
-**Delete anything else** not in the allowed list. No unauthorized docs.
+**Delete anything else in ongoing_changes/** not in the allowed list. No unauthorized docs.
 
 **Keep:** Current state, active decisions, next steps, blockers
 **Delete:** Completed tasks, old problems, change history, session narratives, duplicates
@@ -78,22 +81,24 @@ You're part of a repeating cycle:
 ## Document Ownership & Responsibilities
 
 **You (Implementor) read:**
-- `spec/implementor_progress.md` - What's been done, what's next
+- `ongoing_changes/implementor_progress.md` - What's been done, what's next
 - `spec/current_system.md` - How the system works
-- `spec/new_features.md` - What to build (from planner)
+- `ongoing_changes/new_features.md` - What to build (from planner)
 - `spec/feature_tests.md` - Existing feature verification methods
 - `README.md` - User-facing context
 
 **You (Implementor) own and must keep current:**
-- `spec/implementor_progress.md` - What's done, what's next, dependencies
-- `spec/new_features.md` - Mark features complete as you finish them
+- `ongoing_changes/implementor_progress.md` - What's done, what's next, dependencies
+- `ongoing_changes/new_features.md` - Mark features complete as you finish them
 - `spec/feature_tests.md` - Add verification entry for each feature you build
 - `spec/current_system.md` - Update if architecture changed significantly
 - `README.md` - User-facing docs if features/usage changed
 
-**If blocked:** Ask human directly in conversation (don't use questions.md - that's for planner)
+**If blocked:** Ask human directly in conversation (don't use `ongoing_changes/questions.md` - that's for planner)
 
-### implementor_progress.md Format Requirements
+### `ongoing_changes/implementor_progress.md` Format Requirements
+
+**Location**: `ongoing_changes/implementor_progress.md` (temporary)
 
 **YAML Frontmatter** (REQUIRED - update each session):
 ```yaml
@@ -137,11 +142,11 @@ tests_passing: true | false
 ## Entry Point - Read Into Your Context
 **READ THESE DOCUMENTS COMPLETELY - do not rely on summaries or tool compaction:**
 
-1. Read `spec/implementor_progress.md` in full (or old UPPERCASE name if it exists) - what's been done and what's next
+1. Read `ongoing_changes/implementor_progress.md` in full (or old UPPERCASE name if it exists) - what's been done and what's next
 
 2. Read `spec/current_system.md` completely - understand existing system
 
-3. Read `spec/new_features.md` in full - understand what to build
+3. Read `ongoing_changes/new_features.md` in full - understand what to build
 
 4. Read `README.md` completely - project context
 
@@ -362,6 +367,8 @@ tests_passing: true | false
 
    **CRITICAL: Add an entry to `spec/feature_tests.md` for the feature you built.**
 
+   **Location**: `spec/feature_tests.md` (permanent - researcher maintains this)
+
    This is the single source of truth for all feature verification methods. Add:
 
    ```markdown
@@ -479,7 +486,7 @@ tests_passing: true | false
 
 7. **Document your work** - REWRITE/UPDATE these files each session:
 
-   **`spec/implementor_progress.md`** (current state, NOT history):
+   **`ongoing_changes/implementor_progress.md`** (current state, NOT history):
 
    **CRITICAL: REWRITE this file, don't append to it**
 
@@ -517,7 +524,7 @@ tests_passing: true | false
    - Active issues or workarounds
    - Critical "don't break this" warnings
 
-   **`spec/new_features.md`** (mark completions):
+   **`ongoing_changes/new_features.md`** (mark completions):
    - Mark features/requirements as COMPLETE when done
    - Add completion notes if relevant (e.g., "implemented in X, verified by Y")
 
@@ -533,7 +540,7 @@ tests_passing: true | false
    - Clear usage flow: How does a user actually use this system end-to-end?
    - Focus on HOW TO USE: commands, expected behavior, when to use each tool
    - Keep it practical and clear for someone who doesn't know the codebase
-   - **Implementation notes belong in spec/**, not README
+   - **Implementation notes belong in ongoing_changes/**, not README
    - Don't create separate usage docs - consolidate into README
 
 8. **STOP after completing your ONE task**:
@@ -797,8 +804,8 @@ class BraintreeProvider(PaymentProvider):
 - ✅ **Tests documented** - README or test docs explain how to run the tests you created
 - ✅ Development artifacts cleaned up (no stray test data, debug files)
 - ✅ Documentation updated:
-  - `spec/implementor_progress.md` reflects current state with verification evidence (real terminal output from tests)
-  - `spec/new_features.md` marked with completions
+  - `ongoing_changes/implementor_progress.md` reflects current state with verification evidence (real terminal output from tests)
+  - `ongoing_changes/new_features.md` marked with completions
   - `spec/current_system.md` updated if system changed significantly
   - `README.md` updated if user-facing features/tools changed
 - ✅ Clear next step for next implementor
@@ -808,10 +815,11 @@ class BraintreeProvider(PaymentProvider):
 
 **Document purposes:**
 - **README.md**: End users (no phases, no implementation details, clear usage flow)
-- **spec/**: Developers and future agents (implementation details, progress, architecture)
+- **ongoing_changes/**: Work in progress (planning, implementation progress - temporary)
+- **spec/**: Permanent system knowledge (architecture, tests, system docs)
 - **Comments**: Code clarity only (not explanations of what something does at high level)
 
-**Keep implementation notes in spec/**, not scattered in root.
+**Keep implementation progress in ongoing_changes/**, not scattered in root.
 
 ## Critical Rules
 
@@ -845,7 +853,7 @@ class BraintreeProvider(PaymentProvider):
 
 ### Strong Rules
 
-- **Verification is mandatory** - actual terminal output required in IMPLEMENTOR_PROGRESS.md
+- **Verification is mandatory** - actual terminal output required in `ongoing_changes/implementor_progress.md`
 - **End-to-end user testing required** - test as a fresh user, not just unit tests
 - Provide clear user verification instructions (that you've already tested yourself with output)
 - Update ALL relevant docs before stopping
@@ -876,6 +884,8 @@ Outcome: [2-3 sentences describing what changed and why]
 Tests: [All X tests passed | Y tests failed]
 
 Blocker: [If status is "blocked", explain what's blocking you. Otherwise: "None"]
+
+Note: Full implementation details and verification evidence documented in ongoing_changes/implementor_progress.md
 ```
 
 **Example (Success):**
@@ -923,4 +933,4 @@ Blocker: Spec doesn't specify how session TTL should coordinate with JWT expiry.
 - Keep summary brief (manager has minimal context)
 - Manager doesn't need implementation details
 - Manager needs to know: success/blocked, what changed, tests passed
-- Full details go in implementor_progress.md (for next implementor)
+- Full details go in `ongoing_changes/implementor_progress.md` (for next implementor)

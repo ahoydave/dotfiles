@@ -24,6 +24,8 @@
       "Bash(git switch:*)",
       "Bash(git reset:*)",
       "Bash(git stash:*)",
+      "Bash(git restore:*)",
+      "Bash(git worktree:*)",
       "Bash(npm test:*)",
       "Bash(npm run test:*)",
       "Bash(npm run build:*)",
@@ -60,8 +62,11 @@
       "Bash(cd:*)",
       "Bash(find:*)",
       "Bash(which:*)",
+      "Bash(cat:*)",
       "Bash(test:*)",
-      "Bash([:*)"
+      "Bash([:*)",
+      "Bash(tree:*)",
+      "Bash(git grep:*)"
     ],
     "deny": [],
     "ask": [
@@ -71,21 +76,8 @@
     ],
     "defaultMode": "acceptEdits"
   },
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "prompt",
-            "prompt": "Output JSON with your token usage: {\"decision\": \"approve\", \"usedTokens\": X, \"maxTokens\": Y, \"remainingTokens\": Z} using your actual current numbers"
-          }
-        ]
-      }
-    ]
-  },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.sh"
-  },
-  "alwaysThinkingEnabled": true
+  }
 }
