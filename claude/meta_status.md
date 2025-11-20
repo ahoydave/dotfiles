@@ -1,19 +1,19 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2025-11-14
-git_commit: b2d1b59f3d1ec973d07b40db739f831ae07a7c99
-refinement_count: 46
+last_updated: 2025-11-20
+git_commit: 7a101201484e95c79346d3c7a5ada647dddfd837
+refinement_count: 47
 status: production-ready
-recent_focus: meta_agent_process_improvement
+recent_focus: diagram_ownership_boundaries
 agent_count: 5
 ---
 
-## Current State (2025-11-14)
+## Current State (2025-11-20)
 
 ### Status: Production-Ready with Autonomous Implementation Manager
 
-**Agent prompts**: 46 refinements applied through iterative testing
+**Agent prompts**: 47 refinements applied through iterative testing
 **Deployment**: Prompts in ~/dotfiles/claude/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
 **Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
@@ -355,6 +355,23 @@ agent_count: 5
      - Better refinement decisions based on actual content
      - Forces meta-agent to stay grounded in source of truth
      - Meta_status.md can focus on history/patterns rather than trying to mirror prompt content
+47. **Diagram ownership boundaries (planner vs researcher)**
+   - **The problem**: Planner prompt told to create diagrams in `spec/diagrams/`
+   - This is researcher's territory (spec/ folder is owned by researcher)
+   - Planner diagrams show PLANNED changes (what SHOULD be), not current system
+   - Researcher diagrams show CURRENT system state (what EXISTS)
+   - Mixing them in same directory violates ownership boundaries
+   - **The solution**: Clear diagram location separation by ownership
+   - **Planner diagrams**: `ongoing_changes/diagrams/` (temporary, shows planned changes)
+   - **Researcher diagrams**: `spec/diagrams/` (permanent, shows current system)
+   - Updated all references in plan.md from `spec/diagrams/` to `ongoing_changes/diagrams/`
+   - Aligns with two-directory structure (Refinement #45): ongoing_changes/ = temporary, spec/ = permanent
+   - **Benefits**:
+     - Clear ownership: planner owns ongoing_changes/, researcher owns spec/
+     - Temporal clarity: planned changes separate from current state
+     - Prevents confusion: "Is this diagram showing what exists or what we're building?"
+     - Clean handoff: when implementation complete, planner diagrams deleted, researcher documents actual result
+     - Researcher updates spec/diagrams/ based on actual implementation, not planner's intent
 
 **See git history for full chronological details.**
 
@@ -590,13 +607,14 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
 **Agent document ownership**:
 - **Researcher** owns:
   - `spec/current_system.md` (+ `spec/system/components/*.md`, `spec/system/flows/*.md` if split)
-  - `spec/diagrams/*.puml` + `*.svg`
+  - `spec/diagrams/*.puml` + `*.svg` (current system diagrams)
   - `spec/feature_tests.md` (maintains/verifies)
   - `spec/research_status.md`
 - **Planner** owns:
   - `ongoing_changes/new_features.md`
   - `ongoing_changes/planning_status.md`
   - `ongoing_changes/questions.md`
+  - `ongoing_changes/diagrams/*.puml` + `*.svg` (planned changes diagrams)
   - (reads `spec/feature_tests.md`)
 - **Implementor** owns:
   - `ongoing_changes/implementor_progress.md`
@@ -694,8 +712,17 @@ All prompts tested on actual project (this looped agent system):
 
 ## Active Development Areas
 
-### Recently Completed (2025-11-14)
-✅ **Meta-agent reads actual prompts** - JUST ADDED (Refinement #46)
+### Recently Completed (2025-11-20)
+✅ **Diagram ownership boundaries** - JUST ADDED (Refinement #47)
+  - Planner diagrams now go in `ongoing_changes/diagrams/` (temporary, shows planned changes)
+  - Researcher diagrams remain in `spec/diagrams/` (permanent, shows current system)
+  - Fixes violation of ownership boundaries (planner was putting diagrams in researcher's spec/ folder)
+  - Temporal clarity: planned changes vs actual current state kept separate
+  - Clean handoff: planner diagrams deleted after implementation, researcher documents actual result
+  - Updated all references in plan.md from spec/diagrams/ to ongoing_changes/diagrams/
+
+### Previously Completed (2025-11-14)
+✅ **Meta-agent reads actual prompts** (Refinement #46)
   - Meta-agent now reads all four agent prompts directly (research.md, plan.md, implement.md, implementation-manager.md)
   - Never relies on secondhand information from meta_status.md descriptions
   - Prompt length becomes observable signal (if too long to read, that's a problem to fix)
@@ -790,6 +817,10 @@ All prompts tested on actual project (this looped agent system):
 **Deployment**: No install script needed. Prompts are in dotfiles and automatically available via `~/.claude/commands` symlink.
 
 ### Known Issues to Monitor
+- **NEW**: Do planners create diagrams in `ongoing_changes/diagrams/` (not `spec/diagrams/`)?
+- **NEW**: Do researchers create diagrams in `spec/diagrams/` (not `ongoing_changes/diagrams/`)?
+- **NEW**: Are planned changes diagrams clearly separate from current system diagrams?
+- **NEW**: Do planners delete their diagrams from `ongoing_changes/diagrams/` when work is complete?
 - **NEW**: Does meta-agent actually read all four prompts at start of each session?
 - **NEW**: Does reading actual prompts lead to better refinement decisions vs relying on meta_status.md?
 - **NEW**: Can meta-agent identify inconsistencies between prompts that weren't visible in meta_status.md?

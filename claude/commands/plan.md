@@ -274,8 +274,8 @@ features: [list, of, feature, names]
 - Add "PLANNING STATUS: COMPLETE" at top when ready for implementation
 
 **Diagram workflow** (REQUIRED for features touching 2+ components):
-1. Create `.puml` files in `spec/diagrams/` for component/sequence diagrams with change highlighting
-2. Run `plantuml spec/diagrams/*.puml -tsvg` to generate SVGs
+1. Create `.puml` files in `ongoing_changes/diagrams/` for component/sequence diagrams with change highlighting
+2. Run `plantuml ongoing_changes/diagrams/*.puml -tsvg` to generate SVGs
 3. Reference in markdown: `![Description](diagrams/name.svg)` with source link
 4. Commit both `.puml` and `.svg` files
 
@@ -438,8 +438,8 @@ Visual diagrams make spec review dramatically easier for humans. Instantly seein
 
 **CRITICAL: Use separate diagram files with generated SVGs:**
 
-1. Create `.puml` files in `spec/diagrams/` directory
-2. Generate SVGs: `plantuml spec/diagrams/*.puml -tsvg`
+1. Create `.puml` files in `ongoing_changes/diagrams/` directory
+2. Generate SVGs: `plantuml ongoing_changes/diagrams/*.puml -tsvg`
 3. Reference SVGs in markdown: `![Feature Overview](diagrams/feature-name-overview.svg)`
 4. Add source link below image: `*[View/edit source](diagrams/feature-name-overview.puml)*`
 
@@ -480,7 +480,7 @@ Visual diagrams make spec review dramatically easier for humans. Instantly seein
 
 **These are file contents for `.puml` files - NOT inline code blocks in markdown.**
 
-**Component Diagram with Changes** (`spec/diagrams/email-notifications-overview.puml`):
+**Component Diagram with Changes** (`ongoing_changes/diagrams/email-notifications-overview.puml`):
 ```plantuml
 @startuml
 !theme plain
@@ -511,7 +511,7 @@ end note
 @enduml
 ```
 
-**Sequence Diagram for New Feature** (`spec/diagrams/password-reset-flow.puml`):
+**Sequence Diagram for New Feature** (`ongoing_changes/diagrams/password-reset-flow.puml`):
 ```plantuml
 @startuml
 !theme plain
@@ -548,7 +548,7 @@ FE --> User: "Password updated"
 
 **After creating/editing .puml files, ALWAYS run:**
 ```bash
-plantuml spec/diagrams/*.puml -tsvg
+plantuml ongoing_changes/diagrams/*.puml -tsvg
 ```
 
 ### Where to Place Diagrams in new_features.md
@@ -588,8 +588,8 @@ plantuml spec/diagrams/*.puml -tsvg
 ```
 
 **Workflow:**
-1. Create/edit `.puml` files in `spec/diagrams/`
-2. Run `plantuml spec/diagrams/*.puml -tsvg`
+1. Create/edit `.puml` files in `ongoing_changes/diagrams/`
+2. Run `plantuml ongoing_changes/diagrams/*.puml -tsvg`
 3. Reference SVGs in markdown with `![Description](diagrams/name.svg)`
 4. Add source link: `*[View/edit source](diagrams/name.puml)*`
 
