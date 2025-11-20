@@ -1,97 +1,88 @@
 # Looped Agent Workflow System
 
-**Version**: 1.1
-**Last Updated**: 2025-11-09
-
-A system for using coding agents (Claude, GPT-5, Gemini, etc.) in loops to research, plan, and implement software projects through specialized agent prompts and shared documentation.
+Agent prompts for iterative software development using Claude Code or other coding agents.
 
 ## Quick Start
 
-**With Claude Code CLI:**
+**Claude Code CLI:**
 ```
-/research     # Investigate and document existing system
-/plan         # Design specifications for new work
-/implement    # Build features one task at a time
-```
-
-**With other agents:**
-Reference the command files directly:
-```
-Please act as the researcher agent from ~/dotfiles/claude/commands/research.md
+/research                # Investigate system, document current state
+/plan                    # Design features (collaborative with human)
+/implement               # Build one task, verify, stop
+/implementation-manager  # Autonomous multi-task orchestration
+/meta-agent              # Refine the agent system itself
 ```
 
-## What's In This Directory
+**Other agents:** Reference command files: `~/dotfiles/claude/commands/research.md`
 
-### Commands (`commands/`)
-- **research.md** - Research agent prompt (investigates systems, verifies implementations)
-- **plan.md** - Planning agent prompt (designs specs collaboratively with humans)
-- **implement.md** - Implementor agent prompt (builds one atomic task per session)
-- **implementation-manager.md** - Manager agent prompt (autonomous multi-task orchestration)
-- **meta-agent.md** - Meta-agent prompt (for refining the system itself)
+## Contents
 
-### Documentation
-- **agent_workflow.md** - User guide: how to use the system
-- **meta_status.md** - System state, development history, what's working/failing
-- **ACE-FCA-COMPARISON.md** - Analysis comparing with similar systems
+**Agent Prompts** (`commands/`):
+- `research.md` - Investigate and verify system
+- `plan.md` - Design specs with human collaboration
+- `implement.md` - Build one atomic task per session
+- `implementation-manager.md` - Multi-task autonomous orchestration
+- `meta-agent.md` - Refine the system itself
 
-### Configuration
-- **settings.json** - Claude Code settings
-- **statusline-command.sh** - Custom statusline script
+**Documentation:**
+- `agent_workflow.md` - User guide
+- `meta_status.md` - System development history (for meta-agent)
+- `ACE-FCA-COMPARISON.md` - Lessons from similar systems
 
-## Core Principles
+**Config:** `settings.json`, `statusline-command.sh`
 
-1. **Three agent types** with clear document ownership
-2. **ONE task per session** (implementor) - clean boundaries prevent drift
-3. **Context management** - 40-50% wrap up, 60% hard stop
-4. **Sub-agent delegation** - keep verbose work out of main context
-5. **Documentation is not history** - rewrite, don't append
-6. **Proof-required testing** - paste actual terminal output
-7. **Agent-agnostic** - works with any coding agent
+## Principles
 
-## Document Structure (Per Project)
+1. **Specialized agents** with document ownership (researcher owns `spec/`, planner owns `ongoing_changes/new_features.md`, implementor owns `ongoing_changes/implementor_progress.md`)
+2. **ONE task per session** (implementor) - atomic boundaries prevent drift
+3. **Context budget** - 40-50% wrap up, 60% hard stop
+4. **Sub-agent delegation** - verbose exploration kept out of main context
+5. **Docs for future agents** - rewrite current state, delete obsolete info
+6. **Proof-required testing** - paste actual terminal output showing tests pass
+7. **Agent-agnostic** - works with Claude Code, GPT, Gemini, etc.
+
+## Document Structure
 
 ```
 spec/
-  CURRENT_SYSTEM.md    - How system works (researcher owns)
-  RESEARCH_STATUS.md   - Research progress (researcher owns)
-  NEW_FEATURES.md      - What to build (planner owns)
-  PLANNING_STATUS.md   - Planning progress (planner owns)
-  QUESTIONS.md         - Human Q&A (planner only)
-  PROGRESS.md          - Implementation state (implementor owns)
+  current_system.md         - System understanding (researcher)
+  feature_tests.md          - Feature verification registry (researcher)
+  research_status.md        - Research progress (researcher)
+ongoing_changes/
+  new_features.md           - What to build (planner)
+  planning_status.md        - Planning progress (planner)
+  questions.md              - Human Q&A (planner, temporary)
+  implementor_progress.md   - What's done/next (implementor)
+  manager_progress.md       - Task tracking (manager)
 ```
 
-## Development Cycle
+## Cycle
 
 ```
-1. Researcher    → Understand system     → spec/CURRENT_SYSTEM.md
-2. Planner       → Spec features         → spec/NEW_FEATURES.md
-3. Implementor   → Build (one task)      → spec/PROGRESS.md
-4. Implementor   → Build (next task)     → spec/PROGRESS.md
-5. Researcher    → Verify reality        → Update spec/CURRENT_SYSTEM.md
-6. Back to step 2
+1. Researcher    → Document system     → spec/current_system.md
+2. Planner       → Design features     → ongoing_changes/new_features.md
+3. Implementor   → Build one task      → ongoing_changes/implementor_progress.md
+4. Implementor   → Build next task     → (repeat)
+5. Researcher    → Verify changes      → Update spec/
+6. Loop
 ```
 
-## Key Features
+## Features
 
-✅ **31 refinements** through iterative testing on real projects
-✅ **Visual documentation** with PlantUML diagrams
-✅ **YAML frontmatter** for traceability and metadata
-✅ **Context optimization** aligned with proven thresholds (40-60%)
-✅ **Multi-file system docs** for large codebases (>800-1000 lines)
-✅ **No documentation sprawl** - explicit allowed lists
-✅ **Slash command integration** - convenient invocation in Claude Code
+- **Progressive disclosure** - C4-inspired docs (Levels 1→2→3) for token efficiency
+- **PlantUML diagrams** - Visual architecture with SVG generation
+- **YAML frontmatter** - Traceability (git commits, dates, status)
+- **Context thresholds** - 40-50% wrap up, 60% hard stop
+- **Repeatable testing** - Scripts, automated tests, agent-interactive procedures
+- **Multi-file split** - Large system docs split at ~500 lines
+- **Authorized file cleanup** - Agents delete unauthorized docs
 
-## Links
-
-- **Full guide**: See `agent_workflow.md`
-- **System status**: See `meta_status.md`
-- **Meta-agent prompt**: See `commands/meta-agent.md`
-- **Comparison study**: See `ACE-FCA-COMPARISON.md`
+**Learn more:** `agent_workflow.md`, `meta_status.md`, `ACE-FCA-COMPARISON.md`
 
 ## Deployment
 
-This directory is symlinked to `~/.claude/`:
-- `~/.claude/commands` → `~/dotfiles/claude/commands`
-- `~/.claude/settings.json` → `~/dotfiles/claude/settings.json`
-
-No install script needed - just symlink and use.
+Symlink to `~/.claude/`:
+```bash
+ln -sf ~/dotfiles/claude/commands ~/.claude/commands
+ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
+```
