@@ -66,7 +66,8 @@
       "Bash(test:*)",
       "Bash([:*)",
       "Bash(tree:*)",
-      "Bash(git grep:*)"
+      "Bash(git grep:*)",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": [
@@ -79,5 +80,6 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.sh"
-  }
+  },
+  "alwaysThinkingEnabled": false
 }

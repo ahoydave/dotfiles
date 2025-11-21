@@ -1,28 +1,28 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2025-11-20
-git_commit: 7a101201484e95c79346d3c7a5ada647dddfd837
-refinement_count: 47
+last_updated: 2025-11-21
+git_commit: 911ff2945bc63c3d69dd102521865ad4d25dfad1
+refinement_count: 53
 status: production-ready
-recent_focus: diagram_ownership_boundaries
+recent_focus: documentation_ownership
 agent_count: 5
 ---
 
-## Current State (2025-11-20)
+## Current State (2025-11-21)
 
 ### Status: Production-Ready with Autonomous Implementation Manager
 
-**Agent prompts**: 47 refinements applied through iterative testing
+**Agent prompts**: 53 refinements applied through iterative testing
 **Deployment**: Prompts in ~/dotfiles/claude/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
 **Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
-**Recent focus**: Meta-agent process improvement (read actual prompts, not secondhand info)
+**Recent focus**: Comment accuracy (never leave outdated comments after code changes)
 
 ### What's Working
 
-✅ **Researcher**: Clean handoffs, effective exploration, comprehensive system documentation with UML diagrams (separate .puml files + auto-generated SVGs), test suite verification, documentor role (facts, not recommendations)
-✅ **Planner**: Interactive collaboration via questions.md, visual planning with change-highlighted diagrams, verification strategy in specs
+✅ **Researcher**: Clean handoffs, scales to massive codebases via aggressive sub-agent delegation, comprehensive system documentation with UML diagrams (separate .puml files + auto-generated SVGs), test suite verification, documentor role (facts, not recommendations), verification mindset (trust code over claims), no documentation history meta-commentary
+✅ **Planner**: Interactive collaboration via questions.md, visual planning with change-highlighted diagrams, verification strategy in specs, absolute no-code rule (user experience clear, implementation flexible)
 ✅ **Implementor**: Clear task boundaries, repeatable test creation requirements, end-to-end verification focus
 ✅ **Implementation Manager**: Autonomous multi-task orchestration via sub-agents (Refinement #32)
   - Eliminates human friction between tasks
@@ -63,459 +63,89 @@ agent_count: 5
 
 ## Development History
 
-### 42 Iterative Refinements (2025-11-01 to 2025-11-10)
+### Foundational Refinements 1-40 (2025-11-01 to 2025-11-10)
 
-**Key improvements made**:
-1. Documentation is Not History principle (delete obsolete info)
-2. ONE task per session rule (implementor)
-3. Mandatory end-to-end user testing with evidence
-4. Follow spec literally (replace means replace)
-5. questions.md as primary planner communication
-6. Spec Detail Level guidelines (interfaces, not code dumps)
-7. progress.md REWRITE requirement (not append)
-8. Development cycle clarity (removed "next agent will..." assumptions)
-9. Context management strategy (originally 60-70% wrap up, 80% hard stop)
-10. Sub-agent delegation for verbose work
-11. Checkpoint review process (researcher verifies after 2-3 implementations)
-12. Spec simplicity guidelines (2-3 phases max)
-13. Document ownership clarification
-14. Token efficiency strategies
-15. Quality standards for code and specs
-16. End-to-end verification requirements
-17. User-facing documentation separation (README vs spec/)
-18. Component replacement capability checks
-19. Regression testing requirements
-20. Development artifact cleanup
-21. User verification instructions
-22. questions.md cleanup (delete answered questions)
-23. Agent-agnostic terminology (Claude → coding agents)
-24. Workflow documentation split (agent_workflow.md vs meta-agent.md)
-25. No documentation sprawl (explicit allowed list, DELETE rule)
-26. System documentation principles (behavior/integration focus, multi-file strategy)
-27. Proof-required testing (paste actual output, no claims without evidence)
-28. **Context threshold optimization (40-50% wrap up, 60% hard stop - aligned with ACE-FCA)**
-29. **UML/PlantUML diagram integration (component, sequence, interface diagrams)**
-30. **YAML frontmatter metadata (git SHA, dates, status tracking for traceability)**
-31. **Slash command integration (Claude Code CLI integration via dotfiles)**
-   - Commands in `~/dotfiles/claude/commands/` (research.md, plan.md, implement.md)
-   - Invoked with `/research`, `/plan`, `/implement`
-   - Maintains agent-agnostic design (still usable via file references)
-   - Deprecates install.sh script (dotfiles handles deployment)
-32. **Implementation Manager (autonomous multi-task orchestration)**
-   - Manager-worker pattern: thin orchestration layer delegates to implementor sub-agents
-   - Eliminates human friction between tasks (continues autonomously until done/blocked)
-   - Minimal manager context (<30%) enables handling 10s-100s of tasks per session
-   - Two-document system: manager_progress.md (outcomes) + implementor_progress.md (technical details)
-   - Graceful restart handling and context overflow recovery
-   - Balances ACE-FCA flow mode with our paranoid testing requirements
-33. **Settings.json permissions (autonomous development operations)**
-   - All standard dev commands pre-approved in settings.json (tests, builds, git)
-   - Agents work autonomously without permission requests for safe operations
-   - Dangerous operations (git push, rm -rf, sudo) still require approval
-   - Eliminates friction for Implementation Manager autonomous flow
-   - Single source of truth: settings.json controls permissions, prompts stay clean
-34. **Context usage tracking (feedback loop for task sizing)**
-   - Implementor sub-agents report final context usage in summaries
-   - Manager tracks context usage per task in manager_progress.md
-   - Context Usage Analysis section shows statistics (avg, range, distribution)
-   - Planner reviews historical data to calibrate future task sizes
-   - Enables data-driven refinement of planning granularity
-   - Target: Keep implementors in 40-50% context range
-35. **Diagram files with SVG generation (improved human review)**
-   - PlantUML diagrams now in separate `.puml` files in `spec/diagrams/`
-   - Researcher generates SVG files: `plantuml spec/diagrams/*.puml -tsvg`
-   - Markdown references SVGs with source links: `![Desc](diagrams/name.svg)` + `*[View/edit source](diagrams/name.puml)*`
-   - Humans see diagrams immediately in any markdown viewer (GitHub, VS Code, etc.)
-   - No external rendering tools needed (was major friction point)
-   - Format migration rule: convert inline PlantUML to separate files
-   - Both `.puml` sources and `.svg` outputs committed to git
-36. **Repeatable test suite framework (fixes "fake testing" at its root)**
-   - **The problem**: Agents tested once and pasted output, but didn't create repeatable tests
-   - "Code exists" ≠ "Feature works from user perspective"
-   - Researcher couldn't verify implementations (no tests to run)
-   - No accumulation of test coverage as features were built
-   - **The solution**: Tests are now first-class deliverables
-   - Implementor: CREATES repeatable tests (scripts/automated/documented), not just tests once
-   - Implementor: RUNS new tests + existing test suite (regression check)
-   - Implementor: Tests verify END-TO-END user experience, not just code existence
-   - Researcher: RUNS test suite to verify system state (not just reads code)
-   - Researcher: Documents test results, coverage gaps in current_system.md
-   - Planner: Includes verification strategy in specs (HOW to test repeatably)
-   - Test types: Automated tests (tests/), verification scripts (tools/verify_*.sh), documented procedures
-   - Emphasis: "Can another agent run this test?" "Does it test the user experience?"
-   - Closes the gap: Future agents can verify features work by running the test suite
-37. **Feature test registry (feature_tests.md - single source of truth)**
-   - **The problem**: Tests scattered (tests/ dir, tools/verify_*.sh, README procedures)
-   - Hard to discover what features exist and how to verify each
-   - No clear coverage visibility (what has tests, what doesn't)
-   - Researcher unclear what to run to verify system state
-   - **The solution**: `spec/feature_tests.md` as feature test registry
-   - Single registry: All features + verification methods in one place
-   - Clarified test types: Automated, Verification Script, Agent-Interactive (not "manual")
-   - Agent-interactive testing valid for non-deterministic systems (chatbots, AI, UX)
-   - Implementor: Adds entry to feature_tests.md for each feature built
-   - Researcher: Runs tests from feature_tests.md, updates status/dates, documents gaps
-   - Planner: References in specs, verification strategy becomes feature_tests.md entry
-   - Easy gap analysis: Features without tests immediately visible
-   - Document ownership: Implementor creates, Researcher maintains, Planner references
-38. **Researcher cleanup scope boundaries (prevents accidental deletion)**
-   - **The problem**: Researcher told to "aggressively delete" docs, but unclear boundaries
-   - Risk: Could delete implementor_progress.md, manager_progress.md owned by other agents
-   - Risk: Could delete documents outside spec/ folder inappropriately
-   - **The solution**: Explicit scope boundaries in researcher prompt
-   - Cleanup authority LIMITED to `spec/` folder only
-   - Complete allowed list for spec/ (includes planner-owned docs like new_features.md)
-   - Explicit "NEVER delete" list: implementor_progress.md, manager_progress.md, any docs outside spec/
-   - Clarifies document ownership boundaries between agents
-   - Prevents cross-agent document conflicts
-39. **Lowercase document filenames (consistency and convention)**
-   - **The rationale**: UPPERCASE filenames were unconventional for markdown docs
-   - Lowercase is standard convention in most projects
-   - **The change**: All documentation filenames migrated to lowercase
-   - CURRENT_SYSTEM.md → current_system.md
-   - NEW_FEATURES.md → new_features.md
-   - IMPLEMENTOR_PROGRESS.md → implementor_progress.md
-   - MANAGER_PROGRESS.md → manager_progress.md
-   - RESEARCH_STATUS.md → research_status.md
-   - PLANNING_STATUS.md → planning_status.md
-   - QUESTIONS.md → questions.md
-   - FEATURE_TESTS.md → feature_tests.md
-   - All agent prompts updated to reference lowercase filenames
-   - Migration instructions added so agents will rename old UPPERCASE files automatically
-   - Document format migration rule updated to include filename case normalization
-40. **Token usage reporting (self-monitoring and visibility)**
-   - **The problem**: Agents monitor token usage internally but don't report it to users
-   - Hard for users to understand when agents are approaching limits
-   - Agents may not proactively communicate context pressure
-   - Users can't gauge progress or help agents make stopping decisions
-   - **The solution**: All agents now report current token usage percentage at each interaction
-   - Added to all four agent prompts: research, plan, implement, implementation-manager
-   - Clear instruction: "Report your current token usage percentage at each interaction"
-   - Helps agents stay accountable to thresholds (40-50% wrap up, 60% hard stop)
-   - Gives users visibility into context consumption patterns
-   - Enables better decision-making about when to stop/continue
-41. **C4-inspired progressive disclosure for documentation (MAJOR structural improvement)**
-   - **The problem**: Documentation didn't provide gradual increase in detail, "dived in haphazardly"
-   - Agents read too much context (2000+ lines) when they only needed high-level overview
-   - No systematic structure for organizing documentation by detail level
-   - Unclear when to split docs or how to navigate between levels
-   - Token inefficiency: reading everything when only parts are relevant
-   - **The inspiration**: C4 Model (Context, Containers, Components, Code) - proven systematic approach to architecture documentation
-   - **The solution**: Three-level progressive disclosure structure
-   - **Level 1: System Context** (always in current_system.md)
-     - What the system does, who uses it, external dependencies
-     - Diagram: system-context.puml (system boundary with external actors)
-     - Target: 100-200 lines
-   - **Level 2: Containers/Components Overview** (always in current_system.md)
-     - Major components, data flows, integration points
-     - Diagram: containers-overview.puml (components with connections)
-     - Target: 200-400 lines
-     - **Threshold: Keep Levels 1+2 under 500 lines total**
-   - **Level 3: Component Details** (split to spec/system/components/<name>.md when needed)
-     - Internal component architecture, APIs, constraints
-     - Diagrams: component-detail.puml, component-sequence.puml
-     - Create when: Component description >150 lines or complexity warrants focus
-   - **Critical Flows** (split to spec/system/flows/<name>.md as needed)
-     - Important sequences spanning multiple components
-     - Diagrams: flow-sequence.puml
-     - Create when: Flow is critical (auth, payment, startup) or spans 3+ components
-   - **Navigation rules**: Every doc has clear "drill down" and "back up" links
-   - **Reading strategy**:
-     - Planner: Always reads Levels 1+2 (~500 lines), drills to Level 3 only if feature touches that component
-     - Implementor: Always reads Levels 1+2, drills to specific components/flows they're modifying
-     - Researcher: Builds progressively, Level 1 → Level 2 → Level 3 as system complexity requires
-   - **Token savings**: 60-75% reduction (500 lines vs 2000+) for typical planning/implementation tasks
-   - **Benefits**:
-     - Human comprehension: Easy to grasp system at appropriate level
-     - Token efficiency: Read only what you need
-     - Systematic structure: Clear guidelines for when to split and how to organize
-     - Scalability: Works for small systems (single file) and large systems (multi-file)
-   - **Implementation**:
-     - Completely rewrote Research agent's "System Documentation Principles" section (not just appended)
-     - Updated diagram guidelines to align with C4 levels
-     - Updated PlantUML examples to show Level 1, 2, 3 diagrams
-     - Added "Reading current_system.md Efficiently" sections to Plan and Implement agents
-     - Planner diagrams now explicitly work at Level 2 (component-level changes)
-     - All output requirements updated to reflect new structure
-   - **Validated by real usage**: User reported Unity project diagrams "were very good" but docs "dived in haphazardly" - this refinement directly addresses that pain point
-42. **Role clarity: Documentor, not critic**
-   - **The problem**: Researcher acting as critic instead of documentor
-   - Spent token budget analyzing what "should" be improved (planner's job)
-   - Created recommendation documents (IMPROVEMENTS.md, REDUNDANT_API_CALLS.md, PERFORMANCE_ISSUES.md)
-   - Half-baked improvement suggestions without planner's design process
-   - Documentation sprawl from unauthorized recommendation files
-   - **The insight**: Inspired by ACE-FCA's emphasis on researcher as documentor
-   - **The solution**: Clear role boundary - researcher documents WHAT EXISTS, planner identifies WHAT SHOULD BE
-   - Researcher documents issues FACTUALLY in current_system.md
-   - Example: "Component X makes 3 API calls per request" (fact), NOT "Component X should be refactored" (recommendation)
-   - Trust planner to read documentation and identify improvements
-   - Added "Role Clarity: Documentor, Not Critic" section to research prompt
-   - Expanded forbidden files list to include common recommendation file names
-   - **Benefits**:
-     - Researcher's tokens go to documentation, not analysis
-     - Prevents documentation sprawl (no separate recommendation files)
-     - Cleaner handoff: objective facts → thoughtful design
-     - Planner equipped to design solutions, researcher equipped to describe reality
-43. **Coding standards: Clarity, simplicity, complexity budget**
-   - **The problem**: Implementors producing code that's hard for humans and future agents to understand
-   - Comments explaining changes that stay forever in codebase
-   - Unnecessary abstractions and indirection imposing cognitive load
-   - Complex code when simple code would suffice
-   - Premature optimization and "planning for the future"
-   - **The philosophy**: Simple > Complex, Clear > Clever, Delete > Keep
-   - **The solution**: Explicit "Coding Standards - ABSOLUTE RULES" section in implementor prompt
-   - **Comment discipline**:
-     - Comments ONLY for non-obvious WHY (not WHAT, not change descriptions)
-     - Before commenting: Can I make the code clearer instead?
-     - Examples showing good vs bad comment usage
-   - **Simplicity over cleverness**:
-     - Code is read 10x more than written - optimize for reading
-     - Obvious structure over abstraction
-     - Clear names over short names
-     - Explicit flow over magic
-     - "If a human or agent can't easily see what's happening, there's a problem"
-   - **Complexity budget**:
-     - Treat complexity like precious resource (like memory in embedded systems)
-     - Default to simple, add complexity only when problem demands it
-     - Need 3+ concrete cases before abstracting (not 1-2)
-     - Ask: Is problem inherently complex, or am I making it complex?
-   - **Code deletion is beautiful**:
-     - Every line of code is a liability
-     - Delete unused code, remove commented-out code, simplify when requirements change
-     - Git remembers - no "keeping just in case"
-   - **Examples**: Concrete before/after showing bad (clever/complex) vs good (simple/clear)
-   - **Benefits**:
-     - Code easier for future agents to reason about
-     - Less cognitive load for humans reviewing code
-     - Fewer bugs from unnecessary complexity
-     - Faster implementation (simple solutions complete faster)
-     - Aligns with atomic task approach (simple code = easier verification)
-44. **Prompt verbosity reduction (major cleanup)**
-   - **The problem**: Agent prompts had grown to 750-1050 lines with significant repetition
-   - Documentation sprawl instructions repeated across prompts (30-50 lines each)
-   - Format migration instructions with bash examples (40+ lines each)
-   - Git permissions sections duplicated (20+ lines) despite settings.json handling this
-   - Allowed/forbidden file lists with excessive symbols and explanations
-   - YAML frontmatter examples shown multiple times per prompt
-   - Hard for humans to review, signal-to-noise ratio degraded
-   - **The solution**: Systematic reduction of repetitive, redundant, and unnecessary content
-   - **Five high-impact reductions**:
-     1. Consolidated "Documentation is Not History" (40-50 lines → 15 lines per prompt)
-     2. Simplified format migration (40+ lines → 5 lines, removed bash examples)
-     3. Condensed allowed/forbidden lists (removed ❌ symbols, reduced explanatory text)
-     4. Removed git permissions sections (settings.json handles this)
-     5. Deduplicated YAML examples (removed redundant instances)
-   - **What we kept**: Critical teaching examples (coding standards, verification discipline, C4 progressive disclosure)
-   - **Estimated reduction**: ~759 lines across 4 prompts (~24% reduction)
-   - **Benefits**:
-     - Faster human review when refining prompts
-     - Clearer signal-to-noise ratio for agents
-     - Reduced context consumption when agents read their own instructions
-     - Maintained all critical rules and examples
-     - More prominent placement of essential guidance
-45. **Directory structure clarification (prevents documentation sprawl)**
-   - **The context**: Agent prompts live in ~/dotfiles/claude/commands/ and are invoked via slash commands in ANY project
-   - When `/research`, `/plan`, `/implement` are invoked, agents create docs in the TARGET PROJECT, not in dotfiles
-   - **The problem**: Unclear where agents should put documentation led to sprawl
-   - Temporary docs (planning, implementation progress) scattered at root level
-   - No clear separation between "work in progress" and "permanent system knowledge"
-   - Agents might create docs in random locations
-   - **The solution**: Two-directory structure with clear purposes
-   - **`ongoing_changes/`** (root level) - Temporary work-in-progress documents
-     - Planner creates: `ongoing_changes/new_features.md`, `ongoing_changes/planning_status.md`, `ongoing_changes/questions.md`
-     - Implementor creates: `ongoing_changes/implementor_progress.md`
-     - Manager creates: `ongoing_changes/manager_progress.md`
-     - Deleted/archived when work is complete
-   - **`spec/`** - Permanent system documentation
-     - Researcher creates: `spec/current_system.md`, `spec/system/components/`, `spec/system/flows/`, `spec/diagrams/`, `spec/research_status.md`
-     - Shared registry: `spec/feature_tests.md` (implementor creates entries, researcher maintains)
-     - Never deleted, continuously updated
-   - **Benefits**:
-     - Clear mental model: ongoing_changes = temporary, spec = permanent
-     - Prevents documentation sprawl (only two valid locations)
-     - Easy cleanup: delete entire ongoing_changes/ when project phase complete
-     - Researcher territory (spec/) clearly separated from planner/implementor territory (ongoing_changes/)
-     - Aligns with document lifecycle (temporary vs permanent)
-     - Human comprehension: "Is this describing what exists or what we're building?"
-46. **Meta-agent reads actual prompts, not secondhand info (critical process improvement)**
-   - **The problem**: Meta-agent was instructed to read meta_status.md for context about agent prompts
-   - Relied on secondhand descriptions instead of actual prompt content
-   - Risk of meta_status.md becoming stale or inaccurate
-   - Meta-agent couldn't verify actual state of prompts vs documented state
-   - If prompts were too long for meta-agent to read, that itself was a signal they needed reducing
-   - **The solution**: Meta-agent ALWAYS reads all four agent prompts directly
-   - Updated meta-agent.md Entry Point to require reading research.md, plan.md, implement.md, implementation-manager.md
-   - "If prompts are too long to read comfortably, that's a problem to fix" - length becomes observable signal
-   - Never rely on meta_status.md descriptions - always verify actual prompt content
-   - Firsthand knowledge required for making good refinement decisions
-   - **Benefits**:
-     - Meta-agent sees actual reality, not filtered summaries
-     - Can identify inconsistencies between prompts that meta_status.md misses
-     - Prompt length becomes direct feedback (if too long, agent will notice and can fix)
-     - Better refinement decisions based on actual content
-     - Forces meta-agent to stay grounded in source of truth
-     - Meta_status.md can focus on history/patterns rather than trying to mirror prompt content
-47. **Diagram ownership boundaries (planner vs researcher)**
-   - **The problem**: Planner prompt told to create diagrams in `spec/diagrams/`
-   - This is researcher's territory (spec/ folder is owned by researcher)
-   - Planner diagrams show PLANNED changes (what SHOULD be), not current system
-   - Researcher diagrams show CURRENT system state (what EXISTS)
-   - Mixing them in same directory violates ownership boundaries
-   - **The solution**: Clear diagram location separation by ownership
-   - **Planner diagrams**: `ongoing_changes/diagrams/` (temporary, shows planned changes)
-   - **Researcher diagrams**: `spec/diagrams/` (permanent, shows current system)
-   - Updated all references in plan.md from `spec/diagrams/` to `ongoing_changes/diagrams/`
-   - Aligns with two-directory structure (Refinement #45): ongoing_changes/ = temporary, spec/ = permanent
-   - **Benefits**:
-     - Clear ownership: planner owns ongoing_changes/, researcher owns spec/
-     - Temporal clarity: planned changes separate from current state
-     - Prevents confusion: "Is this diagram showing what exists or what we're building?"
-     - Clean handoff: when implementation complete, planner diagrams deleted, researcher documents actual result
-     - Researcher updates spec/diagrams/ based on actual implementation, not planner's intent
+**See `meta_history.md` for detailed archive of refinements 1-40.**
+
+**Key patterns established:**
+- Documentation discipline (REWRITE not append, delete obsolete info, docs for future agents)
+- Testing discipline (paste output, create repeatable tests, end-to-end verification, regression checks)
+- Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
+- Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
+- System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 41-53 (2025-11-10 to 2025-11-21)
+
+41. **C4-inspired progressive disclosure** - Three-level documentation structure (Context, Containers, Components). Levels 1+2 in current_system.md (<500 lines), Level 3 split to components/flows. 60-75% token savings for typical tasks.
+
+42. **Role clarity: Documentor, not critic** - Researcher documents WHAT EXISTS (facts), planner identifies WHAT SHOULD BE (improvements). Prevents recommendation docs (IMPROVEMENTS.md, etc.).
+
+43. **Coding standards: Clarity, simplicity, complexity budget** - Simple > Complex, Clear > Clever, Delete > Keep. Comments only for WHY (not WHAT), complexity as precious resource, code deletion is beautiful.
+
+44. **Prompt verbosity reduction** - ~759 lines removed across 4 prompts (~24% reduction). Consolidated repetitive sections while keeping critical teaching examples.
+
+45. **Directory structure clarification** - Two-directory structure: `ongoing_changes/` (temporary WIP) + `spec/` (permanent docs). Prevents sprawl, clear ownership boundaries.
+
+46. **Meta-agent reads actual prompts** - Always read all four agent prompts directly, not secondhand from meta_status.md. Prompt length becomes observable signal.
+
+47. **Diagram ownership boundaries** - Planner diagrams in `ongoing_changes/diagrams/` (planned changes), researcher diagrams in `spec/diagrams/` (current system).
+
+48. **Verification mindset and no documentation history** - Trust code, not claims. Never document the history of documentation itself (git tracks that).
+
+49. **Aggressive sub-agent delegation for scale** - Explicit thresholds by codebase size. >100k LOC: 5-10 parallel sub-agents. Enables handling any codebase size while staying <50% context.
+
+50. **No implementation code in specs** - ABSOLUTE RULE with no escape hatches. Specs define WHAT to build and HOW IT BEHAVES, not HOW TO BUILD IT. Prevents code dumps.
+
+51. **Comment accuracy after code changes** - Delete/update comments that reference removed code. Avoid comparative phrases ("less/more/better than..."). Comments state WHAT code does NOW, not WHAT CHANGED.
+
+52. **Instruction consolidation (meta-agent)** - Archived refinements 1-40 to meta_history.md (~400 lines saved). Compressed ACE-FCA comparison to summary with link (~120 lines saved). Consolidated "Known Issues to Monitor" from 109 questions to 30 organized by refinement group (~80 lines saved). Total ~600 lines removed from meta_status.md.
+
+53. **README.md ownership (researcher)** - Researcher now owns and maintains project README.md alongside current_system.md. Problem: Researchers create comprehensive system docs but never update the user-facing README, causing it to become stale. Solution: Added README.md to researcher's allowed file list and document ownership. Added explicit section in Process step 3 requiring README.md updates aligned with current_system.md findings. Updated implementor prompt to clarify researcher owns overall README structure, implementor only updates for feature-specific usage changes. Prevents "project front door" from becoming outdated while internal docs stay current.
 
 **See git history for full chronological details.**
 
-## Convergent Evolution: ACE-FCA Comparison (2025-11-09)
+## Convergent Evolution: ACE-FCA (2025-11-09)
 
-### The Discovery
+We independently converged on ~80-85% the same solution as HumanLayer's "Advanced Context Engineering for Coding Agents" (ACE-FCA). **Strong validation that we're solving the problem correctly.**
 
-During development, we discovered another team (HumanLayer) independently built a nearly identical system called "Advanced Context Engineering for Coding Agents" (ACE-FCA). **We converged on ~80-85% the same solution** despite working independently.
+**Key insight**: The bottleneck in AI coding is context management, not model capability.
 
-**Their system**: https://github.com/humanlayer/advanced-context-engineering-for-coding-agents
+**What we adopted from them**: Context thresholds (40-50% wrap up, 60% hard stop), YAML frontmatter, PlantUML diagrams.
 
-### Key Finding: We Both Recognized the Same Core Problem
+**Our unique strengths**: Implementation Manager (autonomous flow via sub-agents), comprehensive current_system.md (works on unfamiliar codebases), explicit "paste output" rule (we discovered agents fake testing), agent-agnostic design.
 
-**The bottleneck in AI coding is context management, not model capability.**
+**Philosophical difference**: They optimize for flow (expert devs on own codebases), we optimize for reliability (any codebase, proof-required verification).
 
-Both systems use:
-- Research → Plan → Implement workflow (three phases, same names)
-- Frequent compaction to prevent context bloat
-- Subagent delegation for exploration
-- Human review at leverage points
-- Document-based handoffs between sessions
+**Full analysis**: See `ACE-FCA-COMPARISON.md`. Their system: https://github.com/humanlayer/advanced-context-engineering-for-coding-agents
 
-This convergence is **strong validation** that we're solving the problem correctly.
-
-### What We Learned and Adopted from ACE-FCA
-
-**1. Context Thresholds (Refinement #28)**
-- **They use**: 40-60% target range
-- **We had**: 60-70% wrap up, 80% hard stop
-- **We adopted**: 40-50% wrap up, 60% hard stop
-- **Why**: Their thresholds proven in real production codebases (300k LOC Rust projects, 35k LOC changes)
-
-**2. YAML Frontmatter Metadata (Refinement #30)**
-- **They use**: Metadata headers in research docs (git SHA, date, researcher, tags, status)
-- **We adopted**: YAML frontmatter in ALL major docs (current_system, new_features, progress, etc.)
-- **Why**: Traceability, searchability, automation potential, audit trails
-
-**3. Visual Documentation Principle**
-- **They showed**: Diagrams dramatically improve human review speed
-- **We adopted**: PlantUML diagrams for architecture (Refinement #29)
-- **Why**: LLMs generate PlantUML reliably, humans render it easily, reduces ambiguity
-
-**4. Documented Real-World Results**
-- **They have**: Metrics and linked PRs proving effectiveness
-- **We learned**: Need to document our own real-world usage similarly
-- **Action**: Future agents should document metrics from actual projects
-
-### What We Kept Different (Our Unique Strengths)
-
-**1. Flow Mode via Implementation Manager (Refinement #32)**
-- **Their approach**: Continue through multiple phases in one session
-- **Our approach (updated)**: Implementation Manager orchestrates autonomous flow via sub-agents
-  - Manager continues through all tasks (like ACE-FCA)
-  - But each task delegated to fresh `/implement` sub-agent
-  - Maintains our paranoid testing (each sub-agent must paste output)
-  - Maintains atomic task boundaries (each sub-agent does ONE task)
-- **Why this works**: Best of both worlds - autonomous flow WITHOUT error accumulation
-- **Trade-off**: More complex (manager + workers) but maintains reliability
-
-**2. Comprehensive System Documentation (current_system.md)**
-- **Their approach**: Targeted, problem-specific research docs (timestamped, archived)
-- **Our approach**: Living current_system.md that covers entire system
-- **Why we keep it**: Works for unfamiliar codebases, reduces planner errors from missing constraints
-- **Trade-off**: More upfront researcher work, but better for general use
-
-**3. Explicit "Paste Output" Testing Rule**
-- **Their approach**: Verification required but less explicit
-- **Our approach**: "ABSOLUTE RULE: paste actual terminal output or it didn't happen"
-- **Why we keep it**: We discovered agents fake testing (critical failure mode)
-- **Evidence**: Our 42 refinements found this pattern repeatedly
-
-**4. Document Format Migration Rule**
-- **Their approach**: Not explicitly documented
-- **Our approach**: "Update old formats IMMEDIATELY, no permission needed"
-- **Why we added it**: Ensures system evolves uniformly, applies to all future improvements
-- **Benefit**: Automatic adoption of better practices
-
-**5. Agent-Agnostic Design**
-- **Their approach**: Slash commands, Claude-specific tooling
-- **Our approach**: Works with any coding agent (Claude, GPT-5, Gemini, etc.)
-- **Why we keep it**: Future-proof, platform-independent
-- **Trade-off**: Less IDE integration convenience
-
-### Philosophical Differences
-
-**ACE-FCA optimizes for**: Flow and senior engineer productivity
-- Continue through phases when it makes sense
-- Adapt plan to reality during implementation
-- Assume developer has system knowledge
-
-**We optimize for**: Reliability and verification
-- Strict boundaries (one task per session)
-- Follow spec literally (if unclear, ask)
-- Comprehensive system documentation upfront
-- Proof-required testing
-
-**Neither is universally better** - they solve slightly different problems:
-- ACE-FCA: Augment expert developers on their own codebases
-- Us: Work on any codebase, including unfamiliar ones
-
-### What This Means for Future Development
-
-**1. We're on the Right Track**
-Independent convergence on the same architecture is the strongest possible validation. The Research-Plan-Implement pattern with context management appears to be the **natural solution** to AI-assisted coding.
-
-**2. Learn from Their Results**
-- They have documented real-world metrics (1 hour for bug fixes in 300k LOC codebases)
-- We should document our own usage with similar rigor
-- Their weekly coding sessions and Y Combinator talk suggest active community
-
-**3. Consider Hybrid Modes**
-Future consideration: Could we support both modes?
-- "Careful mode" (our approach): Atomic tasks, strict verification
-- "Flow mode" (their approach): Continue through phases when appropriate
-- User selects based on task complexity/risk
-
-**4. Maintain Our Paranoid Testing**
-Our "paste output" rule and strict verification caught real failure modes. Don't compromise this even if others don't emphasize it as strongly.
-
-**5. Cross-Pollinate Ideas**
-- Check their updates periodically for new insights
-- Consider reaching out to share learnings
-- Our documented failure patterns could benefit their system too
-
-### Reference Documents
-
-- **Full comparison analysis**: `ACE-FCA-COMPARISON.md` (in this repository)
-- **Their main doc**: https://github.com/humanlayer/advanced-context-engineering-for-coding-agents/blob/main/ace-fca.md
-- **Their prompts**:
-  - Research: https://github.com/humanlayer/humanlayer/blob/main/.claude/commands/research_codebase.md
-  - Plan: https://github.com/humanlayer/humanlayer/blob/main/.claude/commands/create_plan.md
-  - Implement: https://github.com/humanlayer/humanlayer/blob/main/.claude/commands/implement_plan.md
-
-### Key Takeaway for Future Meta-Agents
-
-When someone proposes a change, ask:
-1. Does this align with our core principles (reliability, verification, atomic tasks)?
-2. Does ACE-FCA do this? What was their experience?
-3. Is there evidence from real usage?
-4. Does it compromise our unique strengths?
-
-We should learn from others but maintain our identity as the **paranoid, reliable, proof-required** approach to agent workflows.
+**Meta-agent guidance**: When evaluating changes, ask: (1) Aligns with our principles? (2) Did ACE-FCA do this? (3) Evidence from real usage? (4) Compromises our strengths?
 
 ## Common Failure Patterns & Solutions
+
+### Problem: Researcher too trusting, documenting documentation history
+**Issue 1**: Researcher accepts claims without verification
+- Takes user/comment/naming at face value without reading code
+- User says "two purposes" but they're the same - researcher doesn't question
+- Comments say X but code does Y - researcher trusts comment
+- Function names suggest X but implementation shows Y - researcher trusts naming
+
+**Issue 2**: Researcher documents the history of documentation itself
+- "Previously this spec documented X, but now it's Y"
+- "We originally thought component did X, now we know it does Y"
+- Meta-commentary about spec evolution instead of current system
+→ **Solution (Refinement #48)**:
+- New "Verification Mindset: Trust Code, Not Claims" section with concrete examples
+- Process: claim → read code → question if mismatch → trust code
+- Enhanced "Documentation is Not History" with explicit rule against doc history meta-commentary
+- Clear distinction: system history OK only if it explains current constraints
+
+### Problem: Comments that compare to removed code
+Implementors change code but add comments that describe *what changed* rather than *current state*.
+- Comment says "less likely to clash" - **LESS THAN WHAT?** (old ports are gone from code)
+- Comparative phrases ("more/less/better/improved/now uses") reference invisible previous state
+- Comments age like milk: meaningless without knowing code history
+- Example: "Using 37000+ (less likely to clash)" after changing 3000 → 37000 - comparison context deleted
+- Pattern: Describing the *change* instead of the *result*
+→ **Solution (Refinement #51)**: "CRITICAL: When you change code, DELETE OR UPDATE comments that reference the old code" section. Explicit warning: "Especially dangerous: Comments that make comparisons to removed code". Red flag phrases listed ("less/more/better/fewer than...", "now uses...", "changed to...", "improved...", "instead of..."). Concrete FindAvailablePort example showing **"LESS THAN WHAT?"** problem. Key distinction: Good comments state WHAT code does NOW, not WHAT CHANGED. Three solution alternatives showing current facts without comparisons.
 
 ### Problem: Complex, hard-to-understand code
 Implementors produce code with unnecessary abstraction, clever one-liners, and comments explaining changes.
@@ -528,6 +158,16 @@ Agents treat docs like append-only logs.
 ### Problem: Researcher as critic
 Researcher spends tokens analyzing what "should" be improved instead of documenting what exists.
 → **Solution (Refinement #42)**: "Role Clarity: Documentor, Not Critic" section. Document facts objectively, trust planner to identify improvements. No recommendation files (IMPROVEMENTS.md, REDUNDANT_API_CALLS.md, etc.).
+
+### Problem: Code-heavy specs (planner dumps implementation)
+Planner includes implementation code, algorithms, and pseudocode in specs instead of clear requirements.
+- Escape hatches like "when code is OK to illustrate" get abused
+- Agents rationalize: "This algorithm IS tricky, so I'll include the implementation"
+- Specs become hard to review (20+ lines of code vs 5 lines of requirements)
+- Implementors copy-paste code instead of thinking through implementation
+- No room for better solutions when algorithm already specified
+- Indicates lazy planning (dumping code easier than clarifying requirements)
+→ **Solution (Refinement #50)**: "ABSOLUTE RULE: NO IMPLEMENTATION CODE IN SPECS" section at top of Spec Detail Level. Core principle "User experience clear, implementation flexible" made prominent. Removed all escape hatches. Single narrow exception: only if multiple valid interpretations produce different user-facing behavior (rare). Concrete before/after examples showing code dump (BAD) vs requirement (GOOD). Focus on WHAT to build and HOW IT BEHAVES, not HOW TO BUILD IT.
 
 ### Problem: Multi-task creep
 Implementors continue to next task when they have context.
@@ -610,6 +250,7 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
   - `spec/diagrams/*.puml` + `*.svg` (current system diagrams)
   - `spec/feature_tests.md` (maintains/verifies)
   - `spec/research_status.md`
+  - `README.md` (project root - user-facing overview, kept aligned with current_system.md)
 - **Planner** owns:
   - `ongoing_changes/new_features.md`
   - `ongoing_changes/planning_status.md`
@@ -619,6 +260,7 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
 - **Implementor** owns:
   - `ongoing_changes/implementor_progress.md`
   - `spec/feature_tests.md` (creates entries)
+  - `README.md` (updates for user-facing feature changes only - researcher owns structure)
   - (updates `ongoing_changes/new_features.md` with completions)
 - **Implementation Manager** owns:
   - `ongoing_changes/manager_progress.md`
@@ -712,14 +354,68 @@ All prompts tested on actual project (this looped agent system):
 
 ## Active Development Areas
 
-### Recently Completed (2025-11-20)
-✅ **Diagram ownership boundaries** - JUST ADDED (Refinement #47)
+### Recently Completed (2025-11-21)
+
+✅ **README.md ownership** (Refinement #53) - JUST ADDED
+  - Researcher now owns and must keep README.md current alongside current_system.md
+  - Problem: README becomes stale while internal docs (current_system.md) stay fresh
+  - Added README.md to researcher's allowed files and document ownership
+  - Process step 3 now requires updating both current_system.md AND README.md
+  - README.md guidance: user-facing project overview, major features, install/setup, usage, aligned with discoveries
+  - Implementor role clarified: updates README for feature-specific usage, researcher owns overall structure
+  - Key insight: README is "project's front door" - can't let it become outdated
+  - Prevents disconnect between what's documented internally and what users see
+
+✅ **Comment accuracy after code changes** (Refinement #51)
+  - Implementor prompt strengthened to prevent comments that compare to removed code
+  - Key issue: Comments describing *what changed* rather than *current state* ("less likely" - LESS THAN WHAT?)
+  - Added "CRITICAL: When you change code, DELETE OR UPDATE comments that reference the old code" section
+  - Explicit warning: "Especially dangerous: Comments that make comparisons to removed code"
+  - Concrete bad example: "Using 37000+ (less likely to clash)" - comparison context (3000) deleted from code
+  - Red flag phrases: "less/more/better/fewer than...", "now uses...", "changed to...", "improved...", "instead of..."
+  - Three solution alternatives showing current facts without comparisons (not "less than", but "uses ephemeral range")
+  - Key distinction: Good comments state WHAT code does NOW, not WHAT CHANGED
+  - Added 4th question to comment checklist: "Does any existing comment reference what I'm changing?"
+  - Prevents comments that "age like milk" - meaningless without code history
+  - Forces agents to think "what does this DO" not "what did I CHANGE"
+
+✅ **No implementation code in specs** (Refinement #50)
+  - Planner prompt tightened to prevent code dumping in specifications
+  - Added "ABSOLUTE RULE: NO IMPLEMENTATION CODE IN SPECS" at top of Spec Detail Level section
+  - Core principle "User experience clear, implementation flexible" made prominent
+  - Removed all escape hatches: no "when code is OK" section, no "key algorithms" inclusion
+  - Single narrow exception: only if multiple valid interpretations produce different user-facing behavior (rare: 1 in 10 specs)
+  - Concrete before/after examples: password validation, search ranking (shows BAD vs GOOD)
+  - Strengthened exclusion list: NO code, NO pseudocode, NO "illustrative" examples, NO algorithms
+  - Emphasis on WHAT to build and HOW IT BEHAVES, not HOW TO BUILD IT
+  - Forces planner to clarify requirements instead of jumping to implementation
+  - Prevents lazy planning (code dumps are easier than clear requirements)
+  - Aligns with coding standards (simple > complex, clear > clever)
+
+### Previously Completed (2025-11-20)
+✅ **Verification mindset and no documentation history** (Refinement #48)
+  - Researcher now has "Verification Mindset: Trust Code, Not Claims" section
+  - Concrete examples of healthy skepticism (comments vs code, naming vs implementation, user claims)
+  - Process: verify claims against code, ask questions when mismatch, trust code over claims
+  - Enhanced "Documentation is Not History" with explicit rule: never document doc history itself
+  - Clear distinction: system history OK only if it explains current constraints
+  - Prevents meta-commentary about spec evolution (that's what git is for)
+✅ **Diagram ownership boundaries** (Refinement #47)
   - Planner diagrams now go in `ongoing_changes/diagrams/` (temporary, shows planned changes)
   - Researcher diagrams remain in `spec/diagrams/` (permanent, shows current system)
   - Fixes violation of ownership boundaries (planner was putting diagrams in researcher's spec/ folder)
   - Temporal clarity: planned changes vs actual current state kept separate
   - Clean handoff: planner diagrams deleted after implementation, researcher documents actual result
   - Updated all references in plan.md from spec/diagrams/ to ongoing_changes/diagrams/
+✅ **Aggressive sub-agent delegation for scale** (Refinement #49)
+  - Researcher now has prominent "Scale Strategy" section with absolute rules for sub-agent use
+  - Explicit thresholds: >5k LOC launch Explore agents, >20k LOC parallel agents, >100k LOC 5-10 agents
+  - Concrete before/after examples showing context burn (bad) vs sub-agent delegation (good)
+  - Parallel exploration emphasized: launch 3-5+ agents simultaneously
+  - Clarified "read completely" applies to handoff docs (spec/), NOT codebase exploration
+  - Updated Process section with specific guidance by codebase size
+  - Default mindset: "Orchestrate research via sub-agents" not "read files yourself"
+  - Enables handling codebases of ANY size while staying under 50% context
 
 ### Previously Completed (2025-11-14)
 ✅ **Meta-agent reads actual prompts** (Refinement #46)
@@ -817,69 +513,38 @@ All prompts tested on actual project (this looped agent system):
 **Deployment**: No install script needed. Prompts are in dotfiles and automatically available via `~/.claude/commands` symlink.
 
 ### Known Issues to Monitor
-- **NEW**: Do planners create diagrams in `ongoing_changes/diagrams/` (not `spec/diagrams/`)?
-- **NEW**: Do researchers create diagrams in `spec/diagrams/` (not `ongoing_changes/diagrams/`)?
-- **NEW**: Are planned changes diagrams clearly separate from current system diagrams?
-- **NEW**: Do planners delete their diagrams from `ongoing_changes/diagrams/` when work is complete?
-- **NEW**: Does meta-agent actually read all four prompts at start of each session?
-- **NEW**: Does reading actual prompts lead to better refinement decisions vs relying on meta_status.md?
-- **NEW**: Can meta-agent identify inconsistencies between prompts that weren't visible in meta_status.md?
-- **NEW**: Does prompt length become a useful observable signal for when reduction is needed?
-- **NEW**: Do agents correctly put docs in `ongoing_changes/` vs `spec/` directories?
-- **NEW**: Do agents understand that prompts are in dotfiles but docs go in target project?
-- **NEW**: Do planners, implementors, and managers put their docs in `ongoing_changes/`?
-- **NEW**: Does the researcher put all their docs in `spec/`?
-- **NEW**: Does the two-directory structure prevent documentation sprawl?
-- **NEW**: Do agents create unauthorized docs outside these two directories?
-- **NEW**: Do agents read and process prompts more efficiently with reduced verbosity?
-- **NEW**: Did we remove any critical instructions that cause issues?
-- **NEW**: Are remaining rules more prominent and easier to follow?
-- Do implementors follow coding standards (simple > complex, clear > clever)?
-- **NEW**: Do implementors avoid unnecessary comments (only WHY, not WHAT)?
-- **NEW**: Do implementors resist premature abstraction (wait for 3+ cases)?
-- **NEW**: Do implementors delete unused code instead of commenting it out?
-- **NEW**: Is code produced easier for future agents to understand and modify?
-- **NEW**: Do implementors treat complexity as precious (complexity budget principle)?
-- **NEW**: Do researchers stay in documentor role (facts only) or drift into critic role (recommendations)?
-- **NEW**: Do researchers avoid creating unauthorized recommendation files (IMPROVEMENTS.md, REDUNDANT_API_CALLS.md, etc.)?
-- **NEW**: Do researchers document issues factually in current_system.md instead of separate files?
-- **NEW**: Do researchers trust the planner to identify improvements, or try to do the planner's job?
-- **NEW**: Do researchers create C4-level documentation correctly (Level 1+2 in current_system.md, Level 3 split when needed)?
-- **NEW**: Do researchers keep current_system.md under 500 lines for Levels 1+2?
-- **NEW**: Do researchers create system-context and containers-overview diagrams consistently?
-- **NEW**: Do planners and implementors read only relevant documentation levels (not everything)?
-- **NEW**: Does progressive disclosure actually reduce token usage in practice (target: 60-75% reduction)?
-- **NEW**: Do navigation links (📖 drill down, ⬆️ back up) work well for humans and agents?
-- **NEW**: When do researchers decide to split to Level 3? (Is 150-line threshold working?)
-- **NEW**: Do agents actually report their token usage percentage at each interaction?
-- **NEW**: Does token usage reporting help agents make better stopping decisions?
-- **NEW**: Do agents automatically rename UPPERCASE document files to lowercase on encounter?
-- **NEW**: Do researchers respect cleanup scope boundaries (only delete in spec/, not implementor_progress.md/manager_progress.md)?
-- **NEW**: Do implementors add entries to feature_tests.md for features they build?
-- **NEW**: Do researchers use feature_tests.md as their test checklist?
-- **NEW**: Do researchers update test status/dates in feature_tests.md after running tests?
-- **NEW**: Do agents properly distinguish between Automated/Verification Script/Agent-Interactive test types?
-- **NEW**: Do implementors actually CREATE repeatable tests (not just test once)?
-- **NEW**: Do implementors create tests that verify END-TO-END user experience (not just "code exists")?
-- **NEW**: Do implementors run existing test suite (regression check)?
-- **NEW**: Do researchers actually RUN the test suite to verify system state?
-- **NEW**: Do researchers document test results and coverage gaps in current_system.md?
-- **NEW**: Do planners include verification strategies in specs?
-- Do agents actually follow the "paste output" rule, or do they still fake testing?
-- Do agents properly split large current_system.md files using the multi-file strategy?
-- Do agents delete unauthorized documentation, or do they still create sprawl?
-- Do researchers create separate .puml files and generate SVGs correctly?
-- Do researchers migrate inline PlantUML to separate files when found?
-- Do agents generate accurate PlantUML diagrams that compile correctly?
-- Do agents properly update YAML frontmatter each session?
-- Do agents migrate old document formats immediately as instructed?
-- Does Implementation Manager correctly delegate to sub-agents and maintain minimal context?
-- Does Implementation Manager properly handle restarts and context overflow scenarios?
-- Do implementor sub-agents provide clear summaries in the expected format?
-- Do settings.json permissions prevent friction during autonomous implementation?
-- Do implementors correctly report context usage in their summaries?
-- Does manager correctly track and aggregate context usage data?
-- Does planner actually use historical context data to calibrate task sizes?
+
+**Recent Refinements (41-53):**
+- Ref #53 (README ownership): Does researcher keep README.md current alongside current_system.md? Is README user-facing and aligned with discoveries? Does implementor respect researcher's overall structure?
+- Ref #51 (Comment accuracy): Do comments avoid comparisons to removed code ("less/more than...")? State current facts, not what changed?
+- Ref #50 (No code in specs): Do planners avoid dumping implementation code? Focus on WHAT/HOW IT BEHAVES vs HOW TO BUILD?
+- Ref #49 (Sub-agent delegation): Does researcher use sub-agents aggressively? Launch 5-10 parallel agents for >100k LOC codebases? Stay <50% context?
+- Ref #48 (Verification mindset): Does researcher trust code over claims? Avoid documenting documentation history?
+- Ref #47 (Diagram ownership): Planners use `ongoing_changes/diagrams/`, researchers use `spec/diagrams/`?
+- Ref #46 (Meta reads prompts): Does meta-agent read all four prompts directly?
+- Ref #45 (Directory structure): Do agents respect `ongoing_changes/` (temporary) vs `spec/` (permanent) boundaries? No unauthorized docs elsewhere?
+- Ref #44 (Prompt verbosity): Are prompts more efficient? Did reduction harm anything?
+- Ref #43 (Coding standards): Do implementors follow Simple > Complex, Clear > Clever? Comments only for WHY? Treat complexity as precious?
+- Ref #42 (Documentor role): Does researcher stay in documentor role (facts) vs critic role (recommendations)? No IMPROVEMENTS.md files?
+- Ref #41 (C4 progressive disclosure): Do researchers keep Levels 1+2 <500 lines? Split to Level 3 appropriately? Do agents read only relevant levels? 60-75% token savings achieved?
+
+**Core System (Refinements 28-40):**
+- Token usage reporting: Do agents report context % at each interaction?
+- Repeatable tests (Ref #36): Do implementors CREATE repeatable tests (not just test once)? Verify end-to-end user experience? Run regression checks?
+- Feature test registry (Ref #37): Do implementors add to feature_tests.md? Do researchers use it as test checklist?
+- Paste output rule: Do agents paste actual terminal output (not just claim they tested)?
+- PlantUML diagrams: Do agents create separate .puml files and generate SVGs correctly?
+- YAML frontmatter: Do agents update metadata each session?
+- Document cleanup: Do researchers only delete in spec/ folder (not implementor_progress.md, manager_progress.md)?
+- Implementation Manager: Does manager delegate properly? Maintain minimal context (<30%)? Handle restarts gracefully?
+- Context usage tracking: Do implementors report final context? Does manager aggregate data? Does planner use historical data to calibrate tasks?
+
+**Fundamental Patterns (Refinements 1-27):**
+- ONE task per implementor session: Do implementors STOP after one task?
+- Follow spec literally: Do implementors ask when unclear vs reinterpreting?
+- Documentation is not history: Do agents REWRITE (not append)? Delete obsolete info?
+- Documentation sprawl: Do agents create unauthorized docs, or stick to allowed lists?
+- questions.md cleanup: Does planner delete answered questions immediately?
 
 ### Future Considerations
 - Additional agent types (e.g., reviewer, tester)?

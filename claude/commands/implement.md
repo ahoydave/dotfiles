@@ -39,7 +39,7 @@ You are a looped agent instance. Your context is precious:
 - `ongoing_changes/new_features.md` (mark completions)
 - `spec/feature_tests.md` (add test entries)
 - `spec/current_system.md` (update if architecture changed)
-- `README.md` (user-facing updates only)
+- `README.md` (update for user-facing feature changes - researcher owns overall structure)
 
 **Delete anything else in ongoing_changes/** not in the allowed list. No unauthorized docs.
 
@@ -534,14 +534,16 @@ tests_passing: true | false
    - Keep it accurate - future agents rely on this
    - Only update if changes are significant (not for minor tweaks)
 
-   **`README.md`** (user-facing documentation ONLY):
-   - UPDATE if you added/changed user-facing features, commands, or tools
+   **`README.md`** (update for user-facing feature changes only):
+   - **When to update**: You added/changed user-facing features, commands, or tools
+   - **What to update**: Usage instructions, new commands, changed behavior
+   - **What NOT to change**: Overall project structure (researcher owns that)
    - **User perspective**: No "phases", no implementation details, no progress tracking
-   - Clear usage flow: How does a user actually use this system end-to-end?
-   - Focus on HOW TO USE: commands, expected behavior, when to use each tool
+   - Clear usage flow: How does a user actually use this new feature?
+   - Focus on HOW TO USE: commands, expected behavior, examples
    - Keep it practical and clear for someone who doesn't know the codebase
    - **Implementation notes belong in ongoing_changes/**, not README
-   - Don't create separate usage docs - consolidate into README
+   - **Note**: Researcher maintains overall README structure, you add feature-specific usage
 
 8. **STOP after completing your ONE task**:
    - After verification and documentation are complete: STOP
@@ -572,10 +574,60 @@ tests_passing: true | false
 - ❌ Narrative about implementation ("First we do X, then we do Y")
 - ❌ Compensating for unclear code (rewrite the code instead)
 
+**CRITICAL: When you change code, DELETE OR UPDATE comments that reference the old code**
+
+Comments become **dangerously misleading** when they describe code that no longer exists. Every time you modify code, check if existing comments are still accurate.
+
+**Especially dangerous**: Comments that make **comparisons to removed code** or describe what changed.
+
+❌ **EXTREMELY BAD - Comment compares to code that's gone**:
+```csharp
+// Find available ports
+int httpPort = FindAvailablePort(3000);
+int wsPort = FindAvailablePort(9001);
+```
+Changed to:
+```csharp
+// Find available ports in less common range to avoid conflicts
+// Using 37000+ (ephemeral port range, less likely to clash with common services)
+int httpPort = FindAvailablePort(37000);
+int wsPort = FindAvailablePort(37100);
+```
+**Problem**: "Less common range" and "less likely to clash" - **LESS THAN WHAT?** The original ports (3000, 9001) are gone from the code. The comment compares to something that no longer exists, making it meaningless. It's describing the *change* rather than the *current state*.
+
+**These phrases are red flags** (they reference removed code):
+- "less likely than..." ← less than WHAT?
+- "now uses..." ← what did it use BEFORE?
+- "changed to..." ← changed from WHAT?
+- "improved..." ← improved from WHAT?
+- "instead of..." ← instead of WHAT?
+- "more/fewer/better..." ← compared to WHAT?
+
+✅ **CORRECT - Comment states CURRENT FACTS without comparison**:
+```csharp
+// Ephemeral port range (37000+) unlikely to conflict with system services
+int httpPort = FindAvailablePort(37000);
+int wsPort = FindAvailablePort(37100);
+```
+Or even better (inline):
+```csharp
+int httpPort = FindAvailablePort(37000);  // Ephemeral range, avoids common ports
+int wsPort = FindAvailablePort(37100);
+```
+Or best (self-documenting code):
+```csharp
+const int EPHEMERAL_PORT_START = 37000;  // Avoid common service ports
+int httpPort = FindAvailablePort(EPHEMERAL_PORT_START);
+int wsPort = FindAvailablePort(EPHEMERAL_PORT_START + 100);
+```
+
+**Notice**: The good versions state WHAT the code does NOW (uses ephemeral range, avoids conflicts), not WHAT CHANGED (less than before, improved from previous).
+
 **Before adding a comment, ask:**
 1. Can I make the code clearer instead? (Rename variables, extract function with clear name)
 2. Is this explaining WHAT (bad) or WHY (potentially good)?
 3. Will this comment still be accurate in 6 months, or will it become misleading?
+4. **If I'm modifying code: Does any existing comment reference what I'm changing?**
 
 **Examples:**
 

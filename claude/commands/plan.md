@@ -393,9 +393,14 @@ At end of your session:
 
 ## Spec Detail Level - CRITICAL
 
-**Specs are communication tools for HUMANS, not implementation code dumps**
+**ABSOLUTE RULE: NO IMPLEMENTATION CODE IN SPECS**
+
+**Core Principle**: "User experience clear, implementation flexible"
+
+Your job is to define WHAT to build and HOW IT BEHAVES, not HOW TO BUILD IT. Implementors are competent developers who will figure out the implementation. If you dump code into specs, you're doing their job for them and making specs harder to review.
 
 ### Include (What to Specify):
+- ✅ **User-facing behavior**: What users see, experience, and can do
 - ✅ **Tool/function signatures**: name, parameters, return shape (interface contracts)
 - ✅ **Data formats**: JSONL structure, file frontmatter, API payloads (contracts)
 - ✅ **Workflow sequences**: step 1 → step 2 → step 3 (behavior)
@@ -403,32 +408,140 @@ At end of your session:
 - ✅ **Verification criteria**: testable outcomes (how to know it works)
 - ✅ **Integration points**: which components talk to which, with what data
 - ✅ **Component relationships**: dependencies, data flows, responsibilities
-- ✅ **Key algorithms/logic**: When critical to understanding (pseudocode/code OK if it ILLUSTRATES the concept)
-
-### When Code/Pseudocode is OK:
-- To illustrate a tricky algorithm or important concept
-- To show an example data transformation
-- To clarify ambiguous logic
-- **NOT** as the actual implementation to copy-paste
+- ✅ **Edge cases and constraints**: What should happen when X, limits on Y
 
 ### Exclude (Too Much Detail):
-- ❌ **Dense implementation code**: Don't dump the entire implementation
+- ❌ **ANY implementation code**: No code, no pseudocode, no "illustrative" examples
+- ❌ **Algorithms**: Describe WHAT it does, not HOW it works internally
 - ❌ **Full class definitions**: Complete class structures with all methods
 - ❌ **Boilerplate code**: Error handling, logging, imports
 - ❌ **Internal patterns**: How to structure classes/modules
+- ❌ **Data transformation code**: Describe inputs/outputs, not the transformation logic
+
+### The ONLY Exception (Rare):
+If there are **multiple valid interpretations** of a requirement that would produce **different user-facing behavior**, you may include a brief example to disambiguate. But this should be rare (maybe 1 in 10 specs).
+
+**Test before including code**: Can I describe this requirement clearly in English instead? If yes, do that.
 
 ### The Key Test:
 **Two implementors should produce systems that perform identically from the USER perspective, but could have different internals.**
 
-- ✅ Same behavior, different code = good spec
-- ❌ Only one way to implement it = too specific
-- ❌ Unclear what to build = too vague
+- ✅ Same behavior, different code = good spec (you specified WHAT)
+- ❌ Only one way to implement it = too specific (you specified HOW)
+- ❌ Unclear what to build = too vague (you didn't specify clearly)
+
+### Examples: Bad vs Good
+
+**❌ BAD - Code Dump:**
+```markdown
+## Feature: Password Validation
+
+The system should validate passwords using this algorithm:
+
+```python
+def validate_password(password: str) -> bool:
+    if len(password) < 8:
+        return False
+    has_upper = any(c.isupper() for c in password)
+    has_lower = any(c.islower() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    return has_upper and has_lower and has_digit
+```
+
+This ensures passwords meet security requirements.
+```
+
+**Why this is bad**: You wrote the implementation. Implementor will copy-paste. No room for better solutions. Hard to review (have to read code).
+
+**✅ GOOD - Requirement:**
+```markdown
+## Feature: Password Validation
+
+### Requirements
+When user creates/updates password, system validates:
+- Minimum 8 characters
+- At least one uppercase letter
+- At least one lowercase letter
+- At least one digit
+
+### Behavior
+- Valid password: Accept and proceed
+- Invalid password: Show error message listing which requirements failed
+- Error messages: Specific (e.g., "Password must contain at least one digit")
+
+### Verification
+User can successfully create account with "SecurePass123" but is rejected with "password" (clear error shown)
+```
+
+**Why this is good**: Clear requirements, testable behavior, implementor chooses how to validate. Could use regex, loops, library - doesn't matter as long as it works.
+
+---
+
+**❌ BAD - Algorithm Dump:**
+```markdown
+## Feature: Search Results Ranking
+
+Search results should be ranked by relevance score:
+
+```python
+def calculate_relevance(query: str, document: dict) -> float:
+    score = 0.0
+    query_terms = query.lower().split()
+
+    # Title matches worth 3x
+    for term in query_terms:
+        if term in document['title'].lower():
+            score += 3.0
+
+    # Body matches worth 1x
+    for term in query_terms:
+        score += document['body'].lower().count(term) * 1.0
+
+    # Recency bonus
+    days_old = (datetime.now() - document['created_at']).days
+    recency_score = max(0, 1.0 - (days_old / 365))
+
+    return score + recency_score
+```
+```
+
+**Why this is bad**: You're doing the implementor's job. What if there's a better ranking algorithm? What if they want to use a search library? Spec is now 20 lines of code to review instead of 5 lines of requirements.
+
+**✅ GOOD - Requirement:**
+```markdown
+## Feature: Search Results Ranking
+
+### Requirements
+Search results ranked by relevance to query:
+
+**Ranking factors** (most to least important):
+1. Query terms in title (highest weight)
+2. Query terms in body (medium weight)
+3. Document recency (lower weight, newer = higher)
+
+### Behavior
+- User searches "python testing"
+- Results with "python" or "testing" in title appear first
+- Among title matches, newer documents rank higher
+- Results with terms only in body appear after title matches
+- Documents with no matches don't appear
+
+### Verification
+Search "python testing":
+- Document with title "Python Testing Guide" (1 week old) ranks #1
+- Document with title "Introduction to Python" (1 year old) ranks #2
+- Document with title "Java" but body mentions "python testing" ranks #3
+```
+
+**Why this is good**: Clear ranking priorities, testable behavior, implementor can choose algorithm (TF-IDF, BM25, simple scoring, whatever works).
 
 ### Why This Matters:
 - Humans review specs to understand WHAT you want built
-- Dense code dumps are hard to review
+- Dense code dumps are hard to review and indicate lazy planning
 - Specs should be readable, scannable, understandable
 - Implementation freedom = better solutions
+- Implementors think through edge cases instead of copy-pasting
+- Forces YOU to think clearly about requirements, not jump to implementation
 
 ## UML Diagrams for Visual Planning - CRITICAL
 
