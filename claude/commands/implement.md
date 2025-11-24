@@ -40,6 +40,7 @@ You are a looped agent instance. Your context is precious:
 - `spec/feature_tests.md` (add test entries)
 - `spec/current_system.md` (update if architecture changed)
 - `README.md` (update for user-facing feature changes - researcher owns overall structure)
+- `.agent-rules/implementation.md` (append when human requests)
 
 **Delete anything else in ongoing_changes/** not in the allowed list. No unauthorized docs.
 
@@ -150,6 +151,8 @@ tests_passing: true | false
 
 4. Read `README.md` completely - project context
 
+5. **Read `.agent-rules/implementation.md` if it exists** - ABSOLUTE project-specific rules you must follow
+
 ## Reading current_system.md Efficiently - Progressive Disclosure
 
 **The researcher uses C4-inspired progressive disclosure** (Levels 1-2-3). Read strategically based on your task.
@@ -174,6 +177,130 @@ tests_passing: true | false
 **Look for navigation**: current_system.md has "📖 For details, see..." links. Follow only what you need.
 
 **When updating current_system.md**: If your implementation adds/modifies components at Level 2 (major architectural changes), update current_system.md. If you're just implementing within existing components, update usually not needed.
+
+## Project-Specific Rules
+
+**If `.agent-rules/implementation.md` exists, read it during entry point (step 5 above).**
+
+These are ABSOLUTE rules specific to THIS project. They capture learnings from previous sessions - workflows you MUST follow, gotchas you MUST avoid, required sequences you MUST execute.
+
+**Rules are permanent knowledge for this project.** Unlike session docs (implementor_progress.md, which changes), rules accumulate and persist.
+
+### What Goes in Rules
+
+Project-specific patterns that should ALWAYS be followed:
+- **Tool-specific workflows**: "After changing Unity files, reload Unity domain via UnityMCP"
+- **Project conventions**: "Never allocate ports 9000-9010 (reserved for Unity)"
+- **Required sequences**: "Always run integration tests after modifying API endpoints"
+- **Known gotchas**: "Don't manually edit .meta files (Unity generates them)"
+- **Technology constraints**: "Use Nix for builds, never Docker in this project"
+
+### Rule Format - CRITICAL: Token Efficiency
+
+**Rules must be CONCISE. Only document what you CAN'T infer.**
+
+Don't explain things you already know (what file types are, why tools work the way they do, general concepts). Only document:
+- ✅ Specific commands/tools for THIS project
+- ✅ When to trigger the workflow
+- ✅ Verification steps
+
+**Simple format:**
+```markdown
+## [Rule Name]
+**Context**: [Trigger condition - when to apply]
+**How**: [Specific commands and verification]
+```
+
+That's it. No "Rule", no "Why", no "Added" fields.
+
+### Examples: Bad vs Good
+
+❌ **TOO VERBOSE (wastes tokens explaining what you already know)**:
+```markdown
+## Unity Domain Reload After File Changes
+**Context**: Unity project - applies when adding, removing, or changing .cs files (C# source code)
+**Rule**: ALWAYS reload Unity domain after modifying C# files AND check console for compilation errors
+**How**:
+1. After creating/modifying/deleting .cs files, trigger domain reload:
+   - Via UnityMCP tool: `mcp__unity__unity_trigger_reload()`
+2. Wait approximately 5 seconds for compilation to complete
+3. Check Unity console for compilation errors:
+   - Via UnityMCP tool: `mcp__unity__unity_get_console_logs(logType="Error")`
+4. If errors found, FIX them immediately before proceeding
+5. Verify compilation succeeded (no errors in console)
+
+**Why**: Unity must compile C# code changes and generate .meta files for the engine to recognize new/modified files. Skipping this causes:
+- Missing .meta files (Unity won't track assets)
+- Compilation errors not detected
+- "Missing reference" errors in editor
+- Broken builds
+
+**Added**: 2025-11-23 (user request)
+```
+*Why bad: Explains what .cs files are, why Unity needs compilation, consequences you already understand. ~180 tokens.*
+
+✅ **GOOD (only documents what you can't infer)**:
+```markdown
+## Unity Domain Reload
+**Context**: After changing .cs files
+**How**: Run `mcp__unity__unity_trigger_reload()`, then `mcp__unity__unity_get_console_logs(logType="Error")`. Fix errors before proceeding.
+```
+*Why good: Just the trigger and specific commands. ~30 tokens.*
+
+✅ **ALSO GOOD (slightly more detailed if needed)**:
+```markdown
+## Port Allocation
+**Context**: When allocating network ports
+**How**: Never use 9000-9010 (reserved for Unity). Use 37000+ range.
+```
+
+✅ **ALSO GOOD (multi-step workflow)**:
+```markdown
+## Database Schema Changes
+**Context**: After modifying schema files
+**How**:
+1. Run migrations: `npm run migrate`
+2. Update types: `npm run generate-types`
+3. Restart dev server: `npm run dev`
+```
+
+### When to Add Rules
+
+**ONLY add rules when human explicitly requests it:**
+- Human says: **"Add this as a rule"**
+- Human says: **"We should always do this for [technology] projects"**
+- Human says: **"Make this a project rule"**
+
+**DO NOT add rules proactively** - even if you think something should be a rule, wait for human confirmation.
+
+### How to Add Rules
+
+When human requests adding a rule:
+
+1. **APPEND to `.agent-rules/implementation.md`** (don't rewrite the file)
+2. Use the concise format above (Context + How only)
+3. **Be token-efficient**: Only document what you can't infer
+4. Include specific commands/tools for THIS project
+5. No explanations of general concepts you already know
+
+Example interaction:
+```
+Human: "Always reload the Unity domain after changing files. Add this as a rule."
+You: *Append to .agent-rules/implementation.md*
+
+## Unity Domain Reload
+**Context**: After changing .cs files
+**How**: Run `mcp__unity__unity_trigger_reload()`, then `mcp__unity__unity_get_console_logs(logType="Error")`. Fix errors before proceeding.
+```
+
+### If No Rules File Exists
+
+If `.agent-rules/implementation.md` doesn't exist and human requests adding a rule:
+1. Create the file
+2. Add header: `# Implementation Rules for [Project Name]`
+3. Add the rule using format above
+
+**The rules file is permanent project knowledge** - it stays with the codebase and helps all future implementor sessions.
 
 ## Process
 

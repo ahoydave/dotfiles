@@ -226,6 +226,56 @@ Please act as the meta-agent from ~/dotfiles/claude/commands/meta-agent.md
 
 Each agent reads their status docs and continues from where the previous agent left off. No need to explain history - they pick up context from the documents.
 
+### Project-Specific Rules
+
+**Location**: `.agent-rules/` directory in your project root
+
+As you work with agents on a project, you'll discover patterns that should ALWAYS be followed:
+- Tool-specific workflows (Unity domain reloads, Unreal builds)
+- Project conventions (port ranges to avoid, file patterns)
+- Required sequences ("always run X after Y")
+- Known gotchas ("never manually edit .meta files")
+
+**Instead of repeating these instructions every session**, save them as permanent project rules.
+
+**How it works:**
+
+1. **Agent encounters a workflow**: You explain "after changing Unity files, always reload the domain via UnityMCP server"
+2. **Agent completes the task successfully**
+3. **You say**: "Add this as a rule"
+4. **Agent appends to `.agent-rules/implementation.md`** with token-efficient format:
+   - **Context**: When this applies (trigger condition)
+   - **How**: Specific commands and verification
+
+5. **Future implementors read the rules** during entry point and follow them automatically
+
+**Example rule (concise format):**
+```markdown
+## Unity Domain Reload
+**Context**: After changing .cs files
+**How**: Run `mcp__unity__unity_trigger_reload()`, then `mcp__unity__unity_get_console_logs(logType="Error")`. Fix errors before proceeding.
+```
+
+**Why concise:** Rules are token-efficient - only document what the agent can't infer (specific commands for THIS project), not what it already knows (why Unity needs compilation).
+
+**Rules files:**
+- `.agent-rules/implementation.md` - Rules for implementors
+- `.agent-rules/research.md` - Rules for researchers
+- `.agent-rules/planning.md` - Rules for planners
+
+**When to add rules:**
+- Only when you explicitly say "add this as a rule"
+- After successful task completion (capture what worked)
+- When you find yourself repeating the same instruction multiple times
+
+**Benefits:**
+- Permanent project knowledge (travels with codebase)
+- Reduces repeated clarifications
+- Captures tool-specific workflows
+- Accumulates learnings across sessions
+
+**Like feature_tests.md, but for workflows**: feature_tests.md documents "how to TEST features", agent rules document "how to BUILD features in this project".
+
 ---
 
 ## Key Principles

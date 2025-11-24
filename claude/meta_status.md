@@ -1,23 +1,23 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2025-11-21
+last_updated: 2025-11-24
 git_commit: 911ff2945bc63c3d69dd102521865ad4d25dfad1
-refinement_count: 53
+refinement_count: 55
 status: production-ready
-recent_focus: documentation_ownership
+recent_focus: autonomous_research_delegation
 agent_count: 5
 ---
 
-## Current State (2025-11-21)
+## Current State (2025-11-24)
 
-### Status: Production-Ready with Autonomous Implementation Manager
+### Status: Production-Ready with Autonomous Implementation Manager and Research Delegation
 
-**Agent prompts**: 53 refinements applied through iterative testing
+**Agent prompts**: 55 refinements applied through iterative testing
 **Deployment**: Prompts in ~/dotfiles/claude/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
 **Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
-**Recent focus**: Comment accuracy (never leave outdated comments after code changes)
+**Recent focus**: Project-specific agent rules (`.agent-rules/` directory for accumulating project learnings)
 
 ### What's Working
 
@@ -100,6 +100,10 @@ agent_count: 5
 52. **Instruction consolidation (meta-agent)** - Archived refinements 1-40 to meta_history.md (~400 lines saved). Compressed ACE-FCA comparison to summary with link (~120 lines saved). Consolidated "Known Issues to Monitor" from 109 questions to 30 organized by refinement group (~80 lines saved). Total ~600 lines removed from meta_status.md.
 
 53. **README.md ownership (researcher)** - Researcher now owns and maintains project README.md alongside current_system.md. Problem: Researchers create comprehensive system docs but never update the user-facing README, causing it to become stale. Solution: Added README.md to researcher's allowed file list and document ownership. Added explicit section in Process step 3 requiring README.md updates aligned with current_system.md findings. Updated implementor prompt to clarify researcher owns overall README structure, implementor only updates for feature-specific usage changes. Prevents "project front door" from becoming outdated while internal docs stay current.
+
+54. **Project-specific agent rules** - Added `.agent-rules/` directory concept for accumulating project-specific learnings. Problem: Every project has unique workflows, gotchas, and constraints that agents must learn repeatedly (e.g., "reload Unity domain after file changes", "never allocate ports 9000-9010"). Without persistent rules, agents ask same questions every session or make same mistakes. Solution: Created `.agent-rules/{implementation,research,planning}.md` files that agents read during entry point and can APPEND to when human says "add this as a rule". Format: Context, Rule, How, Why, Added. Rules use absolute language ("ALWAYS", "NEVER", "MUST"). Only added when human explicitly requests. APPEND-ONLY to accumulate knowledge. Inspired by Geoffrey Huntley's "stdlib" concept but simplified for our agent-agnostic workflow (no XML, no auto-execution, just markdown rules agents read and apply). Benefits: (1) Permanent project knowledge, (2) Reduces repeated clarifications, (3) Captures tool-specific workflows, (4) Accumulates like feature_tests.md. Each agent reads its own rules file plus planner reads implementation rules to understand constraints. Addresses real user need: Unity project requiring specific MCP server calls after file changes.
+
+55. **Planner spawns researcher sub-agents** - Planner can now autonomously spawn researcher sub-agents to fill factual gaps about current system. Problem: During planning, planner discovers gaps in system understanding ("How does auth work?", "What's the DB schema?"). Previously required human to manually invoke /research, update spec, then re-invoke /plan - friction in the workflow. Solution: Added "Spawning Research Sub-Agents for Factual Gaps" section to planner prompt (~120 lines). Clear boundary: spawn researcher for FACTUAL gaps (how system works), ask human in questions.md for DECISIONAL matters (what to build, priorities, business rules). Planner uses Task tool to spawn researcher with specific question. Researcher investigates, updates spec/current_system.md (spec remains source of truth), returns RESEARCH SUMMARY (brief answer + spec pointers + key constraints). Planner reads brief answer to continue, or reads referenced spec sections for deeper detail. Added "Sub-Agent Mode" section to researcher prompt (~100 lines) defining RESEARCH SUMMARY format and targeted research behavior. Pattern consistent with Implementation Manager (manager spawns implementors, planner spawns researchers). Benefits: (1) Autonomous factual research - no human friction for "how does it work" questions, (2) Better specs - complete understanding before planning, (3) Spec always updated - permanent benefit for all agents, (4) Progressive detail - planner controls depth via summary vs full spec sections. Example: Planner asks "How does auth middleware work?" → researcher investigates → updates spec with auth flow + diagram → returns summary → planner continues with complete understanding. Reduces "I think it works like X" → later discovery it's Y. Human focuses on design decisions, researcher handles facts about current system.
 
 **See git history for full chronological details.**
 
@@ -354,9 +358,32 @@ All prompts tested on actual project (this looped agent system):
 
 ## Active Development Areas
 
-### Recently Completed (2025-11-21)
+### Recently Completed (2025-11-24)
 
-✅ **README.md ownership** (Refinement #53) - JUST ADDED
+✅ **Planner spawns researcher sub-agents** (Refinement #55) - JUST ADDED
+  - Planner can autonomously spawn /research sub-agents for factual gaps
+  - Clear boundary: factual questions (spawn researcher) vs design decisions (ask human)
+  - Researcher updates spec/current_system.md, returns RESEARCH SUMMARY
+  - RESEARCH SUMMARY format: brief answer + spec pointers + key constraints
+  - Pattern: manager spawns implementors, planner spawns researchers
+  - Reduces workflow friction: no human mediation for "how does it work?" questions
+  - Better specs: complete system understanding before planning
+  - Progressive detail: planner reads summary or drills into spec sections
+  - Sub-agent mode added to researcher prompt (targeted vs comprehensive research)
+
+✅ **Project-specific agent rules** (Refinement #54)
+  - Added `.agent-rules/` directory for accumulating project-specific learnings
+  - Three files: implementation.md, research.md, planning.md (agents read during entry point)
+  - Agents APPEND rules when human says "add this as a rule"
+  - Format: Context, Rule, How, Why, Added (simple markdown, not XML)
+  - Only added when explicitly requested by human (not proactive)
+  - Addresses repeated questions/mistakes on project-specific workflows
+  - Example use case: Unity projects requiring domain reload after file changes via MCP
+  - Inspired by Geoffrey Huntley's "stdlib" but simplified for agent-agnostic workflow
+  - Benefits: Permanent project knowledge, reduces friction, captures tool workflows
+  - Planner reads implementation rules to understand constraints when planning
+
+✅ **README.md ownership** (Refinement #53)
   - Researcher now owns and must keep README.md current alongside current_system.md
   - Problem: README becomes stale while internal docs (current_system.md) stay fresh
   - Added README.md to researcher's allowed files and document ownership
@@ -514,7 +541,9 @@ All prompts tested on actual project (this looped agent system):
 
 ### Known Issues to Monitor
 
-**Recent Refinements (41-53):**
+**Recent Refinements (41-55):**
+- Ref #55 (Planner spawns researchers): Does planner spawn researcher for factual gaps vs ask human for decisions? Does planner use Task tool correctly with RESEARCH SUMMARY prompt? Does researcher return proper RESEARCH SUMMARY format (question, answer, spec updates with line numbers, key constraints)? Does researcher update spec/current_system.md before returning summary? Does planner read summary and continue, or read referenced spec sections for detail? Does this reduce friction for factual questions? Do planners still ask humans for design decisions?
+- Ref #54 (Project rules): Do agents read `.agent-rules/` during entry point? Do they APPEND (not rewrite)? Only add when human explicitly requests? Do rules use absolute language? Does planner read implementation rules to understand constraints? Do rules accumulate properly across sessions?
 - Ref #53 (README ownership): Does researcher keep README.md current alongside current_system.md? Is README user-facing and aligned with discoveries? Does implementor respect researcher's overall structure?
 - Ref #51 (Comment accuracy): Do comments avoid comparisons to removed code ("less/more than...")? State current facts, not what changed?
 - Ref #50 (No code in specs): Do planners avoid dumping implementation code? Focus on WHAT/HOW IT BEHAVES vs HOW TO BUILD?
