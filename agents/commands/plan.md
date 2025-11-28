@@ -171,9 +171,11 @@ For full implementation details, see updated sections in spec/current_system.md
 
 ### Document Format Standards
 
-**Current standards:** Lowercase filenames, YAML frontmatter, separate .puml + SVG files for diagrams
+**See `spec/README.md` for documentation standards** - structure, diagrams (Mermaid), progressive disclosure levels.
 
-**If you encounter old formats, update immediately:** Rename UPPERCASE files, add missing frontmatter, extract inline PlantUML to separate files. Don't ask permission - just fix it.
+**If `spec/README.md` doesn't exist**, copy from `~/dotfiles/agents/spec-README-template.md`.
+
+**If you encounter old formats, update immediately:** Rename UPPERCASE files, add missing frontmatter. Don't ask permission - just fix it.
 
 ## Permissions
 
@@ -223,24 +225,26 @@ You're part of a repeating cycle:
    - Move resolved questions to "Resolved Questions" section
    - Update planning based on their input
 
-2. Read `ongoing_changes/planning_status.md` in full if it exists - previous planning progress
+2. Read `spec/README.md` in full if it exists - spec folder conventions for this project
 
-3. Read `spec/current_system.md` completely for system understanding
+3. Read `ongoing_changes/planning_status.md` in full if it exists - previous planning progress
 
-4. Read `spec/feature_tests.md` in full if it exists - understand existing features and how they're verified
+4. Read `spec/current_system.md` completely for system understanding
 
-5. Read `ongoing_changes/new_features.md` in full for what's being planned
+5. Read `spec/feature_tests.md` in full if it exists - understand existing features and how they're verified
 
-6. **Read `.agent-rules/planning.md` if it exists** - ABSOLUTE project-specific planning rules
+6. Read `ongoing_changes/new_features.md` in full for what's being planned
 
-7. **Read `.agent-rules/implementation.md` if it exists** - Understand implementation constraints (helps you plan realistically)
+7. **Read `.agent-rules/planning.md` if it exists** - ABSOLUTE project-specific planning rules
 
-8. **Read `ongoing_changes/manager_progress.md` if it exists** - review implementor context usage patterns
+8. **Read `.agent-rules/implementation.md` if it exists** - Understand implementation constraints (helps you plan realistically)
+
+9. **Read `ongoing_changes/manager_progress.md` if it exists** - review implementor context usage patterns
    - Check "Context Usage Analysis" section for task sizing feedback
    - Use historical data to calibrate new task sizes
    - Aim for tasks that keep implementors in 40-50% context range
 
-9. Read any human input or requirements provided completely
+10. Read any human input or requirements provided completely
 
 ## Reading current_system.md Efficiently - Progressive Disclosure
 
@@ -305,20 +309,14 @@ That's it. No "Rule", no "Why", no "Added" fields.
 
 ### Examples: Bad vs Good
 
-❌ **TOO VERBOSE**:
+❌ **TOO VERBOSE** (explains concepts you already know):
 ```markdown
-## Unity Build Time Consideration
-**Context**: Unity projects - when planning features that involve Unity-specific components or assets
-**Rule**: ALWAYS account for Unity build times in task sizing and phase planning
-**How**:
-1. Consider that Unity domain reloads take time during implementation
-2. Budget extra implementor time for Unity-specific tasks
-3. Remember that Unity builds take 10-15 minutes on average
-4. Split large Unity features into smaller phases to avoid context overflow
-5. Include explicit build and test time in verification strategy
-
-**Why**: Unity's compilation and build process is slower than typical web projects. Underestimating time leads to implementor context overflow and incomplete tasks.
-**Added**: 2025-11-23 (learned from implementor running out of context)
+## Unity Build Time
+**Context**: Unity projects, planning phases
+**Rule**: Account for build times in task sizing
+**How**: Budget extra time, split large features, include build/test time
+**Why**: Slow compilation causes context overflow
+**Added**: 2025-11-23
 ```
 
 ✅ **GOOD (token-efficient)**:
@@ -506,19 +504,13 @@ features: [list, of, feature, names]
 **Content Requirements**:
 - CREATE initial spec with all planned features
 - UPDATE in subsequent sessions to refine requirements
-- **Include UML diagrams as SVGs** showing architecture changes (separate .puml files, generate SVGs)
+- **Include Mermaid diagrams inline** showing architecture changes (see spec/README.md for syntax)
 - **Include verification strategy** for each feature (how to test repeatably)
 - Mark features as completed (implementor will do this too)
 - Focus on WHAT, not HOW
 - Two implementations should be functionally identical
 - Clear enough for any competent developer
 - Add "PLANNING STATUS: COMPLETE" at top when ready for implementation
-
-**Diagram workflow** (REQUIRED for features touching 2+ components):
-1. Create `.puml` files in `ongoing_changes/diagrams/` for component/sequence diagrams with change highlighting
-2. Run `plantuml ongoing_changes/diagrams/*.puml -tsvg` to generate SVGs
-3. Reference in markdown: `![Description](diagrams/name.svg)` with source link
-4. Commit both `.puml` and `.svg` files
 
 **Verification Strategy** (REQUIRED for each feature):
 
@@ -786,24 +778,11 @@ Search "python testing":
 
 ## UML Diagrams for Visual Planning - CRITICAL
 
-**Use PlantUML to show what's changing in the system architecture.**
+**Use Mermaid diagrams inline** to show what's changing in the system architecture.
 
-Visual diagrams make spec review dramatically easier for humans. Instantly seeing which components are affected helps spot scope issues, missing considerations, and integration risks.
+Visual diagrams make spec review dramatically easier. Instantly seeing which components are affected helps spot scope issues, missing considerations, and integration risks.
 
-**CRITICAL: Use separate diagram files with generated SVGs:**
-
-1. Create `.puml` files in `ongoing_changes/diagrams/` directory
-2. Generate SVGs: `plantuml ongoing_changes/diagrams/*.puml -tsvg`
-3. Reference SVGs in markdown: `![Feature Overview](diagrams/feature-name-overview.svg)`
-4. Add source link below image: `*[View/edit source](diagrams/feature-name-overview.puml)*`
-
-**Why separate files + SVGs:**
-- Humans see diagrams immediately in markdown viewers (GitHub, VS Code, etc.)
-- No copy-pasting to external renderers needed
-- Source files remain editable and version-controlled
-- Git diffs show what changed in diagram source
-
-**Always generate SVGs after creating or editing diagrams.** This is not optional.
+**See `spec/README.md` for Mermaid syntax** - flowcharts, sequence diagrams, class diagrams.
 
 ### When to Use Diagrams
 
@@ -813,139 +792,24 @@ Visual diagrams make spec review dramatically easier for humans. Instantly seein
 - Focus on WHAT changes at the component level, not HOW it's implemented internally
 
 **Component Diagram with Change Highlighting** - ALWAYS for features touching 2+ components:
-- Show existing architecture (normal color)
-- Highlight modified components (blue background: `#LightBlue`)
-- Highlight new components (green background: `#LightGreen`)
-- Highlight removed components (red background: `#LightCoral`)
-- Show new connections (red arrows with `#Red`)
+- Show existing architecture (normal)
+- Use Mermaid styling to highlight: `style NewComponent fill:#90EE90` (green for new), `fill:#ADD8E6` (blue for modified)
 
-**Sequence Diagram for New Feature** - For any new user flow or data flow:
-- Show complete interaction sequence
-- Include all affected components
-- Highlight new interactions/steps
-- Mark critical points or constraints
+**Sequence Diagram for New Feature** - For any new user flow:
 
-**Before/After Comparison** - For major refactors or replacements:
-- Show current architecture
-- Show proposed architecture
-- Make differences visually obvious
-
-### PlantUML Syntax for Planning
-
-**These are file contents for `.puml` files - NOT inline code blocks in markdown.**
-
-**Component Diagram with Changes** (`ongoing_changes/diagrams/email-notifications-overview.puml`):
-```plantuml
-@startuml
-!theme plain
-title "Feature: Add Email Notification System"
-
-component "Web Frontend" as WF
-component "API Server" as API #LightBlue
-database "PostgreSQL" as DB
-component "Auth Service" as Auth
-component "Email Service" as Email #LightGreen
-
-WF --> API : REST/HTTPS
-API --> DB : SQL
-API --> Auth : gRPC
-API --> Email : AMQP #Red
-
-note right of Email
-  NEW component
-  Handles all email sending
-  Integrates with SendGrid
-end note
-
-note right of API
-  MODIFIED
-  Add email notification endpoints
-  Add message queue consumer
-end note
-@enduml
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant A as API
+    participant N as NewService
+    Note over N: NEW COMPONENT
+    U->>A: Request
+    A->>N: Process
+    N-->>A: Result
+    A-->>U: Response
 ```
 
-**Sequence Diagram for New Feature** (`ongoing_changes/diagrams/password-reset-flow.puml`):
-```plantuml
-@startuml
-!theme plain
-title "New Feature: Password Reset with Email"
-
-actor User
-participant "Frontend" as FE
-participant "API Server" as API #LightBlue
-database "Database" as DB
-participant "Email Service" as Email #LightGreen
-
-User -> FE: Click "Forgot Password"
-FE -> API: POST /auth/reset-request
-activate API #LightBlue
-API -> DB: GenerateResetToken()
-API -> Email: SendResetEmail(token) #Red
-activate Email #LightGreen
-Email --> User: Email with reset link
-deactivate Email
-API --> FE: Success
-deactivate API
-FE --> User: "Check your email"
-
-... User clicks email link ...
-
-User -> FE: Click reset link
-FE -> API: POST /auth/reset-password {token, newPassword}
-API -> DB: ValidateToken()
-API -> DB: UpdatePassword()
-API --> FE: Success
-FE --> User: "Password updated"
-@enduml
-```
-
-**After creating/editing .puml files, ALWAYS run:**
-```bash
-plantuml ongoing_changes/diagrams/*.puml -tsvg
-```
-
-### Where to Place Diagrams in new_features.md
-
-**Typical structure with separate diagram files:**
-
-```markdown
-# Feature: Email Notification System
-
-## Feature Requirements
-[What the feature does from user perspective]
-
-## Architecture Impact
-
-### System Changes Overview
-
-![Email Notifications Architecture](diagrams/email-notifications-overview.svg)
-*[View/edit source](diagrams/email-notifications-overview.puml)*
-
-**Components Affected:**
-- API Server (MODIFIED) - Add email notification endpoints
-- Email Service (NEW) - Handle all email sending
-- Database (MODIFIED) - Add email_queue table
-
-### New User Flow
-
-![Password Reset Flow](diagrams/password-reset-flow.svg)
-*[View/edit source](diagrams/password-reset-flow.puml)*
-
-**Critical Integration Points:**
-- API → Email Service: Uses AMQP (RabbitMQ) for async messaging
-- Email Service → SendGrid: External API (requires API key in env)
-- Database: New email_queue table for retry logic
-
-## Technical Approach
-[Implementation phases, data structures, etc.]
-```
-
-**Workflow:**
-1. Create/edit `.puml` files in `ongoing_changes/diagrams/`
-2. Run `plantuml ongoing_changes/diagrams/*.puml -tsvg`
-3. Reference SVGs in markdown with `![Description](diagrams/name.svg)`
-4. Add source link: `*[View/edit source](diagrams/name.puml)*`
+**Before/After Comparison** - For major refactors, show two diagrams side by side.
 
 ### Benefits for Human Collaboration
 

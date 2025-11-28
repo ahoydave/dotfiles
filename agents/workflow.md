@@ -132,54 +132,29 @@ ongoing_changes/                - Temporary work-in-progress documents
 
 ---
 
-## Viewing UML Diagrams in Documentation
+## Diagrams in Documentation
 
-**Agents include PlantUML diagrams** in system and planning documentation to visualize architecture, data flows, and changes. These diagrams make reviewing and understanding complex systems dramatically easier.
+**Agents use Mermaid diagrams inline** in system and planning documentation. These render natively in GitHub, GitLab, Obsidian, VS Code, and most markdown viewers.
 
 ### Where You'll Find Diagrams
 
-**CURRENT_SYSTEM.md** (from Researcher):
-- Component diagrams showing system architecture
+**current_system.md** (from Researcher):
+- Flowcharts showing system architecture
 - Sequence diagrams for critical data flows
-- Interface diagrams for key contracts
+- Class diagrams for key entities
 
-**NEW_FEATURES.md** (from Planner):
-- Component diagrams highlighting what's changing
-  - Modified components (blue)
-  - New components (green)
-  - Removed components (red)
+**new_features.md** (from Planner):
+- Flowcharts highlighting what's changing
 - Sequence diagrams showing new feature flows
 
-### How to Render PlantUML Diagrams
+### Viewing Mermaid Diagrams
 
-**VSCode** (recommended):
-1. Install "PlantUML" extension
-2. Open any .md file with diagrams
-3. Press `Alt+D` (Windows/Linux) or `Option+D` (Mac) to preview
-4. Or right-click → "Preview Current Diagram"
+**No setup required** - Mermaid renders natively in:
+- GitHub / GitLab (inline in markdown)
+- VS Code (with built-in markdown preview)
+- Obsidian, Notion, and most modern markdown tools
 
-**Online** (no installation):
-- Copy diagram code (between ` ```plantuml` markers)
-- Paste into:
-  - plantuml.com
-  - planttext.com
-  - plantuml-editor.kkeisuke.com
-- View rendered diagram
-
-**Command Line**:
-```bash
-# Install PlantUML
-brew install plantuml  # Mac
-apt-get install plantuml  # Linux
-
-# Render diagrams in markdown file
-plantuml spec/CURRENT_SYSTEM.md
-# Generates PNG images
-```
-
-**Browser Extensions**:
-- Some GitHub/GitLab browser extensions render PlantUML inline
-- Check your repository hosting platform docs
+**VS Code**: Just open the markdown file and use `Cmd+Shift+V` (Mac) or `Ctrl+Shift+V` (Windows/Linux) to preview.
 
 ### Why Diagrams Matter
 

@@ -1,27 +1,27 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2025-11-24
-git_commit: 911ff2945bc63c3d69dd102521865ad4d25dfad1
-refinement_count: 55
+last_updated: 2025-11-28
+git_commit: 771b47c
+refinement_count: 57
 status: production-ready
-recent_focus: autonomous_research_delegation
+recent_focus: comment_quality
 agent_count: 5
 ---
 
-## Current State (2025-11-24)
+## Current State (2025-11-28)
 
-### Status: Production-Ready with Autonomous Implementation Manager and Research Delegation
+### Status: Production-Ready with Optimized Prompt Efficiency
 
-**Agent prompts**: 55 refinements applied through iterative testing
-**Deployment**: Prompts in ~/dotfiles/claude/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
+**Agent prompts**: 57 refinements applied through iterative testing
+**Deployment**: Prompts in ~/dotfiles/agents/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
 **Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
 **Recent focus**: Project-specific agent rules (`.agent-rules/` directory for accumulating project learnings)
 
 ### What's Working
 
-✅ **Researcher**: Clean handoffs, scales to massive codebases via aggressive sub-agent delegation, comprehensive system documentation with UML diagrams (separate .puml files + auto-generated SVGs), test suite verification, documentor role (facts, not recommendations), verification mindset (trust code over claims), no documentation history meta-commentary
+✅ **Researcher**: Clean handoffs, scales to massive codebases via aggressive sub-agent delegation, comprehensive system documentation with inline Mermaid diagrams, test suite verification, documentor role (facts, not recommendations), verification mindset (trust code over claims), no documentation history meta-commentary
 ✅ **Planner**: Interactive collaboration via questions.md, visual planning with change-highlighted diagrams, verification strategy in specs, absolute no-code rule (user experience clear, implementation flexible)
 ✅ **Implementor**: Clear task boundaries, repeatable test creation requirements, end-to-end verification focus
 ✅ **Implementation Manager**: Autonomous multi-task orchestration via sub-agents (Refinement #32)
@@ -39,7 +39,7 @@ agent_count: 5
 ✅ **Test suite verification**: Researcher runs tests to verify system state, not just reads code
 ✅ **End-to-end testing**: Tests verify user experience, not just "code exists"
 ✅ **Proof-required testing**: Implementors must paste actual terminal output as verification
-✅ **Visual architecture**: PlantUML diagrams for components, sequences, and interfaces
+✅ **Visual architecture**: Inline Mermaid diagrams for components, sequences, and interfaces
 ✅ **Metadata tracking**: YAML frontmatter for traceability (git SHA, dates, status)
 ✅ **Format migration**: Automatic updates to latest document format standards
 ✅ **Permissions**: settings.json controls approvals - agents run dev commands without friction
@@ -105,6 +105,10 @@ agent_count: 5
 
 55. **Planner spawns researcher sub-agents** - Planner can now autonomously spawn researcher sub-agents to fill factual gaps about current system. Problem: During planning, planner discovers gaps in system understanding ("How does auth work?", "What's the DB schema?"). Previously required human to manually invoke /research, update spec, then re-invoke /plan - friction in the workflow. Solution: Added "Spawning Research Sub-Agents for Factual Gaps" section to planner prompt (~120 lines). Clear boundary: spawn researcher for FACTUAL gaps (how system works), ask human in questions.md for DECISIONAL matters (what to build, priorities, business rules). Planner uses Task tool to spawn researcher with specific question. Researcher investigates, updates spec/current_system.md (spec remains source of truth), returns RESEARCH SUMMARY (brief answer + spec pointers + key constraints). Planner reads brief answer to continue, or reads referenced spec sections for deeper detail. Added "Sub-Agent Mode" section to researcher prompt (~100 lines) defining RESEARCH SUMMARY format and targeted research behavior. Pattern consistent with Implementation Manager (manager spawns implementors, planner spawns researchers). Benefits: (1) Autonomous factual research - no human friction for "how does it work" questions, (2) Better specs - complete understanding before planning, (3) Spec always updated - permanent benefit for all agents, (4) Progressive detail - planner controls depth via summary vs full spec sections. Example: Planner asks "How does auth middleware work?" → researcher investigates → updates spec with auth flow + diagram → returns summary → planner continues with complete understanding. Reduces "I think it works like X" → later discovery it's Y. Human focuses on design decisions, researcher handles facts about current system.
 
+56. **Prompt verbosity reduction (round 2)** - Removed verbose teaching content while preserving critical behavioral rules. Problem: Prompts approaching 1000+ lines fighting base model training on documentation-as-history. User feedback: agents still miss "don't keep history" despite heavy instruction, PlantUML syntax examples not needed (added by previous meta-agent, not battle-tested). Solution: Removed ~335 lines total: (1) PlantUML syntax examples from research.md and plan.md (~230 lines) - replaced with brief workflow + link to plantuml.com, kept instructions to USE diagrams and generate SVGs. (2) Compressed verbose "bad example" demonstrations in project rules sections (~50 lines) - kept teaching contrast but made more concise. (3) Streamlined repetitive sections (~55 lines). **Kept "Documentation is Not History" sections LOUD and prominent** - this fights base model training so cannot be diluted. Results: research.md 1366→1144 lines (16% reduction), plan.md 1024→915 lines (11% reduction), implement.md 1116→1102 lines (1% reduction), implementation-manager.md unchanged at 388 lines (already tight). Total: ~345 lines removed while strengthening anti-history guidance and preserving all critical behavioral instructions (coding standards examples, verification requirements, absolute rules).
+
+57. **Comments: last resort, not default** - Compressed and reframed comment guidance. Problem: (1) Implementor wrote `"not in Assets"` - negation that only makes sense knowing old code. (2) Previous guidance was 140 lines of examples, fighting verbosity with verbosity. Solution: Rewrote entire comment section to ~30 lines. New framing: "A comment is an admission that the code isn't clear enough." Comments are last resort after trying to make code self-explanatory. Three rules: (1) comments must stand alone, (2) no comparatives/negations, (3) check existing comments when changing code. One concrete example (the Unity case). One valid use case (external constraints). Removed all redundant examples. Key philosophy shift: comments aren't just "for WHY not WHAT" - they're a failure to write clear code.
+
 **See git history for full chronological details.**
 
 ## Convergent Evolution: ACE-FCA (2025-11-09)
@@ -113,7 +117,7 @@ We independently converged on ~80-85% the same solution as HumanLayer's "Advance
 
 **Key insight**: The bottleneck in AI coding is context management, not model capability.
 
-**What we adopted from them**: Context thresholds (40-50% wrap up, 60% hard stop), YAML frontmatter, PlantUML diagrams.
+**What we adopted from them**: Context thresholds (40-50% wrap up, 60% hard stop), YAML frontmatter, visual diagrams (now using Mermaid instead of PlantUML).
 
 **Our unique strengths**: Implementation Manager (autonomous flow via sub-agents), comprehensive current_system.md (works on unfamiliar codebases), explicit "paste output" rule (we discovered agents fake testing), agent-agnostic design.
 
@@ -251,7 +255,6 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
 **Agent document ownership**:
 - **Researcher** owns:
   - `spec/current_system.md` (+ `spec/system/components/*.md`, `spec/system/flows/*.md` if split)
-  - `spec/diagrams/*.puml` + `*.svg` (current system diagrams)
   - `spec/feature_tests.md` (maintains/verifies)
   - `spec/research_status.md`
   - `README.md` (project root - user-facing overview, kept aligned with current_system.md)
@@ -259,7 +262,6 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
   - `ongoing_changes/new_features.md`
   - `ongoing_changes/planning_status.md`
   - `ongoing_changes/questions.md`
-  - `ongoing_changes/diagrams/*.puml` + `*.svg` (planned changes diagrams)
   - (reads `spec/feature_tests.md`)
 - **Implementor** owns:
   - `ongoing_changes/implementor_progress.md`
@@ -269,8 +271,8 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
 - **Implementation Manager** owns:
   - `ongoing_changes/manager_progress.md`
 - **Meta-Agent** owns:
-  - `meta_status.md` (in dotfiles repo, not target projects)
-  - All agent prompts in `~/dotfiles/claude/commands/`
+  - `meta/status.md` (in dotfiles repo, not target projects)
+  - All agent prompts in `~/dotfiles/agents/commands/`
 
 ### System Documentation Principle
 **For current_system.md**: "Behavior and integration points clear, implementation details minimal"
@@ -288,7 +290,7 @@ Document WHAT the system does and HOW components connect - enough to plan change
 - `spec/current_system.md`: Levels 1+2 overview + navigation (under 500 lines)
 - `spec/system/components/<name>.md`: Level 3 component details
 - `spec/system/flows/<name>.md`: Critical flow documentation
-- `spec/diagrams/*.puml` + `.svg`: Visual architecture at all levels
+- Diagrams are inline using Mermaid (see spec/README.md)
 
 **Analogous to planner specs**:
 - Planner: "User experience clear, implementation flexible"
@@ -358,9 +360,25 @@ All prompts tested on actual project (this looped agent system):
 
 ## Active Development Areas
 
-### Recently Completed (2025-11-24)
+### Recently Completed (2025-11-25)
 
-✅ **Planner spawns researcher sub-agents** (Refinement #55) - JUST ADDED
+✅ **Comments: last resort, not default** (Refinement #57) - JUST ADDED
+  - Reframed: "A comment is an admission that the code isn't clear enough"
+  - Compressed from ~140 lines to ~30 lines (same rules, less verbosity)
+  - Three rules: stand alone, no comparatives/negations, check when changing code
+  - One example (Unity "not in Assets" case), one valid use (external constraints)
+  - Philosophy shift: comments are failure to write clear code, not just "for WHY"
+
+✅ **Prompt verbosity reduction (round 2)** (Refinement #56)
+  - Removed ~345 lines across agent prompts while preserving critical behavioral rules
+  - Removed PlantUML syntax examples (research.md, plan.md) - kept workflow + link to docs
+  - Compressed verbose project rules "bad examples" - kept teaching value, reduced tokens
+  - **"Documentation is Not History" sections kept LOUD** - fights base model training
+  - Results: research.md 16% shorter, plan.md 11% shorter, implement.md 1% shorter
+  - Preserves all critical instructions: coding standards, verification requirements, absolute rules
+  - Focus: compress teaching examples, strengthen anti-history guidance
+
+✅ **Planner spawns researcher sub-agents** (Refinement #55)
   - Planner can autonomously spawn /research sub-agents for factual gaps
   - Clear boundary: factual questions (spawn researcher) vs design decisions (ask human)
   - Researcher updates spec/current_system.md, returns RESEARCH SUMMARY
@@ -459,7 +477,7 @@ All prompts tested on actual project (this looped agent system):
   - Planner/implementor/manager docs → `ongoing_changes/`
   - Researcher docs → `spec/`
   - Easy cleanup: delete entire `ongoing_changes/` when project phase complete
-  - Clarifies that prompts in ~/dotfiles/claude/commands/ work on ANY project
+  - Clarifies that prompts in ~/dotfiles/agents/commands/ work on ANY project
 
 ### Previously Completed (2025-11-11)
 ✅ **Prompt verbosity reduction** (Refinement #44)
@@ -522,7 +540,7 @@ All prompts tested on actual project (this looped agent system):
 ✅ **Implementation Manager (autonomous multi-task orchestration)**
 ✅ **Slash command integration** - Claude Code CLI integration via dotfiles
 ✅ **Context threshold optimization** - Aligned with ACE-FCA proven thresholds
-✅ **UML/PlantUML diagram integration** - Visual architecture documentation
+✅ **Mermaid diagram integration** - Inline visual architecture documentation
 ✅ **YAML frontmatter metadata** - Traceability and status tracking
 ✅ **Document format migration rule** - Automatic updates to latest standards
 ✅ Agent-agnostic terminology (supports Claude, GPT-5, Gemini, etc.)
@@ -533,15 +551,17 @@ All prompts tested on actual project (this looped agent system):
 ✅ Comprehensive system doc guidelines for researchers (when to split, what to include/exclude)
 
 ### Current Status
-**System is stable and production-ready.** Enhanced with autonomous Implementation Manager for multi-task orchestration, visual documentation, metadata tracking, and slash command integration. Prompts now live in `~/dotfiles/claude/commands/` for easy deployment. Continue monitoring agent behavior in real usage. Document new failure patterns as they emerge.
+**System is stable and production-ready.** Enhanced with autonomous Implementation Manager for multi-task orchestration, visual documentation, metadata tracking, and slash command integration. Prompts now live in `~/dotfiles/agents/commands/` for easy deployment. Continue monitoring agent behavior in real usage. Document new failure patterns as they emerge.
 
 **Major workflow improvement**: Implementation Manager eliminates human friction between tasks while maintaining our paranoid testing requirements.
 
-**Deployment**: No install script needed. Prompts are in dotfiles and automatically available via `~/.claude/commands` symlink.
+**Deployment**: Prompts are in `~/dotfiles/agents/commands/` and symlinked to `~/.claude/commands` for availability in any project.
 
 ### Known Issues to Monitor
 
-**Recent Refinements (41-55):**
+**Recent Refinements (41-57):**
+- Ref #57 (Comments last resort): Are comments rare? Do agents try to make code self-explanatory first? Do comments avoid comparatives/negations? Are comments treated as failure to write clear code?
+- Ref #56 (Prompt compression round 2): Do agents still follow critical behavioral instructions after compression? **CRITICAL: Do agents still avoid documentation-as-history (this fights base model training)?** Do agents create Mermaid diagrams inline (workflow preserved)? Do agents read project-specific rules (format simplified)? Did compression harm any critical behaviors?
 - Ref #55 (Planner spawns researchers): Does planner spawn researcher for factual gaps vs ask human for decisions? Does planner use Task tool correctly with RESEARCH SUMMARY prompt? Does researcher return proper RESEARCH SUMMARY format (question, answer, spec updates with line numbers, key constraints)? Does researcher update spec/current_system.md before returning summary? Does planner read summary and continue, or read referenced spec sections for detail? Does this reduce friction for factual questions? Do planners still ask humans for design decisions?
 - Ref #54 (Project rules): Do agents read `.agent-rules/` during entry point? Do they APPEND (not rewrite)? Only add when human explicitly requests? Do rules use absolute language? Does planner read implementation rules to understand constraints? Do rules accumulate properly across sessions?
 - Ref #53 (README ownership): Does researcher keep README.md current alongside current_system.md? Is README user-facing and aligned with discoveries? Does implementor respect researcher's overall structure?
@@ -549,7 +569,7 @@ All prompts tested on actual project (this looped agent system):
 - Ref #50 (No code in specs): Do planners avoid dumping implementation code? Focus on WHAT/HOW IT BEHAVES vs HOW TO BUILD?
 - Ref #49 (Sub-agent delegation): Does researcher use sub-agents aggressively? Launch 5-10 parallel agents for >100k LOC codebases? Stay <50% context?
 - Ref #48 (Verification mindset): Does researcher trust code over claims? Avoid documenting documentation history?
-- Ref #47 (Diagram ownership): Planners use `ongoing_changes/diagrams/`, researchers use `spec/diagrams/`?
+- Ref #47 (Diagram ownership): Diagrams inline in relevant markdown files (Mermaid syntax)?
 - Ref #46 (Meta reads prompts): Does meta-agent read all four prompts directly?
 - Ref #45 (Directory structure): Do agents respect `ongoing_changes/` (temporary) vs `spec/` (permanent) boundaries? No unauthorized docs elsewhere?
 - Ref #44 (Prompt verbosity): Are prompts more efficient? Did reduction harm anything?
@@ -562,7 +582,7 @@ All prompts tested on actual project (this looped agent system):
 - Repeatable tests (Ref #36): Do implementors CREATE repeatable tests (not just test once)? Verify end-to-end user experience? Run regression checks?
 - Feature test registry (Ref #37): Do implementors add to feature_tests.md? Do researchers use it as test checklist?
 - Paste output rule: Do agents paste actual terminal output (not just claim they tested)?
-- PlantUML diagrams: Do agents create separate .puml files and generate SVGs correctly?
+- Mermaid diagrams: Do agents create inline diagrams in markdown files?
 - YAML frontmatter: Do agents update metadata each session?
 - Document cleanup: Do researchers only delete in spec/ folder (not implementor_progress.md, manager_progress.md)?
 - Implementation Manager: Does manager delegate properly? Maintain minimal context (<30%)? Handle restarts gracefully?

@@ -8,8 +8,9 @@ Personal development environment configuration.
 - `.vimrc` - Works on any server (plain vim)
 - `.config/nvim/` - Full neovim with LSP, plugins, fuzzy finding
 
-**Claude Code Agent System**: Looped agent workflow for software development
-- `claude/` - Five specialized agents (research, plan, implement, manager, meta) with shared documentation
+**Agent System**: Looped agent workflow for software development (Claude, Gemini, Cursor)
+- `agents/` - Shared agent prompts and workflow documentation
+- `claude/` - Claude Code-specific settings
 
 ## Installation
 
@@ -24,15 +25,17 @@ cd ~/dotfiles
 
 Installs: symlinks to `.vimrc` and `.config/nvim/`, vim-plug plugin manager
 
-### Claude Code Agent System
+### Agent System
 
-Symlink to `~/.claude/`:
+For Claude Code, symlink to `~/.claude/`:
 ```bash
-ln -sf ~/dotfiles/claude/commands ~/.claude/commands
+ln -sf ~/dotfiles/agents/commands ~/.claude/commands
 ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
 ```
 
 Available agents: `/research`, `/plan`, `/implement`, `/implementation-manager`, `/meta-agent`
+
+For Gemini CLI or Cursor, link `agents/commands/` to their respective config locations.
 
 ## Neovim Configuration
 
@@ -48,16 +51,16 @@ Available agents: `/research`, `/plan`, `/implement`, `/implementation-manager`,
 
 ## Agent System
 
-Five specialized agents for iterative software development using Claude Code or other coding agents.
+Five specialized agents for iterative software development. Works with Claude Code, Gemini CLI, Cursor, or any AI coding tool.
 
 **Agents:**
 - `/research` - Investigate system, verify implementations, document current state
-- `/plan` - Design specs collaboratively with humans via QUESTIONS.md
+- `/plan` - Design specs collaboratively with humans via questions.md
 - `/implement` - Build one atomic task per session with mandatory testing
 - `/implementation-manager` - Autonomous multi-task orchestration
 - `/meta-agent` - Refine the agent system itself
 
-**Documentation:** See `claude/README.md` and `claude/agent_workflow.md`
+**Documentation:** See `agents/workflow.md`
 
 ## Usage
 

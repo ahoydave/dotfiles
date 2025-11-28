@@ -145,13 +145,15 @@ tests_passing: true | false
 
 1. Read `ongoing_changes/implementor_progress.md` in full (or old UPPERCASE name if it exists) - what's been done and what's next
 
-2. Read `spec/current_system.md` completely - understand existing system
+2. Read `spec/README.md` in full if it exists - spec folder conventions for this project
 
-3. Read `ongoing_changes/new_features.md` in full - understand what to build
+3. Read `spec/current_system.md` completely - understand existing system
 
-4. Read `README.md` completely - project context
+4. Read `ongoing_changes/new_features.md` in full - understand what to build
 
-5. **Read `.agent-rules/implementation.md` if it exists** - ABSOLUTE project-specific rules you must follow
+5. Read `README.md` completely - project context
+
+6. **Read `.agent-rules/implementation.md` if it exists** - ABSOLUTE project-specific rules you must follow
 
 ## Reading current_system.md Efficiently - Progressive Disclosure
 
@@ -215,29 +217,16 @@ That's it. No "Rule", no "Why", no "Added" fields.
 
 ### Examples: Bad vs Good
 
-❌ **TOO VERBOSE (wastes tokens explaining what you already know)**:
+❌ **TOO VERBOSE** (explains concepts you already know):
 ```markdown
-## Unity Domain Reload After File Changes
-**Context**: Unity project - applies when adding, removing, or changing .cs files (C# source code)
-**Rule**: ALWAYS reload Unity domain after modifying C# files AND check console for compilation errors
-**How**:
-1. After creating/modifying/deleting .cs files, trigger domain reload:
-   - Via UnityMCP tool: `mcp__unity__unity_trigger_reload()`
-2. Wait approximately 5 seconds for compilation to complete
-3. Check Unity console for compilation errors:
-   - Via UnityMCP tool: `mcp__unity__unity_get_console_logs(logType="Error")`
-4. If errors found, FIX them immediately before proceeding
-5. Verify compilation succeeded (no errors in console)
-
-**Why**: Unity must compile C# code changes and generate .meta files for the engine to recognize new/modified files. Skipping this causes:
-- Missing .meta files (Unity won't track assets)
-- Compilation errors not detected
-- "Missing reference" errors in editor
-- Broken builds
-
-**Added**: 2025-11-23 (user request)
+## Unity Domain Reload
+**Context**: Unity project - C# files (.cs)
+**Rule**: Reload domain, check errors
+**How**: Run `mcp__unity__unity_trigger_reload()`, wait 5s, check `mcp__unity__unity_get_console_logs(logType="Error")`, fix errors
+**Why**: Must compile C# changes, generate .meta files
+**Added**: 2025-11-23
 ```
-*Why bad: Explains what .cs files are, why Unity needs compilation, consequences you already understand. ~180 tokens.*
+*Why bad: Explains what .cs files are, why compilation is needed - you already know this.*
 
 ✅ **GOOD (only documents what you can't infer)**:
 ```markdown
@@ -686,112 +675,33 @@ If `.agent-rules/implementation.md` doesn't exist and human requests adding a ru
 
 ## Coding Standards - ABSOLUTE RULES
 
-### Comments Are NOT for Explaining Changes
+### Comments: Last Resort, Not Default
 
-**ABSOLUTE RULE: Comments stay in the codebase forever. Use them ONLY when necessary.**
+**A comment is an admission that the code isn't clear enough.** Before adding a comment, try harder to make the code self-explanatory: rename variables, extract functions, use constants. Comments are a last resort for genuinely non-obvious WHY (external constraints, business rules, workarounds).
 
-**Comments are for:**
-- Explaining non-obvious WHY (business rules, edge cases, workarounds)
-- Warning about gotchas that aren't visible in code
-- Documenting constraints that can't be expressed in code
+**Rules:**
+1. **Comments must stand alone** - If it only makes sense knowing what the code *used to be*, delete it
+2. **No comparatives or negations** - "less than", "instead of", "not in X" reference removed code
+3. **When changing code, check existing comments** - Delete or update any that reference old code
 
-**Comments are NOT for:**
-- ❌ Explaining what code does (code should be self-explanatory)
-- ❌ Describing changes you made ("Added feature X", "Fixed bug Y")
-- ❌ Narrative about implementation ("First we do X, then we do Y")
-- ❌ Compensating for unclear code (rewrite the code instead)
+**Red flags** (these reference removed code):
+- "less/more/better than..." ← than WHAT?
+- "now uses...", "changed to...", "improved..." ← from WHAT?
+- "not in X", "instead of Y" ← why mention what it ISN'T?
 
-**CRITICAL: When you change code, DELETE OR UPDATE comments that reference the old code**
-
-Comments become **dangerously misleading** when they describe code that no longer exists. Every time you modify code, check if existing comments are still accurate.
-
-**Especially dangerous**: Comments that make **comparisons to removed code** or describe what changed.
-
-❌ **EXTREMELY BAD - Comment compares to code that's gone**:
+**One example** - implementor changed path from Assets to project root:
 ```csharp
-// Find available ports
-int httpPort = FindAvailablePort(3000);
-int wsPort = FindAvailablePort(9001);
-```
-Changed to:
-```csharp
-// Find available ports in less common range to avoid conflicts
-// Using 37000+ (ephemeral port range, less likely to clash with common services)
-int httpPort = FindAvailablePort(37000);
-int wsPort = FindAvailablePort(37100);
-```
-**Problem**: "Less common range" and "less likely to clash" - **LESS THAN WHAT?** The original ports (3000, 9001) are gone from the code. The comment compares to something that no longer exists, making it meaningless. It's describing the *change* rather than the *current state*.
+// BAD: "not in Assets" only makes sense if you knew old code used Assets
+// Locate relay.js (in UnityMcpRelay at project root, not in Assets)
+string path = Path.Combine(projectRoot, "UnityMcpRelay/relay.js");
 
-**These phrases are red flags** (they reference removed code):
-- "less likely than..." ← less than WHAT?
-- "now uses..." ← what did it use BEFORE?
-- "changed to..." ← changed from WHAT?
-- "improved..." ← improved from WHAT?
-- "instead of..." ← instead of WHAT?
-- "more/fewer/better..." ← compared to WHAT?
-
-✅ **CORRECT - Comment states CURRENT FACTS without comparison**:
-```csharp
-// Ephemeral port range (37000+) unlikely to conflict with system services
-int httpPort = FindAvailablePort(37000);
-int wsPort = FindAvailablePort(37100);
-```
-Or even better (inline):
-```csharp
-int httpPort = FindAvailablePort(37000);  // Ephemeral range, avoids common ports
-int wsPort = FindAvailablePort(37100);
-```
-Or best (self-documenting code):
-```csharp
-const int EPHEMERAL_PORT_START = 37000;  // Avoid common service ports
-int httpPort = FindAvailablePort(EPHEMERAL_PORT_START);
-int wsPort = FindAvailablePort(EPHEMERAL_PORT_START + 100);
+// GOOD: No comment needed - code is clear
+string relayScriptPath = Path.Combine(projectRoot, "UnityMcpRelay/relay.js");
 ```
 
-**Notice**: The good versions state WHAT the code does NOW (uses ephemeral range, avoids conflicts), not WHAT CHANGED (less than before, improved from previous).
-
-**Before adding a comment, ask:**
-1. Can I make the code clearer instead? (Rename variables, extract function with clear name)
-2. Is this explaining WHAT (bad) or WHY (potentially good)?
-3. Will this comment still be accurate in 6 months, or will it become misleading?
-4. **If I'm modifying code: Does any existing comment reference what I'm changing?**
-
-**Examples:**
-
-❌ **BAD - Comment explains WHAT**:
+**Only valid use** - non-obvious external constraint:
 ```python
-# Check if user is authenticated
-if user.token and user.token.valid:
-    return True
-```
-✅ **GOOD - Code is self-explanatory**:
-```python
-def is_authenticated(user):
-    return user.token and user.token.valid
-```
-
-❌ **BAD - Comment describes changes**:
-```python
-# Added validation to fix bug #123
-def validate_input(data):
-    # Check for empty strings (added 2025-11-10)
-    if not data.strip():
-        return False
-```
-✅ **GOOD - Code speaks for itself, git tracks changes**:
-```python
-def validate_input(data):
-    if not data.strip():
-        return False
-```
-
-✅ **GOOD - Comment explains non-obvious WHY**:
-```python
-# External API requires exactly 3 retries per their SLA
-MAX_RETRIES = 3
-
-# Cache expires at 2am UTC to align with vendor's daily data refresh
-CACHE_EXPIRY = "02:00 UTC"
+MAX_RETRIES = 3  # External API SLA requires exactly 3
 ```
 
 ### Simple Code > Clever Code

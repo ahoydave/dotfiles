@@ -67,7 +67,9 @@
       "Bash([:*)",
       "Bash(tree:*)",
       "Bash(git grep:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "mcp__unity__unity_build",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": [
@@ -77,6 +79,7 @@
     ],
     "defaultMode": "acceptEdits"
   },
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.sh"

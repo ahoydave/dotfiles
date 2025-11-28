@@ -48,8 +48,8 @@ echo "  ~/.config/nvim -> $DOTFILES_DIR/nvim"
 echo ""
 echo "Setting up Claude Code configuration..."
 
-# Create .claude directory structure in dotfiles if it doesn't exist
-mkdir -p "$DOTFILES_DIR/claude/commands"
+# Create directory structure in dotfiles if it doesn't exist
+mkdir -p "$DOTFILES_DIR/agents/commands"
 
 # Ensure ~/.claude directory exists
 mkdir -p "$HOME/.claude"
@@ -81,8 +81,8 @@ rm -f "$HOME/.claude/statusline-command.sh"
 ln -sf "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
 echo "  ~/.claude/settings.json -> $DOTFILES_DIR/claude/settings.json"
 
-ln -sf "$DOTFILES_DIR/claude/commands" "$HOME/.claude/commands"
-echo "  ~/.claude/commands -> $DOTFILES_DIR/claude/commands"
+ln -sf "$DOTFILES_DIR/agents/commands" "$HOME/.claude/commands"
+echo "  ~/.claude/commands -> $DOTFILES_DIR/agents/commands"
 
 ln -sf "$DOTFILES_DIR/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 echo "  ~/.claude/statusline-command.sh -> $DOTFILES_DIR/claude/statusline-command.sh"
@@ -124,8 +124,8 @@ echo "  2. For full neovim experience, install dependencies:"
 echo "     brew install neovim fzf fd ripgrep lazygit"
 echo "     brew install pyright typescript-language-server"
 echo ""
-echo "  3. Create custom Claude Code commands:"
-echo "     cd ~/dotfiles/claude/commands"
+echo "  3. Create custom agent commands:"
+echo "     cd ~/dotfiles/agents/commands"
 echo "     cat > example.md << 'EOF'"
 echo "---"
 echo "description: Example custom command"
