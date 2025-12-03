@@ -51,14 +51,93 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 
 ## The Development Cycle
 
-Repeating cycle with flexibility to jump to any agent as needed:
+### High-Level Overview
 
+```mermaid
+flowchart LR
+    R[Research] --> P[Plan] --> I[Implement] --> V[Verify]
+    V --> P
 ```
-1. Researcher    → Capture/verify system → spec/current_system.md
-2. Planner       → Spec features        → ongoing_changes/new_features.md + questions.md
-3. Implementor   → Build (repeat)       → ongoing_changes/implementor_progress.md
-4. Researcher    → Verify reality       → Update spec/current_system.md
-5. Back to step 2
+
+Each phase involves human-agent collaboration. The cycle continues until the project is complete.
+
+### Detailed Phase Interactions
+
+```mermaid
+flowchart TB
+    subgraph research["1. Research Phase"]
+        direction TB
+        R1["/research<br>Agent explores system"]
+        R2["Human reviews<br>spec/current_system.md"]
+        R3{Accurate?}
+        R1 --> R2 --> R3
+        R3 -->|No| R1
+        R3 -->|Yes| RDone[Ready to plan]
+    end
+
+    subgraph plan["2. Planning Phase"]
+        direction TB
+        P1["Human describes<br>what they want"]
+        P2["/plan<br>Agent designs spec"]
+        P3["Human reviews spec +<br>answers questions.md"]
+        P4{Plan correct?}
+        P1 --> P2 --> P3 --> P4
+        P4 -->|"Clarify/revise"| P2
+        P4 -->|Yes| PDone[Ready to implement]
+    end
+
+    subgraph impl["3. Implementation Phase"]
+        direction TB
+        I1["/implement or<br>/implementation-manager"]
+        I2["Agent builds + tests<br>(one task at a time)"]
+        I3{More tasks?}
+        I1 --> I2 --> I3
+        I3 -->|Yes| I2
+        I3 -->|No| IDone[Ready to verify]
+    end
+
+    subgraph verify["4. Verification Phase"]
+        direction TB
+        V1["/research<br>Agent verifies reality"]
+        V2["Human confirms<br>system works as intended"]
+        V3{All good?}
+        V1 --> V2 --> V3
+        V3 -->|Issues found| VFix[Back to planning]
+        V3 -->|Yes| VDone[Continue or done]
+    end
+
+    research --> plan --> impl --> verify
+    verify -.->|"Next feature"| plan
+```
+
+### Document Flow
+
+```mermaid
+flowchart LR
+    subgraph spec["spec/ (Permanent)"]
+        CS[current_system.md]
+        FT[feature_tests.md]
+    end
+
+    subgraph ongoing["ongoing_changes/ (Temporary)"]
+        NF[new_features.md]
+        Q[questions.md]
+        IP[implementor_progress.md]
+    end
+
+    Researcher -->|writes| CS
+    Researcher -->|writes| FT
+
+    Planner -->|reads| CS
+    Planner -->|writes| NF
+    Planner -->|writes| Q
+
+    Human -->|answers| Q
+
+    Implementor -->|reads| CS
+    Implementor -->|reads| NF
+    Implementor -->|writes| IP
+    Implementor -->|adds to| FT
 ```
 
 **Key**: Agents don't assume who comes next. Each keeps their owned docs current for whoever needs them.
@@ -99,6 +178,12 @@ ongoing_changes/                - Temporary work-in-progress documents
 ```
 
 ### Document Ownership
+
+**spec/README.md** - Documentation standards (permanent, read-only)
+- Created by: Meta-agent (copied from template)
+- Read by: All agents
+- **NEVER modified by agents** - this is a template file
+- If conventions need updating: Ask human to update `~/dotfiles/agents/spec-README-template.md`
 
 **spec/current_system.md** - System understanding (permanent)
 - Created/updated by: Researcher

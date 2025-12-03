@@ -1,19 +1,19 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2025-11-28
-git_commit: 771b47c
-refinement_count: 57
+last_updated: 2025-12-03
+git_commit: 28efd06
+refinement_count: 58
 status: production-ready
-recent_focus: comment_quality
+recent_focus: document_ownership
 agent_count: 5
 ---
 
-## Current State (2025-11-28)
+## Current State (2025-12-03)
 
 ### Status: Production-Ready with Optimized Prompt Efficiency
 
-**Agent prompts**: 57 refinements applied through iterative testing
+**Agent prompts**: 58 refinements applied through iterative testing
 **Deployment**: Prompts in ~/dotfiles/agents/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
 **Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
@@ -108,6 +108,8 @@ agent_count: 5
 56. **Prompt verbosity reduction (round 2)** - Removed verbose teaching content while preserving critical behavioral rules. Problem: Prompts approaching 1000+ lines fighting base model training on documentation-as-history. User feedback: agents still miss "don't keep history" despite heavy instruction, PlantUML syntax examples not needed (added by previous meta-agent, not battle-tested). Solution: Removed ~335 lines total: (1) PlantUML syntax examples from research.md and plan.md (~230 lines) - replaced with brief workflow + link to plantuml.com, kept instructions to USE diagrams and generate SVGs. (2) Compressed verbose "bad example" demonstrations in project rules sections (~50 lines) - kept teaching contrast but made more concise. (3) Streamlined repetitive sections (~55 lines). **Kept "Documentation is Not History" sections LOUD and prominent** - this fights base model training so cannot be diluted. Results: research.md 1366→1144 lines (16% reduction), plan.md 1024→915 lines (11% reduction), implement.md 1116→1102 lines (1% reduction), implementation-manager.md unchanged at 388 lines (already tight). Total: ~345 lines removed while strengthening anti-history guidance and preserving all critical behavioral instructions (coding standards examples, verification requirements, absolute rules).
 
 57. **Comments: last resort, not default** - Compressed and reframed comment guidance. Problem: (1) Implementor wrote `"not in Assets"` - negation that only makes sense knowing old code. (2) Previous guidance was 140 lines of examples, fighting verbosity with verbosity. Solution: Rewrote entire comment section to ~30 lines. New framing: "A comment is an admission that the code isn't clear enough." Comments are last resort after trying to make code self-explanatory. Three rules: (1) comments must stand alone, (2) no comparatives/negations, (3) check existing comments when changing code. One concrete example (the Unity case). One valid use case (external constraints). Removed all redundant examples. Key philosophy shift: comments aren't just "for WHY not WHAT" - they're a failure to write clear code.
+
+58. **spec/README.md ownership clarification** - Made clear that only the meta-agent owns `spec/README.md`. Problem: Agents might modify the spec/README.md documentation standards file during their work, corrupting the template. Solution: (1) Added "NEVER modify `spec/README.md`" to researcher's allowed files section with explanation that meta-agent owns it. (2) Added "(READ ONLY - do not modify)" to entry point instructions in research.md, plan.md, and implement.md. (3) Added warning header to spec-README-template.md: "⚠️ DO NOT MODIFY THIS FILE". (4) Added spec/README.md ownership section to workflow.md document ownership table. Key principle: spec/README.md is a standards template that travels with projects - if conventions need changing, update the source template in dotfiles, not individual project copies.
 
 **See git history for full chronological details.**
 
@@ -360,9 +362,18 @@ All prompts tested on actual project (this looped agent system):
 
 ## Active Development Areas
 
-### Recently Completed (2025-11-25)
+### Recently Completed (2025-12-03)
 
-✅ **Comments: last resort, not default** (Refinement #57) - JUST ADDED
+✅ **spec/README.md ownership clarification** (Refinement #58) - JUST ADDED
+  - Only meta-agent owns spec/README.md (template file for documentation standards)
+  - Added "NEVER modify" warnings to researcher, planner, implementor entry points
+  - Added warning header to spec-README-template.md source file
+  - Updated workflow.md document ownership table with spec/README.md entry
+  - Key: If conventions need changing, update source template in dotfiles, not project copies
+
+### Previously Completed (2025-11-25)
+
+✅ **Comments: last resort, not default** (Refinement #57)
   - Reframed: "A comment is an admission that the code isn't clear enough"
   - Compressed from ~140 lines to ~30 lines (same rules, less verbosity)
   - Three rules: stand alone, no comparatives/negations, check when changing code
@@ -559,7 +570,8 @@ All prompts tested on actual project (this looped agent system):
 
 ### Known Issues to Monitor
 
-**Recent Refinements (41-57):**
+**Recent Refinements (41-58):**
+- Ref #58 (spec/README.md ownership): Do agents avoid modifying spec/README.md? Do they copy template correctly when missing? If conventions need updating, do they ask human to update source template?
 - Ref #57 (Comments last resort): Are comments rare? Do agents try to make code self-explanatory first? Do comments avoid comparatives/negations? Are comments treated as failure to write clear code?
 - Ref #56 (Prompt compression round 2): Do agents still follow critical behavioral instructions after compression? **CRITICAL: Do agents still avoid documentation-as-history (this fights base model training)?** Do agents create Mermaid diagrams inline (workflow preserved)? Do agents read project-specific rules (format simplified)? Did compression harm any critical behaviors?
 - Ref #55 (Planner spawns researchers): Does planner spawn researcher for factual gaps vs ask human for decisions? Does planner use Task tool correctly with RESEARCH SUMMARY prompt? Does researcher return proper RESEARCH SUMMARY format (question, answer, spec updates with line numbers, key constraints)? Does researcher update spec/current_system.md before returning summary? Does planner read summary and continue, or read referenced spec sections for detail? Does this reduce friction for factual questions? Do planners still ask humans for design decisions?

@@ -171,7 +171,7 @@ For full implementation details, see updated sections in spec/current_system.md
 
 ### Document Format Standards
 
-**See `spec/README.md` for documentation standards** - structure, diagrams (Mermaid), progressive disclosure levels.
+**See `spec/README.md` for documentation standards** - structure, diagrams (Mermaid), progressive disclosure levels. **Do not modify spec/README.md** - it's a template owned by meta-agent.
 
 **If `spec/README.md` doesn't exist**, copy from `~/dotfiles/agents/spec-README-template.md`.
 
@@ -225,7 +225,7 @@ You're part of a repeating cycle:
    - Move resolved questions to "Resolved Questions" section
    - Update planning based on their input
 
-2. Read `spec/README.md` in full if it exists - spec folder conventions for this project
+2. Read `spec/README.md` in full if it exists - spec folder conventions for this project (READ ONLY - do not modify)
 
 3. Read `ongoing_changes/planning_status.md` in full if it exists - previous planning progress
 

@@ -1,6 +1,8 @@
 # Spec Folder
 
-> **Template**: Copy this file to `spec/README.md` in your project.
+**⚠️ DO NOT MODIFY THIS FILE** - This is a documentation standards template owned by the meta-agent. If you need different conventions for a specific project, ask the human to update this template.
+
+This file belongs in `spec/README.md` in your project.
 
 The `spec/` folder contains **permanent system documentation** - the source of truth for how the system works.
 

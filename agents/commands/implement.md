@@ -145,7 +145,7 @@ tests_passing: true | false
 
 1. Read `ongoing_changes/implementor_progress.md` in full (or old UPPERCASE name if it exists) - what's been done and what's next
 
-2. Read `spec/README.md` in full if it exists - spec folder conventions for this project
+2. Read `spec/README.md` in full if it exists - spec folder conventions for this project (READ ONLY - do not modify)
 
 3. Read `spec/current_system.md` completely - understand existing system
 

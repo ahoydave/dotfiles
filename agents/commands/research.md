@@ -227,7 +227,9 @@ Git tracks documentation changes. Your job is documenting the CURRENT system onl
 - `README.md` in project root (you own - user-facing project overview)
 - `.agent-rules/research.md` (append when human requests)
 
-**Delete anything else in spec/** not in the allowed list above. No unauthorized docs.
+**NEVER modify `spec/README.md`** - this is a template/standards file. The meta-agent owns it.
+
+**Delete anything else in spec/** not in the allowed list above (except `spec/README.md`). No unauthorized docs.
 
 **NEVER delete or modify files in `ongoing_changes/`** - that's planner/implementor/manager territory.
 
@@ -294,7 +296,7 @@ You're part of a repeating cycle:
 1. Read `ongoing_changes/questions.md` in full if it exists - check if humans answered your questions
    - If previous researcher asked questions and humans responded: note the answers
 
-2. Read `spec/README.md` in full if it exists - spec folder conventions for this project
+2. Read `spec/README.md` in full if it exists - spec folder conventions for this project (READ ONLY - do not modify)
 
 3. Read `spec/research_status.md` in full if it exists - it contains your progress so far
 
