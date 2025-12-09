@@ -19,31 +19,31 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 
 ### Researcher (`research.md`)
 - **Purpose**: Investigates existing system OR verifies implementation
-- **Owns**: `spec/current_system.md`, `spec/feature_tests.md`, `spec/research_status.md`
+- **Owns**: `spec/current-system.md`, `spec/feature-tests.md`, `spec/research-status.md`
 - **Uses**: Task agents for codebase exploration
 - **When**: At project start, or after implementation to verify reality
 
 ### Planner (`plan.md`)
 - **Purpose**: Designs specs for new work (WHAT to build, not HOW)
-- **Owns**: `ongoing_changes/new_features.md`, `ongoing_changes/planning_status.md`, `ongoing_changes/questions.md`
+- **Owns**: `ongoing-changes/new-features.md`, `ongoing-changes/planning-status.md`, `ongoing-changes/questions.md`
 - **Uses**: Task agents for feasibility research, questions.md for human collaboration
 - **When**: After understanding current system, before implementation
 
 ### Implementor (`implement.md`)
 - **Purpose**: Implements ONE atomic task per session, then STOPS
-- **Owns**: `ongoing_changes/implementor_progress.md` (+ marks completions in new_features.md)
+- **Owns**: `ongoing-changes/implementor-progress.md` (+ marks completions in new-features.md)
 - **Uses**: Task agents for debugging, testing, exploration
 - **When**: Repeatedly, one task at a time, until features complete
 
 ### Manager (`implementation-manager.md`)
 - **Purpose**: Orchestrates multiple implementor sessions autonomously
-- **Owns**: `ongoing_changes/manager_progress.md`
+- **Owns**: `ongoing-changes/manager-progress.md`
 - **Uses**: Implementor agents for task execution
 - **When**: For multi-task workflows where human oversight isn't needed per task
 
 ### Meta-Agent (`meta-agent.md`)
 - **Purpose**: Refines the agent system itself (prompts, docs, workflow)
-- **Owns**: `meta_status.md`, agent command files, workflow documentation
+- **Owns**: `meta-status.md`, agent command files, workflow documentation
 - **Uses**: Real project testing to validate refinements
 - **When**: When agent behavior needs improvement or documentation needs updates
 
@@ -68,7 +68,7 @@ flowchart TB
     subgraph research["1. Research Phase"]
         direction TB
         R1["/research<br>Agent explores system"]
-        R2["Human reviews<br>spec/current_system.md"]
+        R2["Human reviews<br>spec/current-system.md"]
         R3{Accurate?}
         R1 --> R2 --> R3
         R3 -->|No| R1
@@ -115,14 +115,14 @@ flowchart TB
 ```mermaid
 flowchart LR
     subgraph spec["spec/ (Permanent)"]
-        CS[current_system.md]
-        FT[feature_tests.md]
+        CS[current-system.md]
+        FT[feature-tests.md]
     end
 
-    subgraph ongoing["ongoing_changes/ (Temporary)"]
-        NF[new_features.md]
+    subgraph ongoing["ongoing-changes/ (Temporary)"]
+        NF[new-features.md]
         Q[questions.md]
-        IP[implementor_progress.md]
+        IP[implementor-progress.md]
     end
 
     Researcher -->|writes| CS
@@ -144,7 +144,7 @@ flowchart LR
 
 **Two-directory structure**:
 - `spec/` - Permanent system knowledge (researcher territory)
-- `ongoing_changes/` - Temporary work-in-progress (planner/implementor/manager territory)
+- `ongoing-changes/` - Temporary work-in-progress (planner/implementor/manager territory)
 
 ---
 
@@ -160,21 +160,21 @@ flowchart LR
     meta-agent.md              - Meta-agent (invoke: /meta-agent)
 
   agent_workflow.md     - This file (user guide)
-  meta_status.md        - System state and development history (meta-agent)
+  meta-status.md        - System state and development history (meta-agent)
   ACE-FCA-COMPARISON.md - Lessons from similar systems
 
 (In target projects - created by agents during usage)
 spec/                           - Permanent system documentation
-  current_system.md             - System understanding (researcher)
-  feature_tests.md              - Feature verification registry (researcher)
-  research_status.md            - Research progress (researcher)
+  current-system.md             - System understanding (researcher)
+  feature-tests.md              - Feature verification registry (researcher)
+  research-status.md            - Research progress (researcher)
 
-ongoing_changes/                - Temporary work-in-progress documents
-  new_features.md               - What to build (planner)
-  planning_status.md            - Planning progress (planner)
+ongoing-changes/                - Temporary work-in-progress documents
+  new-features.md               - What to build (planner)
+  planning-status.md            - Planning progress (planner)
   questions.md                  - Human Q&A (planner, temporary)
-  implementor_progress.md       - Implementation state (implementor)
-  manager_progress.md           - Task tracking (manager)
+  implementor-progress.md       - Implementation state (implementor)
+  manager-progress.md           - Task tracking (manager)
 ```
 
 ### Document Ownership
@@ -185,31 +185,31 @@ ongoing_changes/                - Temporary work-in-progress documents
 - **NEVER modified by agents** - this is a template file
 - If conventions need updating: Ask human to update `~/dotfiles/agents/spec-README-template.md`
 
-**spec/current_system.md** - System understanding (permanent)
+**spec/current-system.md** - System understanding (permanent)
 - Created/updated by: Researcher
 - Read by: Planner, Implementor
 - Living doc: updated as system evolves
 - Principle: "Behavior and integration points clear, implementation details minimal"
 - For large systems (>800-1000 lines): Split into spec/system/ subdocs
 
-**spec/feature_tests.md** - Feature verification registry (permanent)
+**spec/feature-tests.md** - Feature verification registry (permanent)
 - Created/updated by: Researcher (creates structure), Implementor (adds entries)
 - Read by: All agents for verification
 - Never deleted, continuously updated
 
-**ongoing_changes/new_features.md** - Functional requirements (temporary)
+**ongoing-changes/new-features.md** - Functional requirements (temporary)
 - Created/updated by: Planner
 - Read by: Implementor, Manager
 - Marked complete by: Implementor
 - Deleted when project phase complete
 
-**ongoing_changes/implementor_progress.md** - Implementation state (temporary)
+**ongoing-changes/implementor-progress.md** - Implementation state (temporary)
 - Created/updated by: Implementor
 - Read by: Next implementor, Manager
 - Structure: "What's Done / What's Next / Dependencies"
 - REWRITE each session (not append-only)
 
-**ongoing_changes/questions.md** - Structured human Q&A (temporary)
+**ongoing-changes/questions.md** - Structured human Q&A (temporary)
 - Created/updated by: Planner (ONLY)
 - Read by: Human, then planner
 - Format: Context, options, recommendation, HUMAN RESPONSE placeholder
@@ -223,12 +223,12 @@ ongoing_changes/                - Temporary work-in-progress documents
 
 ### Where You'll Find Diagrams
 
-**current_system.md** (from Researcher):
+**current-system.md** (from Researcher):
 - Flowcharts showing system architecture
 - Sequence diagrams for critical data flows
 - Class diagrams for key entities
 
-**new_features.md** (from Planner):
+**new-features.md** (from Planner):
 - Flowcharts highlighting what's changing
 - Sequence diagrams showing new feature flows
 
@@ -334,7 +334,7 @@ As you work with agents on a project, you'll discover patterns that should ALWAY
 - Captures tool-specific workflows
 - Accumulates learnings across sessions
 
-**Like feature_tests.md, but for workflows**: feature_tests.md documents "how to TEST features", agent rules document "how to BUILD features in this project".
+**Like feature-tests.md, but for workflows**: feature-tests.md documents "how to TEST features", agent rules document "how to BUILD features in this project".
 
 ---
 
@@ -342,7 +342,7 @@ As you work with agents on a project, you'll discover patterns that should ALWAY
 
 ### System Documentation Principle
 
-**For spec/current_system.md**: "Behavior and integration points clear, implementation details minimal"
+**For spec/current-system.md**: "Behavior and integration points clear, implementation details minimal"
 
 Document WHAT the system does and HOW components connect - enough to plan changes without surprises, not enough to implement without reading code.
 
@@ -361,7 +361,7 @@ Document WHAT the system does and HOW components connect - enough to plan change
 **Multi-file strategy for large systems** (>800-1000 lines):
 ```
 spec/
-  current_system.md           - Overview + navigation (200-300 lines)
+  current-system.md           - Overview + navigation (200-300 lines)
   system/
     architecture.md           - Components, data flows
     integration-points.md     - APIs, contracts, data formats
@@ -370,7 +370,7 @@ spec/
 
 ### Spec Documentation Principle
 
-**For ongoing_changes/new_features.md**: "User experience clear, implementation flexible"
+**For ongoing-changes/new-features.md**: "User experience clear, implementation flexible"
 
 Two implementors should produce systems that behave identically from user perspective, but could have different internals.
 
@@ -446,7 +446,7 @@ Task: Verify specs match implementation reality, check for regressions
 ```
 
 **What they check**:
-- Does `spec/CURRENT_SYSTEM.md` match actual code?
+- Does `spec/current-system.md` match actual code?
 - Are features marked "ENABLED" actually working?
 - Did recent changes break previous features?
 - Are there contradictions between docs?
@@ -510,23 +510,23 @@ Planner dumps implementation code instead of requirements.
 - `README.md` - End user usage guide (NO phases, NO implementation details)
 
 **For Agent Handoffs:**
-- `spec/current_system.md` - Researcher → Planner/Implementor
-- `ongoing_changes/new_features.md` - Planner → Implementor/Manager
-- `ongoing_changes/implementor_progress.md` - Implementor → Implementor
+- `spec/current-system.md` - Researcher → Planner/Implementor
+- `ongoing-changes/new-features.md` - Planner → Implementor/Manager
+- `ongoing-changes/implementor-progress.md` - Implementor → Implementor
 
 **For Agent Continuity (same role):**
-- `spec/research_status.md` - Researcher → Researcher
-- `ongoing_changes/planning_status.md` - Planner → Planner
-- `ongoing_changes/manager_progress.md` - Manager → Manager
+- `spec/research-status.md` - Researcher → Researcher
+- `ongoing-changes/planning-status.md` - Planner → Planner
+- `ongoing-changes/manager-progress.md` - Manager → Manager
 
 **For Human Interaction:**
-- `ongoing_changes/questions.md` - Planner ↔ Human
+- `ongoing-changes/questions.md` - Planner ↔ Human
 
 **Key**: Agents only read handoff docs from previous role, not internal progress docs from other roles.
 
 **Directory Structure**:
 - `spec/` - Permanent docs (never deleted, continuously updated)
-- `ongoing_changes/` - Temporary docs (deleted when project phase complete)
+- `ongoing-changes/` - Temporary docs (deleted when project phase complete)
 
 ---
 

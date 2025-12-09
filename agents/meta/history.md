@@ -2,7 +2,7 @@
 
 This document archives the detailed history of refinements 1-40 (2025-11-01 to 2025-11-10). These refinements established the foundational patterns of the system.
 
-For current status and recent refinements (41+), see `meta_status.md`.
+For current status and recent refinements (41+), see `meta-status.md`.
 
 ---
 
@@ -46,7 +46,7 @@ For current status and recent refinements (41+), see `meta_status.md`.
 34. **Context usage tracking (feedback loop for task sizing)**
 35. **Diagram files with SVG generation (improved human review)**
 36. **Repeatable test suite framework (fixes "fake testing" at its root)**
-37. **Feature test registry (feature_tests.md - single source of truth)**
+37. **Feature test registry (feature-tests.md - single source of truth)**
 38. **Researcher cleanup scope boundaries (prevents accidental deletion)**
 39. **Lowercase document filenames (consistency and convention)**
 40. **Token usage reporting (self-monitoring and visibility)**
@@ -73,7 +73,7 @@ For current status and recent refinements (41+), see `meta_status.md`.
 
 **Agent Boundaries:**
 - ONE task per implementor session
-- Clear document ownership (spec/ vs ongoing_changes/)
+- Clear document ownership (spec/ vs ongoing-changes/)
 - Researcher = documentor, Planner = designer
 - Follow spec literally (ask if unclear)
 
@@ -87,4 +87,4 @@ For current status and recent refinements (41+), see `meta_status.md`.
 
 For detailed descriptions of these refinements, see git history from 2025-11-01 to 2025-11-10.
 
-For refinements 41+, see `meta_status.md`.
+For refinements 41+, see `meta-status.md`.

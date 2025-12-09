@@ -29,7 +29,7 @@ agent_count: 5
   - Minimal context (stays <30% throughout)
   - Continues until done, blocked, or context limit
   - Manager-worker pattern: delegates to `/implement` sub-agents
-  - Graceful restart handling via manager_progress.md
+  - Graceful restart handling via manager-progress.md
 ✅ **Sub-agent delegation**: Only results return to context (not exploration process)
 ✅ **Document structure**: Clear ownership, no sprawl (explicit allowed lists)
 ✅ **Token efficiency**: Optimized to 40-60% (aligned with ACE-FCA proven thresholds)
@@ -65,7 +65,7 @@ agent_count: 5
 
 ### Foundational Refinements 1-40 (2025-11-01 to 2025-11-10)
 
-**See `meta_history.md` for detailed archive of refinements 1-40.**
+**See `meta-history.md` for detailed archive of refinements 1-40.**
 
 **Key patterns established:**
 - Documentation discipline (REWRITE not append, delete obsolete info, docs for future agents)
@@ -75,7 +75,7 @@ agent_count: 5
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
 ### Recent Refinements 41-53 (2025-11-10 to 2025-11-21)
 
-41. **C4-inspired progressive disclosure** - Three-level documentation structure (Context, Containers, Components). Levels 1+2 in current_system.md (<500 lines), Level 3 split to components/flows. 60-75% token savings for typical tasks.
+41. **C4-inspired progressive disclosure** - Three-level documentation structure (Context, Containers, Components). Levels 1+2 in current-system.md (<500 lines), Level 3 split to components/flows. 60-75% token savings for typical tasks.
 
 42. **Role clarity: Documentor, not critic** - Researcher documents WHAT EXISTS (facts), planner identifies WHAT SHOULD BE (improvements). Prevents recommendation docs (IMPROVEMENTS.md, etc.).
 
@@ -83,11 +83,11 @@ agent_count: 5
 
 44. **Prompt verbosity reduction** - ~759 lines removed across 4 prompts (~24% reduction). Consolidated repetitive sections while keeping critical teaching examples.
 
-45. **Directory structure clarification** - Two-directory structure: `ongoing_changes/` (temporary WIP) + `spec/` (permanent docs). Prevents sprawl, clear ownership boundaries.
+45. **Directory structure clarification** - Two-directory structure: `ongoing-changes/` (temporary WIP) + `spec/` (permanent docs). Prevents sprawl, clear ownership boundaries.
 
-46. **Meta-agent reads actual prompts** - Always read all four agent prompts directly, not secondhand from meta_status.md. Prompt length becomes observable signal.
+46. **Meta-agent reads actual prompts** - Always read all four agent prompts directly, not secondhand from meta-status.md. Prompt length becomes observable signal.
 
-47. **Diagram ownership boundaries** - Planner diagrams in `ongoing_changes/diagrams/` (planned changes), researcher diagrams in `spec/diagrams/` (current system).
+47. **Diagram ownership boundaries** - Planner diagrams in `ongoing-changes/diagrams/` (planned changes), researcher diagrams in `spec/diagrams/` (current system).
 
 48. **Verification mindset and no documentation history** - Trust code, not claims. Never document the history of documentation itself (git tracks that).
 
@@ -97,13 +97,13 @@ agent_count: 5
 
 51. **Comment accuracy after code changes** - Delete/update comments that reference removed code. Avoid comparative phrases ("less/more/better than..."). Comments state WHAT code does NOW, not WHAT CHANGED.
 
-52. **Instruction consolidation (meta-agent)** - Archived refinements 1-40 to meta_history.md (~400 lines saved). Compressed ACE-FCA comparison to summary with link (~120 lines saved). Consolidated "Known Issues to Monitor" from 109 questions to 30 organized by refinement group (~80 lines saved). Total ~600 lines removed from meta_status.md.
+52. **Instruction consolidation (meta-agent)** - Archived refinements 1-40 to meta-history.md (~400 lines saved). Compressed ACE-FCA comparison to summary with link (~120 lines saved). Consolidated "Known Issues to Monitor" from 109 questions to 30 organized by refinement group (~80 lines saved). Total ~600 lines removed from meta-status.md.
 
-53. **README.md ownership (researcher)** - Researcher now owns and maintains project README.md alongside current_system.md. Problem: Researchers create comprehensive system docs but never update the user-facing README, causing it to become stale. Solution: Added README.md to researcher's allowed file list and document ownership. Added explicit section in Process step 3 requiring README.md updates aligned with current_system.md findings. Updated implementor prompt to clarify researcher owns overall README structure, implementor only updates for feature-specific usage changes. Prevents "project front door" from becoming outdated while internal docs stay current.
+53. **README.md ownership (researcher)** - Researcher now owns and maintains project README.md alongside current-system.md. Problem: Researchers create comprehensive system docs but never update the user-facing README, causing it to become stale. Solution: Added README.md to researcher's allowed file list and document ownership. Added explicit section in Process step 3 requiring README.md updates aligned with current-system.md findings. Updated implementor prompt to clarify researcher owns overall README structure, implementor only updates for feature-specific usage changes. Prevents "project front door" from becoming outdated while internal docs stay current.
 
-54. **Project-specific agent rules** - Added `.agent-rules/` directory concept for accumulating project-specific learnings. Problem: Every project has unique workflows, gotchas, and constraints that agents must learn repeatedly (e.g., "reload Unity domain after file changes", "never allocate ports 9000-9010"). Without persistent rules, agents ask same questions every session or make same mistakes. Solution: Created `.agent-rules/{implementation,research,planning}.md` files that agents read during entry point and can APPEND to when human says "add this as a rule". Format: Context, Rule, How, Why, Added. Rules use absolute language ("ALWAYS", "NEVER", "MUST"). Only added when human explicitly requests. APPEND-ONLY to accumulate knowledge. Inspired by Geoffrey Huntley's "stdlib" concept but simplified for our agent-agnostic workflow (no XML, no auto-execution, just markdown rules agents read and apply). Benefits: (1) Permanent project knowledge, (2) Reduces repeated clarifications, (3) Captures tool-specific workflows, (4) Accumulates like feature_tests.md. Each agent reads its own rules file plus planner reads implementation rules to understand constraints. Addresses real user need: Unity project requiring specific MCP server calls after file changes.
+54. **Project-specific agent rules** - Added `.agent-rules/` directory concept for accumulating project-specific learnings. Problem: Every project has unique workflows, gotchas, and constraints that agents must learn repeatedly (e.g., "reload Unity domain after file changes", "never allocate ports 9000-9010"). Without persistent rules, agents ask same questions every session or make same mistakes. Solution: Created `.agent-rules/{implementation,research,planning}.md` files that agents read during entry point and can APPEND to when human says "add this as a rule". Format: Context, Rule, How, Why, Added. Rules use absolute language ("ALWAYS", "NEVER", "MUST"). Only added when human explicitly requests. APPEND-ONLY to accumulate knowledge. Inspired by Geoffrey Huntley's "stdlib" concept but simplified for our agent-agnostic workflow (no XML, no auto-execution, just markdown rules agents read and apply). Benefits: (1) Permanent project knowledge, (2) Reduces repeated clarifications, (3) Captures tool-specific workflows, (4) Accumulates like feature-tests.md. Each agent reads its own rules file plus planner reads implementation rules to understand constraints. Addresses real user need: Unity project requiring specific MCP server calls after file changes.
 
-55. **Planner spawns researcher sub-agents** - Planner can now autonomously spawn researcher sub-agents to fill factual gaps about current system. Problem: During planning, planner discovers gaps in system understanding ("How does auth work?", "What's the DB schema?"). Previously required human to manually invoke /research, update spec, then re-invoke /plan - friction in the workflow. Solution: Added "Spawning Research Sub-Agents for Factual Gaps" section to planner prompt (~120 lines). Clear boundary: spawn researcher for FACTUAL gaps (how system works), ask human in questions.md for DECISIONAL matters (what to build, priorities, business rules). Planner uses Task tool to spawn researcher with specific question. Researcher investigates, updates spec/current_system.md (spec remains source of truth), returns RESEARCH SUMMARY (brief answer + spec pointers + key constraints). Planner reads brief answer to continue, or reads referenced spec sections for deeper detail. Added "Sub-Agent Mode" section to researcher prompt (~100 lines) defining RESEARCH SUMMARY format and targeted research behavior. Pattern consistent with Implementation Manager (manager spawns implementors, planner spawns researchers). Benefits: (1) Autonomous factual research - no human friction for "how does it work" questions, (2) Better specs - complete understanding before planning, (3) Spec always updated - permanent benefit for all agents, (4) Progressive detail - planner controls depth via summary vs full spec sections. Example: Planner asks "How does auth middleware work?" → researcher investigates → updates spec with auth flow + diagram → returns summary → planner continues with complete understanding. Reduces "I think it works like X" → later discovery it's Y. Human focuses on design decisions, researcher handles facts about current system.
+55. **Planner spawns researcher sub-agents** - Planner can now autonomously spawn researcher sub-agents to fill factual gaps about current system. Problem: During planning, planner discovers gaps in system understanding ("How does auth work?", "What's the DB schema?"). Previously required human to manually invoke /research, update spec, then re-invoke /plan - friction in the workflow. Solution: Added "Spawning Research Sub-Agents for Factual Gaps" section to planner prompt (~120 lines). Clear boundary: spawn researcher for FACTUAL gaps (how system works), ask human in questions.md for DECISIONAL matters (what to build, priorities, business rules). Planner uses Task tool to spawn researcher with specific question. Researcher investigates, updates spec/current-system.md (spec remains source of truth), returns RESEARCH SUMMARY (brief answer + spec pointers + key constraints). Planner reads brief answer to continue, or reads referenced spec sections for deeper detail. Added "Sub-Agent Mode" section to researcher prompt (~100 lines) defining RESEARCH SUMMARY format and targeted research behavior. Pattern consistent with Implementation Manager (manager spawns implementors, planner spawns researchers). Benefits: (1) Autonomous factual research - no human friction for "how does it work" questions, (2) Better specs - complete understanding before planning, (3) Spec always updated - permanent benefit for all agents, (4) Progressive detail - planner controls depth via summary vs full spec sections. Example: Planner asks "How does auth middleware work?" → researcher investigates → updates spec with auth flow + diagram → returns summary → planner continues with complete understanding. Reduces "I think it works like X" → later discovery it's Y. Human focuses on design decisions, researcher handles facts about current system.
 
 56. **Prompt verbosity reduction (round 2)** - Removed verbose teaching content while preserving critical behavioral rules. Problem: Prompts approaching 1000+ lines fighting base model training on documentation-as-history. User feedback: agents still miss "don't keep history" despite heavy instruction, PlantUML syntax examples not needed (added by previous meta-agent, not battle-tested). Solution: Removed ~335 lines total: (1) PlantUML syntax examples from research.md and plan.md (~230 lines) - replaced with brief workflow + link to plantuml.com, kept instructions to USE diagrams and generate SVGs. (2) Compressed verbose "bad example" demonstrations in project rules sections (~50 lines) - kept teaching contrast but made more concise. (3) Streamlined repetitive sections (~55 lines). **Kept "Documentation is Not History" sections LOUD and prominent** - this fights base model training so cannot be diluted. Results: research.md 1366→1144 lines (16% reduction), plan.md 1024→915 lines (11% reduction), implement.md 1116→1102 lines (1% reduction), implementation-manager.md unchanged at 388 lines (already tight). Total: ~345 lines removed while strengthening anti-history guidance and preserving all critical behavioral instructions (coding standards examples, verification requirements, absolute rules).
 
@@ -121,7 +121,7 @@ We independently converged on ~80-85% the same solution as HumanLayer's "Advance
 
 **What we adopted from them**: Context thresholds (40-50% wrap up, 60% hard stop), YAML frontmatter, visual diagrams (now using Mermaid instead of PlantUML).
 
-**Our unique strengths**: Implementation Manager (autonomous flow via sub-agents), comprehensive current_system.md (works on unfamiliar codebases), explicit "paste output" rule (we discovered agents fake testing), agent-agnostic design.
+**Our unique strengths**: Implementation Manager (autonomous flow via sub-agents), comprehensive current-system.md (works on unfamiliar codebases), explicit "paste output" rule (we discovered agents fake testing), agent-agnostic design.
 
 **Philosophical difference**: They optimize for flow (expert devs on own codebases), we optimize for reliability (any codebase, proof-required verification).
 
@@ -223,7 +223,7 @@ Agents read too much into their context.
 ### Problem: Documentation sprawl
 Agents invent new docs (SESSION_SUMMARY.md, NOTES.md, etc.) instead of using existing structure.
 → **Solution (Refinement #45)**: Two-directory structure with clear boundaries
-- Only two valid locations: `ongoing_changes/` (temporary) and `spec/` (permanent)
+- Only two valid locations: `ongoing-changes/` (temporary) and `spec/` (permanent)
 - "No Documentation Sprawl" section in all prompts with explicit allowed lists
 - DELETE unauthorized docs outside these directories
 
@@ -232,7 +232,7 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
 → **Solution (Refinement #38, enhanced by #45)**: Explicit scope boundaries in researcher prompt.
 - Cleanup authority LIMITED to `spec/` folder only (researcher's territory)
 - Complete allowed list for spec/ (all researcher-owned docs)
-- Explicit "NEVER touch" rule: `ongoing_changes/` directory (planner/implementor/manager territory)
+- Explicit "NEVER touch" rule: `ongoing-changes/` directory (planner/implementor/manager territory)
 - Two-directory structure (Refinement #45) makes ownership boundaries crystal clear
 
 ## Design Principles
@@ -251,45 +251,45 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
 ### Document Structure
 
 **Directory structure** (in target project, not dotfiles):
-- **`ongoing_changes/`** - Temporary work-in-progress documents (deleted when work complete)
+- **`ongoing-changes/`** - Temporary work-in-progress documents (deleted when work complete)
 - **`spec/`** - Permanent system documentation (continuously updated, never deleted)
 
 **Agent document ownership**:
 - **Researcher** owns:
-  - `spec/current_system.md` (+ `spec/system/components/*.md`, `spec/system/flows/*.md` if split)
-  - `spec/feature_tests.md` (maintains/verifies)
-  - `spec/research_status.md`
-  - `README.md` (project root - user-facing overview, kept aligned with current_system.md)
+  - `spec/current-system.md` (+ `spec/system/components/*.md`, `spec/system/flows/*.md` if split)
+  - `spec/feature-tests.md` (maintains/verifies)
+  - `spec/research-status.md`
+  - `README.md` (project root - user-facing overview, kept aligned with current-system.md)
 - **Planner** owns:
-  - `ongoing_changes/new_features.md`
-  - `ongoing_changes/planning_status.md`
-  - `ongoing_changes/questions.md`
-  - (reads `spec/feature_tests.md`)
+  - `ongoing-changes/new-features.md`
+  - `ongoing-changes/planning-status.md`
+  - `ongoing-changes/questions.md`
+  - (reads `spec/feature-tests.md`)
 - **Implementor** owns:
-  - `ongoing_changes/implementor_progress.md`
-  - `spec/feature_tests.md` (creates entries)
+  - `ongoing-changes/implementor-progress.md`
+  - `spec/feature-tests.md` (creates entries)
   - `README.md` (updates for user-facing feature changes only - researcher owns structure)
-  - (updates `ongoing_changes/new_features.md` with completions)
+  - (updates `ongoing-changes/new-features.md` with completions)
 - **Implementation Manager** owns:
-  - `ongoing_changes/manager_progress.md`
+  - `ongoing-changes/manager-progress.md`
 - **Meta-Agent** owns:
   - `meta/status.md` (in dotfiles repo, not target projects)
   - All agent prompts in `~/dotfiles/agents/commands/`
 
 ### System Documentation Principle
-**For current_system.md**: "Behavior and integration points clear, implementation details minimal"
+**For current-system.md**: "Behavior and integration points clear, implementation details minimal"
 
 Document WHAT the system does and HOW components connect - enough to plan changes without surprises, not enough to implement without reading code.
 
 **Progressive disclosure (C4-inspired)**:
 - **Level 1**: System Context (100-200 lines)
 - **Level 2**: Containers/Components Overview (200-400 lines)
-- **Threshold**: Keep Levels 1+2 under 500 lines in current_system.md
+- **Threshold**: Keep Levels 1+2 under 500 lines in current-system.md
 - **Level 3**: Component Details (split to spec/system/components/<name>.md when >150 lines)
 - **Flows**: Critical multi-component flows (split to spec/system/flows/<name>.md)
 
 **Multi-file strategy** (when Level 2 exceeds ~150 lines for any component):
-- `spec/current_system.md`: Levels 1+2 overview + navigation (under 500 lines)
+- `spec/current-system.md`: Levels 1+2 overview + navigation (under 500 lines)
 - `spec/system/components/<name>.md`: Level 3 component details
 - `spec/system/flows/<name>.md`: Critical flow documentation
 - Diagrams are inline using Mermaid (see spec/README.md)
@@ -300,17 +300,17 @@ Document WHAT the system does and HOW components connect - enough to plan change
 
 ### Handoff Pattern
 Agents read handoff docs from previous role:
-- Planner reads `spec/current_system.md` (from researcher)
-- Implementor reads `ongoing_changes/new_features.md` (from planner) + `spec/current_system.md` + `ongoing_changes/implementor_progress.md`
-- Implementation Manager reads `ongoing_changes/new_features.md` (from planner) + `ongoing_changes/manager_progress.md`
-- Next implementor reads `ongoing_changes/implementor_progress.md` (from previous implementor)
-- Meta-agent reads `meta_status.md` (from previous meta-agent, in dotfiles)
+- Planner reads `spec/current-system.md` (from researcher)
+- Implementor reads `ongoing-changes/new-features.md` (from planner) + `spec/current-system.md` + `ongoing-changes/implementor-progress.md`
+- Implementation Manager reads `ongoing-changes/new-features.md` (from planner) + `ongoing-changes/manager-progress.md`
+- Next implementor reads `ongoing-changes/implementor-progress.md` (from previous implementor)
+- Meta-agent reads `meta-status.md` (from previous meta-agent, in dotfiles)
 
 But agents DON'T read internal progress docs from other roles:
-- Planner doesn't read `spec/research_status.md`, `ongoing_changes/implementor_progress.md`, or `ongoing_changes/manager_progress.md`
-- Implementor doesn't read `spec/research_status.md`, `ongoing_changes/planning_status.md`, or `ongoing_changes/manager_progress.md`
-- Implementation Manager doesn't read `spec/current_system.md`, `spec/research_status.md`, `ongoing_changes/planning_status.md`, or `ongoing_changes/implementor_progress.md`
-- Researcher doesn't read `ongoing_changes/implementor_progress.md`, `ongoing_changes/manager_progress.md`, or `ongoing_changes/planning_status.md`
+- Planner doesn't read `spec/research-status.md`, `ongoing-changes/implementor-progress.md`, or `ongoing-changes/manager-progress.md`
+- Implementor doesn't read `spec/research-status.md`, `ongoing-changes/planning-status.md`, or `ongoing-changes/manager-progress.md`
+- Implementation Manager doesn't read `spec/current-system.md`, `spec/research-status.md`, `ongoing-changes/planning-status.md`, or `ongoing-changes/implementor-progress.md`
+- Researcher doesn't read `ongoing-changes/implementor-progress.md`, `ongoing-changes/manager-progress.md`, or `ongoing-changes/planning-status.md`
 - Meta-agent reads all for system development purposes
 
 ## Testing Approach
@@ -355,7 +355,7 @@ All prompts tested on actual project (this looped agent system):
 
 ### If Stuck or Confused
 - **agent_workflow.md** - How to use the system (user-facing)
-- **meta_status.md** - This file (system state and history)
+- **meta-status.md** - This file (system state and history)
 - **commands/meta-agent.md** - Meta-agent instructions
 - Each agent prompt is self-contained with full instructions
 - questions.md is for planner-human Q&A only
@@ -392,7 +392,7 @@ All prompts tested on actual project (this looped agent system):
 ✅ **Planner spawns researcher sub-agents** (Refinement #55)
   - Planner can autonomously spawn /research sub-agents for factual gaps
   - Clear boundary: factual questions (spawn researcher) vs design decisions (ask human)
-  - Researcher updates spec/current_system.md, returns RESEARCH SUMMARY
+  - Researcher updates spec/current-system.md, returns RESEARCH SUMMARY
   - RESEARCH SUMMARY format: brief answer + spec pointers + key constraints
   - Pattern: manager spawns implementors, planner spawns researchers
   - Reduces workflow friction: no human mediation for "how does it work?" questions
@@ -413,10 +413,10 @@ All prompts tested on actual project (this looped agent system):
   - Planner reads implementation rules to understand constraints when planning
 
 ✅ **README.md ownership** (Refinement #53)
-  - Researcher now owns and must keep README.md current alongside current_system.md
-  - Problem: README becomes stale while internal docs (current_system.md) stay fresh
+  - Researcher now owns and must keep README.md current alongside current-system.md
+  - Problem: README becomes stale while internal docs (current-system.md) stay fresh
   - Added README.md to researcher's allowed files and document ownership
-  - Process step 3 now requires updating both current_system.md AND README.md
+  - Process step 3 now requires updating both current-system.md AND README.md
   - README.md guidance: user-facing project overview, major features, install/setup, usage, aligned with discoveries
   - Implementor role clarified: updates README for feature-specific usage, researcher owns overall structure
   - Key insight: README is "project's front door" - can't let it become outdated
@@ -457,12 +457,12 @@ All prompts tested on actual project (this looped agent system):
   - Clear distinction: system history OK only if it explains current constraints
   - Prevents meta-commentary about spec evolution (that's what git is for)
 ✅ **Diagram ownership boundaries** (Refinement #47)
-  - Planner diagrams now go in `ongoing_changes/diagrams/` (temporary, shows planned changes)
+  - Planner diagrams now go in `ongoing-changes/diagrams/` (temporary, shows planned changes)
   - Researcher diagrams remain in `spec/diagrams/` (permanent, shows current system)
   - Fixes violation of ownership boundaries (planner was putting diagrams in researcher's spec/ folder)
   - Temporal clarity: planned changes vs actual current state kept separate
   - Clean handoff: planner diagrams deleted after implementation, researcher documents actual result
-  - Updated all references in plan.md from spec/diagrams/ to ongoing_changes/diagrams/
+  - Updated all references in plan.md from spec/diagrams/ to ongoing-changes/diagrams/
 ✅ **Aggressive sub-agent delegation for scale** (Refinement #49)
   - Researcher now has prominent "Scale Strategy" section with absolute rules for sub-agent use
   - Explicit thresholds: >5k LOC launch Explore agents, >20k LOC parallel agents, >100k LOC 5-10 agents
@@ -476,18 +476,18 @@ All prompts tested on actual project (this looped agent system):
 ### Previously Completed (2025-11-14)
 ✅ **Meta-agent reads actual prompts** (Refinement #46)
   - Meta-agent now reads all four agent prompts directly (research.md, plan.md, implement.md, implementation-manager.md)
-  - Never relies on secondhand information from meta_status.md descriptions
+  - Never relies on secondhand information from meta-status.md descriptions
   - Prompt length becomes observable signal (if too long to read, that's a problem to fix)
   - Firsthand knowledge enables better refinement decisions
   - Can identify inconsistencies between prompts
-  - Meta_status.md focuses on history/patterns, not mirroring prompt content
+  - meta-status.md focuses on history/patterns, not mirroring prompt content
 ✅ **Directory structure clarification** (Refinement #45)
-  - Two-directory structure: `ongoing_changes/` (temporary) + `spec/` (permanent)
+  - Two-directory structure: `ongoing-changes/` (temporary) + `spec/` (permanent)
   - Prevents documentation sprawl by limiting valid locations
   - Clear separation: work-in-progress vs permanent system knowledge
-  - Planner/implementor/manager docs → `ongoing_changes/`
+  - Planner/implementor/manager docs → `ongoing-changes/`
   - Researcher docs → `spec/`
-  - Easy cleanup: delete entire `ongoing_changes/` when project phase complete
+  - Easy cleanup: delete entire `ongoing-changes/` when project phase complete
   - Clarifies that prompts in ~/dotfiles/agents/commands/ work on ANY project
 
 ### Previously Completed (2025-11-11)
@@ -519,7 +519,7 @@ All prompts tested on actual project (this looped agent system):
   - Cleaner handoff: objective facts → thoughtful design
 ✅ **C4-inspired progressive disclosure** (Refinement #41)
   - Systematic three-level documentation structure (Context, Containers, Components)
-  - Keeps current_system.md under 500 lines (Levels 1+2), splits to component/flow docs as needed
+  - Keeps current-system.md under 500 lines (Levels 1+2), splits to component/flow docs as needed
   - 60-75% token savings: agents read only relevant detail levels
   - Completely rewrote Research agent documentation sections (cohesive, not patchwork)
   - Added efficient reading strategies to Plan and Implement agents
@@ -531,19 +531,19 @@ All prompts tested on actual project (this looped agent system):
   - Improves self-monitoring, user visibility, and accountability to thresholds
   - Helps users understand context consumption and make informed stopping decisions
 ✅ **Lowercase document filenames** (Refinement #39)
-  - All documentation filenames migrated to lowercase (current_system.md, new_features.md, etc.)
+  - All documentation filenames migrated to lowercase (current-system.md, new-features.md, etc.)
   - Agent prompts updated with lowercase references
   - Migration instructions added for automatic UPPERCASE → lowercase conversion
   - Follows standard markdown file naming conventions
 ✅ **Researcher cleanup scope boundaries** (Refinement #38)
   - Explicit boundaries: cleanup authority LIMITED to spec/ folder only
-  - Complete allowed list for spec/ (includes planner-owned docs like new_features.md)
-  - Explicit "NEVER delete" list: implementor_progress.md, manager_progress.md, docs outside spec/
+  - Complete allowed list for spec/ (includes planner-owned docs like new-features.md)
+  - Explicit "NEVER delete" list: implementor-progress.md, manager-progress.md, docs outside spec/
   - Prevents cross-agent document conflicts
   - Clarifies document ownership boundaries
 
 ### Older Completions (2025-11-05 and earlier)
-✅ **Feature test registry (feature_tests.md)** - (Refinement #37)
+✅ **Feature test registry (feature-tests.md)** - (Refinement #37)
 ✅ **Repeatable test suite framework** - (Refinement #36)
 ✅ **Diagram files with SVG generation**
 ✅ **Context usage tracking**
@@ -574,16 +574,16 @@ All prompts tested on actual project (this looped agent system):
 - Ref #58 (spec/README.md ownership): Do agents avoid modifying spec/README.md? Do they copy template correctly when missing? If conventions need updating, do they ask human to update source template?
 - Ref #57 (Comments last resort): Are comments rare? Do agents try to make code self-explanatory first? Do comments avoid comparatives/negations? Are comments treated as failure to write clear code?
 - Ref #56 (Prompt compression round 2): Do agents still follow critical behavioral instructions after compression? **CRITICAL: Do agents still avoid documentation-as-history (this fights base model training)?** Do agents create Mermaid diagrams inline (workflow preserved)? Do agents read project-specific rules (format simplified)? Did compression harm any critical behaviors?
-- Ref #55 (Planner spawns researchers): Does planner spawn researcher for factual gaps vs ask human for decisions? Does planner use Task tool correctly with RESEARCH SUMMARY prompt? Does researcher return proper RESEARCH SUMMARY format (question, answer, spec updates with line numbers, key constraints)? Does researcher update spec/current_system.md before returning summary? Does planner read summary and continue, or read referenced spec sections for detail? Does this reduce friction for factual questions? Do planners still ask humans for design decisions?
+- Ref #55 (Planner spawns researchers): Does planner spawn researcher for factual gaps vs ask human for decisions? Does planner use Task tool correctly with RESEARCH SUMMARY prompt? Does researcher return proper RESEARCH SUMMARY format (question, answer, spec updates with line numbers, key constraints)? Does researcher update spec/current-system.md before returning summary? Does planner read summary and continue, or read referenced spec sections for detail? Does this reduce friction for factual questions? Do planners still ask humans for design decisions?
 - Ref #54 (Project rules): Do agents read `.agent-rules/` during entry point? Do they APPEND (not rewrite)? Only add when human explicitly requests? Do rules use absolute language? Does planner read implementation rules to understand constraints? Do rules accumulate properly across sessions?
-- Ref #53 (README ownership): Does researcher keep README.md current alongside current_system.md? Is README user-facing and aligned with discoveries? Does implementor respect researcher's overall structure?
+- Ref #53 (README ownership): Does researcher keep README.md current alongside current-system.md? Is README user-facing and aligned with discoveries? Does implementor respect researcher's overall structure?
 - Ref #51 (Comment accuracy): Do comments avoid comparisons to removed code ("less/more than...")? State current facts, not what changed?
 - Ref #50 (No code in specs): Do planners avoid dumping implementation code? Focus on WHAT/HOW IT BEHAVES vs HOW TO BUILD?
 - Ref #49 (Sub-agent delegation): Does researcher use sub-agents aggressively? Launch 5-10 parallel agents for >100k LOC codebases? Stay <50% context?
 - Ref #48 (Verification mindset): Does researcher trust code over claims? Avoid documenting documentation history?
 - Ref #47 (Diagram ownership): Diagrams inline in relevant markdown files (Mermaid syntax)?
 - Ref #46 (Meta reads prompts): Does meta-agent read all four prompts directly?
-- Ref #45 (Directory structure): Do agents respect `ongoing_changes/` (temporary) vs `spec/` (permanent) boundaries? No unauthorized docs elsewhere?
+- Ref #45 (Directory structure): Do agents respect `ongoing-changes/` (temporary) vs `spec/` (permanent) boundaries? No unauthorized docs elsewhere?
 - Ref #44 (Prompt verbosity): Are prompts more efficient? Did reduction harm anything?
 - Ref #43 (Coding standards): Do implementors follow Simple > Complex, Clear > Clever? Comments only for WHY? Treat complexity as precious?
 - Ref #42 (Documentor role): Does researcher stay in documentor role (facts) vs critic role (recommendations)? No IMPROVEMENTS.md files?
@@ -592,11 +592,11 @@ All prompts tested on actual project (this looped agent system):
 **Core System (Refinements 28-40):**
 - Token usage reporting: Do agents report context % at each interaction?
 - Repeatable tests (Ref #36): Do implementors CREATE repeatable tests (not just test once)? Verify end-to-end user experience? Run regression checks?
-- Feature test registry (Ref #37): Do implementors add to feature_tests.md? Do researchers use it as test checklist?
+- Feature test registry (Ref #37): Do implementors add to feature-tests.md? Do researchers use it as test checklist?
 - Paste output rule: Do agents paste actual terminal output (not just claim they tested)?
 - Mermaid diagrams: Do agents create inline diagrams in markdown files?
 - YAML frontmatter: Do agents update metadata each session?
-- Document cleanup: Do researchers only delete in spec/ folder (not implementor_progress.md, manager_progress.md)?
+- Document cleanup: Do researchers only delete in spec/ folder (not implementor-progress.md, manager-progress.md)?
 - Implementation Manager: Does manager delegate properly? Maintain minimal context (<30%)? Handle restarts gracefully?
 - Context usage tracking: Do implementors report final context? Does manager aggregate data? Does planner use historical data to calibrate tasks?
 

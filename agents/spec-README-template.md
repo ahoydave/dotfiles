@@ -24,8 +24,8 @@ Document WHAT the system does and HOW components connect - enough to plan change
 ```
 spec/
   README.md                      # This file - documentation standards
-  current_system.md              # System overview (<500 lines)
-  feature_tests.md               # Feature registry + verification methods
+  current-system.md              # System overview (<500 lines)
+  feature-tests.md               # Feature registry + verification methods
 
   system/                        # Detailed docs (when needed)
     components/
@@ -44,13 +44,13 @@ Documentation reveals detail in layers - start with the big picture, drill down 
 
 | Level | What | Where | Target Size |
 |-------|------|-------|-------------|
-| **1: Context** | System purpose, users, external dependencies | `current_system.md` | 100-200 lines |
-| **2: Components** | Major components, connections, data flows | `current_system.md` | 200-400 lines |
+| **1: Context** | System purpose, users, external dependencies | `current-system.md` | 100-200 lines |
+| **2: Components** | Major components, connections, data flows | `current-system.md` | 200-400 lines |
 | **3: Details** | Internal architecture of complex components | `system/components/*.md` | 200-400 lines each |
 | **Flows** | Critical multi-component sequences | `system/flows/*.md` | As needed |
 | **Domain** | Key entities, services, extension points | `system/domain/*.md` | As needed |
 
-**Threshold**: Keep `current_system.md` under 500 lines (Levels 1+2). Split to Level 3 files when any component needs more than ~150 lines.
+**Threshold**: Keep `current-system.md` under 500 lines (Levels 1+2). Split to Level 3 files when any component needs more than ~150 lines.
 
 ## What to Document
 
@@ -159,7 +159,7 @@ Docs: [mermaid.js.org](https://mermaid.js.org/)
 
 ## Feature Tests Registry
 
-`feature_tests.md` tracks what features exist and how to verify them:
+`feature-tests.md` tracks what features exist and how to verify them:
 
 ```markdown
 ## Feature: User Authentication

@@ -20,7 +20,7 @@ We've independently converged on **remarkably similar solutions** to the same pr
 | Aspect | Their System (ACE-FCA) | Our System |
 |--------|----------------------|------------|
 | **Phase 1** | Research (documentarian role) | Researcher (system documentation) |
-| **Phase 2** | Plan (interactive, skeptical) | Planner (collaborative via QUESTIONS.md) |
+| **Phase 2** | Plan (interactive, skeptical) | Planner (collaborative via questions.md.md) |
 | **Phase 3** | Implement (phase-by-phase) | Implementor (one task per session) |
 | **Context Target** | 40-60% usage | 60-70% wrap up, 80% hard stop |
 | **Agent Invocation** | Slash commands (`.claude/commands/`) | Slash commands (`~/dotfiles/claude/commands/`) |
@@ -32,7 +32,7 @@ We've independently converged on **remarkably similar solutions** to the same pr
 | **Frequent Compaction** | ✅ Core technique | ✅ "Documentation is Not History" |
 | **Subagent Delegation** | ✅ codebase-locator, codebase-analyzer | ✅ Task agents (Explore, general-purpose) |
 | **Context Efficiency** | ✅ Keep 40-60% | ✅ Monitor at 60-70%, stop at 80% |
-| **Handoff Documents** | ✅ Research → Plan → Implementation | ✅ CURRENT_SYSTEM → NEW_FEATURES → PROGRESS |
+| **Handoff Documents** | ✅ Research → Plan → Implementation | ✅ current-system.md → new-features.md → PROGRESS |
 | **Human Review Points** | ✅ After research, after plan | ✅ Interactive planning, checkpoint reviews |
 
 ---
@@ -57,12 +57,16 @@ thoughts/shared/
 ### Our Structure
 ```
 spec/
-├── CURRENT_SYSTEM.md (or system/*.md if split)
-├── NEW_FEATURES.md
-├── PROGRESS.md
-├── RESEARCH_STATUS.md
-├── PLANNING_STATUS.md
-└── QUESTIONS.md
+├── current-system.md (or system/*.md if split)
+├── feature-tests.md
+├── research-status.md
+
+ongoing-changes/
+├── new-features.md
+├── planning-status.md
+├── implementor-progress.md
+├── manager-progress.md
+└── questions.md
 ```
 
 **Characteristics**:
@@ -106,16 +110,16 @@ spec/
 - Updates plan file with checkboxes during implementation
 
 **Our Approach** (planner.md):
-- Collaborative via QUESTIONS.md
+- Collaborative via questions.md.md
 - 2-3 phase specs recommended (not 5+)
 - "User experience clear, implementation flexible"
 - Template: Feature Requirements, User Impact, Technical Approach, Implementation Phases, Testing Requirements
 - Separates automated and user verification
-- REWRITE NEW_FEATURES.md (don't append)
+- REWRITE new-features.md.md (don't append)
 
 **Similarity**: ~80% - Both interactive, both emphasize clarity, both separate automated/manual testing
 **Key Differences**:
-- They update plan with checkboxes; we keep separate PROGRESS.md
+- They update plan with checkboxes; we keep separate implementor-progress.md
 - We explicitly limit to 2-3 phases; they don't specify
 - They use single plan file; we use role-specific files
 
@@ -132,7 +136,7 @@ spec/
 **Our Approach** (implementor.md):
 - "ONE TASK PER SESSION" - absolute rule
 - Follow spec literally
-- REWRITE PROGRESS.md after each task
+- REWRITE implementor-progress.md after each task
 - Proof-required testing (paste actual terminal output)
 - End-to-end user testing mandatory
 - Check what you're replacing (capability verification)
@@ -140,7 +144,7 @@ spec/
 **Similarity**: ~70% - Both emphasize verification, both sequential
 **Key Differences**:
 - **Major**: They continue through phases; we stop after one task
-- **Major**: They update plan checkboxes; we rewrite PROGRESS.md
+- **Major**: They update plan checkboxes; we rewrite implementor-progress.md
 - **Major**: We have strict "paste output" rule; they don't explicitly mandate this
 - We have stronger "follow spec literally" guidance
 
@@ -242,7 +246,7 @@ Our implementor stops after each task.
 **Uniqueness**: They continue through multiple phases
 
 ### 2. Multi-File System Documentation Strategy
-When CURRENT_SYSTEM.md exceeds ~800-1000 lines:
+When current-system.md.md exceeds ~800-1000 lines:
 ```
 spec/system/
 ├── architecture.md
@@ -273,15 +277,15 @@ Researcher verifies after 2-3 implementations
 
 ### 6. Document Ownership Model
 Each agent owns specific files:
-- Researcher: CURRENT_SYSTEM, RESEARCH_STATUS
-- Planner: NEW_FEATURES, PLANNING_STATUS, QUESTIONS
-- Implementor: PROGRESS (+ updates NEW_FEATURES)
+- Researcher: current-system.md, research-status.md
+- Planner: new-features.md, planning-status.md, questions.md
+- Implementor: implementor-progress.md (+ updates new-features.md)
 
 **Value**: Clear responsibilities, no overlap/confusion
 **Uniqueness**: They use shared directory with timestamped files
 
 ### 7. Comprehensive Failure Pattern Documentation
-meta_status.md documents 42 refinements and specific failure modes
+meta-status.md documents 42 refinements and specific failure modes
 
 **Value**: Learning from mistakes, continuous improvement
 **Uniqueness**: Their system is more polished but doesn't show the iteration history

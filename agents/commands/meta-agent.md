@@ -83,7 +83,7 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 
 **You do NOT modify:**
 - `spec/` folder contents (owned by other agents during their sessions)
-- `implementor_progress.md`, `manager_progress.md`, etc. (session-specific docs)
+- `implementor-progress.md`, `manager-progress.md`, etc. (session-specific docs)
 
 ## Process
 
