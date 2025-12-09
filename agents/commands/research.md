@@ -222,7 +222,7 @@ Git tracks documentation changes. Your job is documenting the CURRENT system onl
 **YOUR CLEANUP AUTHORITY: `spec/` folder only. Never delete files outside spec/.**
 
 **Allowed files you own**:
-- `spec/current-system.md`, `spec/feature-tests.md`, `spec/research-status.md` (you own)
+- `spec/current-system.md`, `spec/research-status.md` (you own)
 - `spec/system/*.md` (you own - for split documentation)
 - `README.md` in project root (you own - user-facing project overview)
 - `.agent-rules/research.md` (append when human requests)
@@ -276,14 +276,12 @@ You're part of a repeating cycle:
 
 **You (Researcher) read:**
 - `spec/research-status.md` - Previous researcher's progress
-- `spec/feature-tests.md` - Existing features and how to verify them
 - `ongoing-changes/questions.md` - Any human responses to previous questions (if planner created it)
 - `README.md` - Project overview
 - `spec/current-system.md` - What's already documented
 
 **You (Researcher) own and must keep current:**
 - `spec/current-system.md` - System understanding (planners read this!)
-- `spec/feature-tests.md` - Feature test registry (run tests, update status, document gaps)
 - `spec/research-status.md` - Your progress, for next researcher
 - `README.md` - User-facing project overview (keep aligned with current-system.md!)
 - `ongoing-changes/questions.md` - Questions for humans (if needed, temporary)
@@ -300,17 +298,15 @@ You're part of a repeating cycle:
 
 3. Read `spec/research-status.md` in full if it exists - it contains your progress so far
 
-4. Read `spec/feature-tests.md` in full if it exists - features and their verification methods
+4. Read `README.md` completely for project overview
 
-5. Read `README.md` completely for project overview
+5. Read `spec/current-system.md` in full for what's already documented
 
-6. Read `spec/current-system.md` in full for what's already documented
-
-7. **Read `.agent-rules/research.md` if it exists** - ABSOLUTE project-specific rules you must follow
+6. **Read `.agent-rules/research.md` if it exists** - ABSOLUTE project-specific rules you must follow
 
 ## Project-Specific Rules
 
-**If `.agent-rules/research.md` exists, read it during entry point (step 7 above).**
+**If `.agent-rules/research.md` exists, read it during entry point (step 6 above).**
 
 These are ABSOLUTE rules specific to THIS project. They capture learnings from previous sessions - workflows you MUST follow, gotchas you MUST avoid, test procedures you MUST execute.
 
@@ -530,20 +526,7 @@ If `spec/README.md` doesn't exist, copy from `~/dotfiles/agents/spec-README-temp
 
    **CRITICAL: Don't just verify "code exists" - verify features WORK by running tests.**
 
-   **Use feature-tests.md as your test registry**:
-   - If `spec/feature-tests.md` exists: This is your checklist of what to test
-   - Run each test listed in feature-tests.md
-   - Update test status and dates in feature-tests.md
-   - Document any new features you discover (add to feature-tests.md)
-
-   **If feature-tests.md doesn't exist yet**:
-   - CREATE it as you discover features
-   - Check for `tests/` directory with automated tests
-   - Check for `tools/verify_*.sh` verification scripts
-   - Check README for documented test procedures
-   - Document each feature and how to verify it
-
-   **Run the test suite**:
+   **Run the project's test suite**:
    ```bash
    # Automated tests
    pytest tests/                    # Python
@@ -555,27 +538,10 @@ If `spec/README.md` doesn't exist, copy from `~/dotfiles/agents/spec-README-temp
    ./tools/verify_*.sh              # Run all verification scripts
    ```
 
-   **Document results in feature-tests.md**:
-   - Update status for each feature tested (✅ Verified or ❌ Failed)
-   - Update verification dates
-   - Paste test output in current-system.md verification section
-   - Document gap analysis: features without tests
-
-   **Also summarize in current-system.md**:
-   - Overview of test coverage
-   - Link to feature-tests.md for full registry
-   - What features are tested, what lacks tests
-
-   **If tests fail**:
-   - Mark feature as ❌ Failed in feature-tests.md with date
-   - Document failures in current-system.md
-   - Note: "System state unclear - tests failing"
+   **Document test results in current-system.md**:
+   - Test suite status (passing/failing)
+   - If tests fail: note "System state unclear - tests failing"
    - Don't assume implementations work if tests fail
-
-   **If no tests exist for a feature**:
-   - Mark as ❌ No test in feature-tests.md
-   - Document gap in current-system.md
-   - Recommend: Next implementor should add verification
 
 3. **Document** findings in `spec/current-system.md` AND update `README.md`:
 
@@ -742,7 +708,7 @@ components: [list, of, major, components]
 - Component responsibilities and data flows
 - Integration points (APIs, data contracts)
 - Key constraints (technical limitations)
-- Verification summary (link to feature-tests.md)
+- Test suite status (passing/failing)
 - File references (where to find major components)
 
 **Quality checks**:

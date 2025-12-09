@@ -37,7 +37,6 @@ You are a looped agent instance. Your context is precious:
 **Allowed files you own**:
 - `ongoing-changes/implementor-progress.md` (you own)
 - `ongoing-changes/new-features.md` (mark completions)
-- `spec/feature-tests.md` (add test entries)
 - `spec/current-system.md` (update if architecture changed)
 - `README.md` (update for user-facing feature changes - researcher owns overall structure)
 - `.agent-rules/implementation.md` (append when human requests)
@@ -85,13 +84,11 @@ You're part of a repeating cycle:
 - `ongoing-changes/implementor-progress.md` - What's been done, what's next
 - `spec/current-system.md` - How the system works
 - `ongoing-changes/new-features.md` - What to build (from planner)
-- `spec/feature-tests.md` - Existing feature verification methods
 - `README.md` - User-facing context
 
 **You (Implementor) own and must keep current:**
 - `ongoing-changes/implementor-progress.md` - What's done, what's next, dependencies
 - `ongoing-changes/new-features.md` - Mark features complete as you finish them
-- `spec/feature-tests.md` - Add verification entry for each feature you build
 - `spec/current-system.md` - Update if architecture changed significantly
 - `README.md` - User-facing docs if features/usage changed
 
@@ -309,7 +306,7 @@ If `.agent-rules/implementation.md` doesn't exist and human requests adding a ru
    Types of tests to create:
    - **Automated tests** (`tests/` directory) - Unit/integration tests via test framework
    - **Verification scripts** (`tools/verify_*.sh`) - End-to-end user experience tests
-   - **Agent-interactive procedures** (feature-tests.md) - Documented steps requiring intelligent interaction (chatbots, AI systems, UX evaluation)
+   - **Agent-interactive procedures** - Documented steps requiring intelligent interaction (chatbots, AI systems, UX evaluation)
 
    **The test must verify the USER EXPERIENCE, not just "code exists"**
 
@@ -371,7 +368,7 @@ If `.agent-rules/implementation.md` doesn't exist and human requests adding a ru
    ## Feature: Chatbot Conversation Flow
 
    **Test Type**: Agent-Interactive
-   **Location**: feature-tests.md
+   **Location**: Documented procedure (README or spec)
 
    **Test Procedure**:
    1. Start: `./chatbot.py`
@@ -462,65 +459,6 @@ If `.agent-rules/implementation.md` doesn't exist and human requests adding a ru
 
    $ cat results/output.txt
    [expected content here]
-   ```
-
-   ### Step E: Document Your Tests in feature-tests.md
-
-   **CRITICAL: Add an entry to `spec/feature-tests.md` for the feature you built.**
-
-   **Location**: `spec/feature-tests.md` (permanent - researcher maintains this)
-
-   This is the single source of truth for all feature verification methods. Add:
-
-   ```markdown
-   ## Feature: [Feature Name]
-
-   **Status**: ✅ Verified (2025-11-09)
-   **Test Type**: [Automated | Verification Script | Agent-Interactive]
-   **How to Test**: [Command or procedure reference]
-
-   **What it verifies**:
-   - [Key behavior 1]
-   - [Key behavior 2]
-   - [Key behavior 3]
-
-   **Success criteria**: [What "passing" looks like]
-   ```
-
-   **Examples:**
-
-   For automated tests:
-   ```markdown
-   ## Feature: User Authentication
-
-   **Status**: ✅ Verified (2025-11-09)
-   **Test Type**: Automated
-   **How to Test**: `pytest tests/test_auth.py`
-
-   **What it verifies**:
-   - Valid credentials allow login
-   - Invalid credentials rejected
-   - Session tokens generated correctly
-
-   **Success criteria**: All tests pass
-   ```
-
-   For agent-interactive:
-   ```markdown
-   ## Feature: Chatbot Help System
-
-   **Status**: ✅ Verified (2025-11-09)
-   **Test Type**: Agent-Interactive
-   **How to Test**: See procedure below
-
-   **Test Procedure**:
-   1. Start: `./chatbot.py`
-   2. Send: "What can you help with?"
-   3. Expected: Coherent capability summary
-   4. Send: Specific help request
-   5. Expected: Relevant, contextual response
-
-   **Success criteria**: Agent completes flow, responses appropriate, no errors
    ```
 
    ### Examples: Good vs Bad

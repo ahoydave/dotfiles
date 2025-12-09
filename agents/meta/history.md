@@ -46,7 +46,7 @@ For current status and recent refinements (41+), see `meta-status.md`.
 34. **Context usage tracking (feedback loop for task sizing)**
 35. **Diagram files with SVG generation (improved human review)**
 36. **Repeatable test suite framework (fixes "fake testing" at its root)**
-37. **Feature test registry (feature-tests.md - single source of truth)**
+37. **Feature test registry** (deprecated in Refinement #60)
 38. **Researcher cleanup scope boundaries (prevents accidental deletion)**
 39. **Lowercase document filenames (consistency and convention)**
 40. **Token usage reporting (self-monitoring and visibility)**

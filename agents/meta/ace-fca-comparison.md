@@ -58,7 +58,6 @@ thoughts/shared/
 ```
 spec/
 ├── current-system.md (or system/*.md if split)
-├── feature-tests.md
 ├── research-status.md
 
 ongoing-changes/

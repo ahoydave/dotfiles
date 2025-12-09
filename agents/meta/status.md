@@ -1,23 +1,23 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2025-12-03
-git_commit: 28efd06
-refinement_count: 58
+last_updated: 2025-12-09
+git_commit: fa5da8d
+refinement_count: 60
 status: production-ready
-recent_focus: document_ownership
+recent_focus: documentation_efficiency
 agent_count: 5
 ---
 
-## Current State (2025-12-03)
+## Current State (2025-12-09)
 
 ### Status: Production-Ready with Optimized Prompt Efficiency
 
-**Agent prompts**: 58 refinements applied through iterative testing
+**Agent prompts**: 60 refinements applied through iterative testing
 **Deployment**: Prompts in ~/dotfiles/agents/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
 **Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
-**Recent focus**: Project-specific agent rules (`.agent-rules/` directory for accumulating project learnings)
+**Recent focus**: Documentation efficiency - only document non-obvious information
 
 ### What's Working
 
@@ -34,7 +34,7 @@ agent_count: 5
 ✅ **Document structure**: Clear ownership, no sprawl (explicit allowed lists)
 ✅ **Token efficiency**: Optimized to 40-60% (aligned with ACE-FCA proven thresholds)
 ✅ **Agent-agnostic**: Works with Claude, GPT-5, Gemini, etc.
-✅ **System documentation**: Multi-file strategy for large systems (>800-1000 lines), C4-inspired progressive disclosure
+✅ **System documentation**: C4 model with "skip empty diagrams" principle, multi-file strategy for large systems
 ✅ **Repeatable test suites**: Tests as first-class deliverables (scripts/automated/documented procedures)
 ✅ **Test suite verification**: Researcher runs tests to verify system state, not just reads code
 ✅ **End-to-end testing**: Tests verify user experience, not just "code exists"
@@ -75,7 +75,7 @@ agent_count: 5
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
 ### Recent Refinements 41-53 (2025-11-10 to 2025-11-21)
 
-41. **C4-inspired progressive disclosure** - Three-level documentation structure (Context, Containers, Components). Levels 1+2 in current-system.md (<500 lines), Level 3 split to components/flows. 60-75% token savings for typical tasks.
+41. **Progressive disclosure** - Multi-level documentation structure. Overview in current-system.md (<500 lines), details split to components/flows. 60-75% token savings for typical tasks. (Enhanced with full C4 model in Refinement #59.)
 
 42. **Role clarity: Documentor, not critic** - Researcher documents WHAT EXISTS (facts), planner identifies WHAT SHOULD BE (improvements). Prevents recommendation docs (IMPROVEMENTS.md, etc.).
 
@@ -110,6 +110,10 @@ agent_count: 5
 57. **Comments: last resort, not default** - Compressed and reframed comment guidance. Problem: (1) Implementor wrote `"not in Assets"` - negation that only makes sense knowing old code. (2) Previous guidance was 140 lines of examples, fighting verbosity with verbosity. Solution: Rewrote entire comment section to ~30 lines. New framing: "A comment is an admission that the code isn't clear enough." Comments are last resort after trying to make code self-explanatory. Three rules: (1) comments must stand alone, (2) no comparatives/negations, (3) check existing comments when changing code. One concrete example (the Unity case). One valid use case (external constraints). Removed all redundant examples. Key philosophy shift: comments aren't just "for WHY not WHAT" - they're a failure to write clear code.
 
 58. **spec/README.md ownership clarification** - Made clear that only the meta-agent owns `spec/README.md`. Problem: Agents might modify the spec/README.md documentation standards file during their work, corrupting the template. Solution: (1) Added "NEVER modify `spec/README.md`" to researcher's allowed files section with explanation that meta-agent owns it. (2) Added "(READ ONLY - do not modify)" to entry point instructions in research.md, plan.md, and implement.md. (3) Added warning header to spec-README-template.md: "⚠️ DO NOT MODIFY THIS FILE". (4) Added spec/README.md ownership section to workflow.md document ownership table. Key principle: spec/README.md is a standards template that travels with projects - if conventions need changing, update the source template in dotfiles, not individual project copies.
+
+59. **C4 with "skip empty diagrams" principle** - Adopted full C4 model with explicit guidance on when to skip levels. Problem: Previous "C4-inspired" framing was vague - agents didn't know when to include/skip diagram levels. Solution: (1) New core principle: "Document the system efficiently. Skip diagrams that add no information." (2) Full C4 levels explained (Context, Containers, Components, Code) with explicit "Include when" and "Skip when" for each. (3) Additional diagram types (class, sequence, state) with clear inclusion criteria. (4) Summary table showing when to include vs skip each diagram type. (5) Key insight: A container diagram with one container wastes tokens, but simple apps still need documentation - just appropriately sized. Right-size documentation to match system complexity.
+
+60. **Remove feature-tests.md** - Removed underspecified feature test registry. Problem: feature-tests.md was underspecified and duplicated what test suites already do. Projects with automated tests don't need a separate registry - the test files ARE the registry. Running `pytest` or `npm test` is the verification. The concept wasn't battle-tested and agents weren't reliably using it. Solution: (1) Removed feature-tests.md from spec-README-template.md file structure. (2) Removed from researcher's owned files, entry point, and test verification section. (3) Removed from planner's read files and verification strategy examples. (4) Removed from implementor's owned files and "Step E" documentation section. (5) Updated meta/status.md document ownership. Key insight: Testing discipline (Ref #36) remains - implementors still create repeatable tests and paste output as proof. We just removed the separate registry file that was redundant with actual test suites. May revisit feature/test documentation in future with clearer specification.
 
 **See git history for full chronological details.**
 
@@ -218,7 +222,7 @@ Implementor replaces component but loses features.
 
 ### Problem: Context overflow
 Agents read too much into their context.
-→ **Solution**: Token budget monitoring (40-50% wrap up, 60% hard stop) + sub-agent delegation + progressive disclosure (C4 levels).
+→ **Solution**: Token budget monitoring (40-50% wrap up, 60% hard stop) + sub-agent delegation + progressive disclosure.
 
 ### Problem: Documentation sprawl
 Agents invent new docs (SESSION_SUMMARY.md, NOTES.md, etc.) instead of using existing structure.
@@ -257,17 +261,14 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
 **Agent document ownership**:
 - **Researcher** owns:
   - `spec/current-system.md` (+ `spec/system/components/*.md`, `spec/system/flows/*.md` if split)
-  - `spec/feature-tests.md` (maintains/verifies)
   - `spec/research-status.md`
   - `README.md` (project root - user-facing overview, kept aligned with current-system.md)
 - **Planner** owns:
   - `ongoing-changes/new-features.md`
   - `ongoing-changes/planning-status.md`
   - `ongoing-changes/questions.md`
-  - (reads `spec/feature-tests.md`)
 - **Implementor** owns:
   - `ongoing-changes/implementor-progress.md`
-  - `spec/feature-tests.md` (creates entries)
   - `README.md` (updates for user-facing feature changes only - researcher owns structure)
   - (updates `ongoing-changes/new-features.md` with completions)
 - **Implementation Manager** owns:
@@ -277,26 +278,21 @@ Researcher told to "aggressively delete" docs, but unclear boundaries - could de
   - All agent prompts in `~/dotfiles/agents/commands/`
 
 ### System Documentation Principle
-**For current-system.md**: "Behavior and integration points clear, implementation details minimal"
+**For current-system.md**: "Document the system efficiently. Skip diagrams that add no information."
 
-Document WHAT the system does and HOW components connect - enough to plan changes without surprises, not enough to implement without reading code.
+Follow C4 model (Context → Containers → Components → Code) but skip any level that adds no information. A container diagram with one container wastes tokens, but simple apps still need documentation - just appropriately sized.
 
-**Progressive disclosure (C4-inspired)**:
-- **Level 1**: System Context (100-200 lines)
-- **Level 2**: Containers/Components Overview (200-400 lines)
-- **Threshold**: Keep Levels 1+2 under 500 lines in current-system.md
-- **Level 3**: Component Details (split to spec/system/components/<name>.md when >150 lines)
-- **Flows**: Critical multi-component flows (split to spec/system/flows/<name>.md)
+**C4 Levels**:
+- **Level 1: Context** - System + external dependencies (skip if no external systems)
+- **Level 2: Containers** - Deployable units (skip if single container)
+- **Level 3: Components** - Major building blocks within containers
+- **Level 4: Code** - Class diagrams, data models (when not covered at higher levels)
 
-**Multi-file strategy** (when Level 2 exceeds ~150 lines for any component):
-- `spec/current-system.md`: Levels 1+2 overview + navigation (under 500 lines)
-- `spec/system/components/<name>.md`: Level 3 component details
-- `spec/system/flows/<name>.md`: Critical flow documentation
-- Diagrams are inline using Mermaid (see spec/README.md)
+**Additional diagrams**: Class/domain models, sequence flows, state diagrams - include when they add value not shown at higher levels.
 
-**Analogous to planner specs**:
-- Planner: "User experience clear, implementation flexible"
-- Researcher: "System behavior clear, implementation minimal"
+**Threshold**: Keep current-system.md under 500 lines. Split when any component needs >150 lines.
+
+**The test**: "Could someone plan a new feature without missing critical constraints or breaking existing behavior?"
 
 ### Handoff Pattern
 Agents read handoff docs from previous role:
@@ -362,13 +358,23 @@ All prompts tested on actual project (this looped agent system):
 
 ## Active Development Areas
 
-### Recently Completed (2025-12-03)
+### Recently Completed (2025-12-09)
 
-✅ **spec/README.md ownership clarification** (Refinement #58) - JUST ADDED
+✅ **Remove feature-tests.md** (Refinement #60) - JUST ADDED
+  - Removed underspecified feature test registry
+  - Problem: Duplicated what test suites already do, wasn't battle-tested
+  - Testing discipline (Ref #36) remains - implementors still create repeatable tests
+  - May revisit with clearer specification in future
+
+✅ **C4 with "skip empty diagrams" principle** (Refinement #59)
+  - Adopted full C4 model with explicit guidance on when to skip levels
+  - Each C4 level has "Include when" and "Skip when"
+  - Summary table for quick reference
+
+✅ **spec/README.md ownership clarification** (Refinement #58)
   - Only meta-agent owns spec/README.md (template file for documentation standards)
   - Added "NEVER modify" warnings to researcher, planner, implementor entry points
   - Added warning header to spec-README-template.md source file
-  - Updated workflow.md document ownership table with spec/README.md entry
   - Key: If conventions need changing, update source template in dotfiles, not project copies
 
 ### Previously Completed (2025-11-25)
@@ -497,7 +503,7 @@ All prompts tested on actual project (this looped agent system):
   - Condensed allowed/forbidden file lists (removed excessive symbols/explanations)
   - Removed git permissions sections (settings.json handles this)
   - ~759 lines removed across 4 prompts (~24% reduction)
-  - Kept all critical teaching examples (coding standards, verification, C4)
+  - Kept all critical teaching examples (coding standards, verification, progressive disclosure)
   - Faster human review, clearer signal-to-noise for agents
 
 ### Previously Completed (2025-11-10)
@@ -517,14 +523,11 @@ All prompts tested on actual project (this looped agent system):
   - Example guidance: "Component X makes 3 API calls" (fact) NOT "should be refactored" (recommendation)
   - Inspired by ACE-FCA's emphasis on researcher as documentor
   - Cleaner handoff: objective facts → thoughtful design
-✅ **C4-inspired progressive disclosure** (Refinement #41)
-  - Systematic three-level documentation structure (Context, Containers, Components)
-  - Keeps current-system.md under 500 lines (Levels 1+2), splits to component/flow docs as needed
+✅ **Progressive disclosure** (Refinement #41, enhanced in #59)
+  - Multi-level documentation structure following C4 model
+  - Keeps current-system.md under 500 lines, splits to component/flow docs as needed
   - 60-75% token savings: agents read only relevant detail levels
-  - Completely rewrote Research agent documentation sections (cohesive, not patchwork)
-  - Added efficient reading strategies to Plan and Implement agents
-  - Addresses real user pain point: "docs dived in haphazardly"
-  - Human comprehension benefit: gradual detail disclosure
+  - Enhanced in #59 with full C4 levels and explicit "skip when" guidance
 ✅ **Token usage reporting** (Refinement #40)
   - All agents now report current token usage percentage at each interaction
   - Added clear instruction to Token Budget section in all four agent prompts
@@ -543,8 +546,7 @@ All prompts tested on actual project (this looped agent system):
   - Clarifies document ownership boundaries
 
 ### Older Completions (2025-11-05 and earlier)
-✅ **Feature test registry (feature-tests.md)** - (Refinement #37)
-✅ **Repeatable test suite framework** - (Refinement #36)
+✅ **Repeatable test suite framework** - (Refinement #36) (Note: feature-tests.md removed in Refinement #60)
 ✅ **Diagram files with SVG generation**
 ✅ **Context usage tracking**
 ✅ **Settings.json permissions**
@@ -570,7 +572,8 @@ All prompts tested on actual project (this looped agent system):
 
 ### Known Issues to Monitor
 
-**Recent Refinements (41-58):**
+**Recent Refinements (41-59):**
+- Ref #59 (C4 skip empty diagrams): Do agents use full C4 levels appropriately? Do they skip container diagrams for single-container apps? Do they include class/sequence/state diagrams when they add value? Is documentation right-sized for system complexity?
 - Ref #58 (spec/README.md ownership): Do agents avoid modifying spec/README.md? Do they copy template correctly when missing? If conventions need updating, do they ask human to update source template?
 - Ref #57 (Comments last resort): Are comments rare? Do agents try to make code self-explanatory first? Do comments avoid comparatives/negations? Are comments treated as failure to write clear code?
 - Ref #56 (Prompt compression round 2): Do agents still follow critical behavioral instructions after compression? **CRITICAL: Do agents still avoid documentation-as-history (this fights base model training)?** Do agents create Mermaid diagrams inline (workflow preserved)? Do agents read project-specific rules (format simplified)? Did compression harm any critical behaviors?
@@ -587,12 +590,12 @@ All prompts tested on actual project (this looped agent system):
 - Ref #44 (Prompt verbosity): Are prompts more efficient? Did reduction harm anything?
 - Ref #43 (Coding standards): Do implementors follow Simple > Complex, Clear > Clever? Comments only for WHY? Treat complexity as precious?
 - Ref #42 (Documentor role): Does researcher stay in documentor role (facts) vs critic role (recommendations)? No IMPROVEMENTS.md files?
-- Ref #41 (C4 progressive disclosure): Do researchers keep Levels 1+2 <500 lines? Split to Level 3 appropriately? Do agents read only relevant levels? 60-75% token savings achieved?
+- Ref #41 (Progressive disclosure): Do researchers keep overview <500 lines? Split to detail files appropriately? Do agents read only relevant levels? (Enhanced by Ref #59 with full C4)
 
 **Core System (Refinements 28-40):**
 - Token usage reporting: Do agents report context % at each interaction?
 - Repeatable tests (Ref #36): Do implementors CREATE repeatable tests (not just test once)? Verify end-to-end user experience? Run regression checks?
-- Feature test registry (Ref #37): Do implementors add to feature-tests.md? Do researchers use it as test checklist?
+- (Ref #37 removed - feature-tests.md deprecated in Refinement #60)
 - Paste output rule: Do agents paste actual terminal output (not just claim they tested)?
 - Mermaid diagrams: Do agents create inline diagrams in markdown files?
 - YAML frontmatter: Do agents update metadata each session?

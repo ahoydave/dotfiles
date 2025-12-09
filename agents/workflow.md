@@ -19,7 +19,7 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 
 ### Researcher (`research.md`)
 - **Purpose**: Investigates existing system OR verifies implementation
-- **Owns**: `spec/current-system.md`, `spec/feature-tests.md`, `spec/research-status.md`
+- **Owns**: `spec/current-system.md`, `spec/research-status.md`
 - **Uses**: Task agents for codebase exploration
 - **When**: At project start, or after implementation to verify reality
 
@@ -116,7 +116,6 @@ flowchart TB
 flowchart LR
     subgraph spec["spec/ (Permanent)"]
         CS[current-system.md]
-        FT[feature-tests.md]
     end
 
     subgraph ongoing["ongoing-changes/ (Temporary)"]
@@ -126,7 +125,6 @@ flowchart LR
     end
 
     Researcher -->|writes| CS
-    Researcher -->|writes| FT
 
     Planner -->|reads| CS
     Planner -->|writes| NF
@@ -166,7 +164,6 @@ flowchart LR
 (In target projects - created by agents during usage)
 spec/                           - Permanent system documentation
   current-system.md             - System understanding (researcher)
-  feature-tests.md              - Feature verification registry (researcher)
   research-status.md            - Research progress (researcher)
 
 ongoing-changes/                - Temporary work-in-progress documents
@@ -191,11 +188,6 @@ ongoing-changes/                - Temporary work-in-progress documents
 - Living doc: updated as system evolves
 - Principle: "Behavior and integration points clear, implementation details minimal"
 - For large systems (>800-1000 lines): Split into spec/system/ subdocs
-
-**spec/feature-tests.md** - Feature verification registry (permanent)
-- Created/updated by: Researcher (creates structure), Implementor (adds entries)
-- Read by: All agents for verification
-- Never deleted, continuously updated
 
 **ongoing-changes/new-features.md** - Functional requirements (temporary)
 - Created/updated by: Planner
@@ -334,7 +326,7 @@ As you work with agents on a project, you'll discover patterns that should ALWAY
 - Captures tool-specific workflows
 - Accumulates learnings across sessions
 
-**Like feature-tests.md, but for workflows**: feature-tests.md documents "how to TEST features", agent rules document "how to BUILD features in this project".
+**Permanent project knowledge**: Agent rules document "how to BUILD features in this project" - workflows, gotchas, and constraints that accumulate over time.
 
 ---
 

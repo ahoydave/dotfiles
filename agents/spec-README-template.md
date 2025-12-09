@@ -1,6 +1,6 @@
 # Spec Folder
 
-**⚠️ DO NOT MODIFY THIS FILE** - This is a documentation standards template owned by the meta-agent. If you need different conventions for a specific project, ask the human to update this template.
+*Agents do not modify this file* - This is a documentation standard. If you need different conventions for a specific project, ask the human to update this template.
 
 This file belongs in `spec/README.md` in your project.
 
@@ -13,44 +13,35 @@ Enable anyone (human or AI agent) to understand the current system quickly and a
 - **Human review**: Scannable, visual diagrams, clear navigation
 - **Collaboration**: Shared understanding across team members and tools
 
-## Core Principle
-
-**"Behavior and integration points clear, implementation details minimal"**
-
-Document WHAT the system does and HOW components connect - enough to plan changes without surprises, not enough to implement without reading code.
-
-## Structure
-
-```
-spec/
-  README.md                      # This file - documentation standards
-  current-system.md              # System overview (<500 lines)
-  feature-tests.md               # Feature registry + verification methods
-
-  system/                        # Detailed docs (when needed)
-    components/
-      <component-name>.md        # Deep dive on specific component
-    flows/
-      <flow-name>.md             # Critical multi-component flows
-    domain/
-      <area>.md                  # Domain entities and relationships
-```
-
 Diagrams are **inline** using Mermaid syntax - no separate diagram files needed.
 
-## Progressive Disclosure (C4-Inspired)
+## C4 Model
 
-Documentation reveals detail in layers - start with the big picture, drill down only as needed.
+Documentation follows the [C4 model](https://c4model.com/) - four levels of abstraction for describing software architecture. **Skip any level that adds no information.**
 
-| Level | What | Where | Target Size |
-|-------|------|-------|-------------|
-| **1: Context** | System purpose, users, external dependencies | `current-system.md` | 100-200 lines |
-| **2: Components** | Major components, connections, data flows | `current-system.md` | 200-400 lines |
-| **3: Details** | Internal architecture of complex components | `system/components/*.md` | 200-400 lines each |
-| **Flows** | Critical multi-component sequences | `system/flows/*.md` | As needed |
-| **Domain** | Key entities, services, extension points | `system/domain/*.md` | As needed |
+### Level 1: System Context
+**What**: The system as a black box, showing users and external systems it interacts with.
+**Include when**: External dependencies or multiple user types exist.
+**Skip when**: No external systems and one obvious user type.
+**Mermaid**: `C4Context` with `Person()`, `System()`, `System_Ext()`, `Rel()`
 
-**Threshold**: Keep `current-system.md` under 500 lines (Levels 1+2). Split to Level 3 files when any component needs more than ~150 lines.
+### Level 2: Containers
+**What**: Major deployable units - web apps, APIs, databases, message queues, etc.
+**Include when**: Multiple containers that communicate.
+**Skip when**: Single container (monolith, CLI tool, single service).
+**Mermaid**: `C4Container` with `Container()`, `ContainerDb()`, `Container_Boundary()`
+
+### Level 3: Components
+**What**: Major building blocks within a container - services, controllers, repositories.
+**Include when**: Container internals are complex enough to need explanation.
+**Location**: `current-system.md` for overview, `system/components/<name>.md` for details.
+**Mermaid**: `C4Component` with `Component()`, `ComponentDb()`
+
+### Level 4: Code
+**What**: Class diagrams, data models, detailed interfaces.
+**Include when**: Important domain models, complex class relationships, extension points not covered at higher levels.
+**Location**: `system/domain/<area>.md` or within component docs.
+**Mermaid**: `classDiagram`
 
 ## What to Document
 
@@ -73,104 +64,46 @@ Documentation reveals detail in layers - start with the big picture, drill down 
 - If yes → documentation is complete enough
 - If no → missing critical integration points or constraints
 
-## Class/Service Structure (When Needed)
+## Additional Diagrams
 
-For systems with significant OO or service-oriented architecture, document at the class level when a component's behavior can't be understood without knowing its structure.
+Beyond C4 levels, include these when they add value:
 
-**Document:**
-- **Key domain entities** - Core business objects and their relationships (User, Order, Product)
-- **Service interfaces** - Contracts between components: method signatures, return types
-- **Extension points** - What can be plugged in, extended, or overridden
+| Type | Include When | Mermaid |
+|------|--------------|---------|
+| Class/Data Model | Important domain entities, complex relationships | `classDiagram` |
+| Sequence/Flow | Multi-step interactions not obvious from structure | `sequenceDiagram` |
+| State | Entity has meaningful lifecycle states | `stateDiagram-v2` |
 
-**Location**: Within `system/components/<component>.md` or dedicated `system/domain/<area>.md`
+**The rule**: Include a diagram if it adds information. Skip if empty or redundant.
 
-**Class diagrams** show relationships, not full implementation:
+Docs: [C4 model](https://c4model.com/) | [Mermaid C4 syntax](https://mermaid.js.org/syntax/c4.html) | [Mermaid docs](https://mermaid.js.org/)
 
-```mermaid
-classDiagram
-    Order --> User
-    Order *-- OrderItem
+## File Structure
 
-    class Order {
-        +items[]
-        +total
-        +status
-    }
-    class User {
-        +email
-        +roles[]
-    }
-    class OrderItem {
-        +product
-        +quantity
-    }
+```
+spec/
+  README.md                      # This file - documentation standards
+  current-system.md              # System overview (<500 lines)
+
+  system/                        # Detailed docs (when needed)
+    components/
+      <component-name>.md        # Deep dive on specific component
+    flows/
+      <flow-name>.md             # Critical multi-component flows
+    domain/
+      <area>.md                  # Domain entities and relationships
 ```
 
-**Include**: Key properties, relationships, cardinality, public interfaces
-**Exclude**: Every method, private fields, implementation details
+## Progressive Disclosure
 
-## Diagrams
+Keep `current-system.md` under 500 lines. Split to detail files when any section needs more than ~150 lines:
 
-Visual diagrams dramatically improve comprehension. Use **Mermaid** for inline, version-controlled diagrams that render directly in GitHub, GitLab, Obsidian, and VS Code.
-
-**Inline in markdown** - no separate files, no build step:
-
-~~~markdown
-```mermaid
-flowchart LR
-    User --> API --> Database
-```
-~~~
-
-**Recommended diagram types**:
-
-| Purpose | Mermaid Type | Use For |
-|---------|--------------|---------|
-| System context | `flowchart` | System boundary, external actors/systems |
-| Components | `flowchart` | Major components and connections |
-| Sequences | `sequenceDiagram` | Critical interaction flows |
-| Classes/Entities | `classDiagram` | Domain models, service interfaces |
-| State machines | `stateDiagram-v2` | Lifecycle of key entities |
-
-**Example - system context**:
-
-```mermaid
-flowchart TB
-    User([User]) --> App[Application]
-    App --> DB[(Database)]
-    App --> ExtAPI[External API]
-```
-
-**Example - sequence flow**:
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant A as API
-    participant D as Database
-
-    U->>A: POST /login
-    A->>D: Validate credentials
-    D-->>A: User record
-    A-->>U: JWT token
-```
-
-Docs: [mermaid.js.org](https://mermaid.js.org/)
-
-## Feature Tests Registry
-
-`feature-tests.md` tracks what features exist and how to verify them:
-
-```markdown
-## Feature: User Authentication
-
-**Description**: Users can log in with email/password
-**Test Type**: Automated (pytest)
-**Location**: `tests/test_auth.py`
-**Last Verified**: 2025-11-15 ✅
-```
-
-This serves as a living checklist - anyone can verify the system works by running through the registry.
+| Level | Where | Target Size |
+|-------|-------|-------------|
+| Context + Containers + Components overview | `current-system.md` | 300-500 lines |
+| Component details | `system/components/*.md` | 200-400 lines each |
+| Complex flows | `system/flows/*.md` | As needed |
+| Domain models | `system/domain/*.md` | As needed |
 
 ## Document Standards
 
@@ -190,8 +123,7 @@ This serves as a living checklist - anyone can verify the system works by runnin
 
 ## Key Principles
 
-1. **Current state only** - Document what IS, not what WAS or SHOULD BE
-2. **Progressive disclosure** - Overview first, details on demand
+1. **Right-sized documentation** - Match detail to system complexity, skip empty diagrams
+2. **Current state only** - Document what IS, not what WAS or SHOULD BE
 3. **Rewrite, don't append** - Keep docs current, not historical
 4. **Delete aggressively** - If it's outdated or redundant, remove it
-5. **Optimize for the reader** - Whether human or agent, they need facts fast

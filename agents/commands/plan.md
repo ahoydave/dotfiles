@@ -157,7 +157,7 @@ For full implementation details, see updated sections in spec/current-system.md
 - `.agent-rules/planning.md` (append when human requests)
 
 **Files you read** (do not modify):
-- `spec/current-system.md`, `spec/feature-tests.md` (researcher owns)
+- `spec/current-system.md` (researcher owns)
 - `.agent-rules/implementation.md` (read to understand project constraints)
 
 **Delete anything else in ongoing-changes/** not in the allowed list. No unauthorized docs.
@@ -204,7 +204,6 @@ You're part of a repeating cycle:
 **You (Planner) read:**
 - `ongoing-changes/questions.md` - Check for human responses FIRST
 - `spec/current-system.md` - How system works (from researcher)
-- `spec/feature-tests.md` - Existing features and verification methods
 - `ongoing-changes/planning-status.md` - Previous planner's progress
 - `ongoing-changes/new-features.md` - What's been planned
 - `ongoing-changes/manager-progress.md` - Historical context usage data (if exists)
@@ -231,15 +230,13 @@ You're part of a repeating cycle:
 
 4. Read `spec/current-system.md` completely for system understanding
 
-5. Read `spec/feature-tests.md` in full if it exists - understand existing features and how they're verified
+5. Read `ongoing-changes/new-features.md` in full for what's being planned
 
-6. Read `ongoing-changes/new-features.md` in full for what's being planned
+6. **Read `.agent-rules/planning.md` if it exists** - ABSOLUTE project-specific planning rules
 
-7. **Read `.agent-rules/planning.md` if it exists** - ABSOLUTE project-specific planning rules
+7. **Read `.agent-rules/implementation.md` if it exists** - Understand implementation constraints (helps you plan realistically)
 
-8. **Read `.agent-rules/implementation.md` if it exists** - Understand implementation constraints (helps you plan realistically)
-
-9. **Read `ongoing-changes/manager-progress.md` if it exists** - review implementor context usage patterns
+8. **Read `ongoing-changes/manager-progress.md` if it exists** - review implementor context usage patterns
    - Check "Context Usage Analysis" section for task sizing feedback
    - Use historical data to calibrate new task sizes
    - Aim for tasks that keep implementors in 40-50% context range
@@ -498,7 +495,7 @@ features: [list, of, feature, names]
 
 **Verification Strategy** (REQUIRED for each feature):
 
-For each feature in your spec, include a section describing how it will be verified. The implementor will add this to `spec/feature-tests.md`.
+For each feature in your spec, include a section describing how it will be verified.
 
 ```markdown
 ## Feature: Screenshot Search
@@ -510,58 +507,24 @@ For each feature in your spec, include a section describing how it will be verif
 
 **Test Type**: Verification script (end-to-end)
 **Test Location**: `tools/verify_screenshot_search.sh`
-**feature-tests.md Entry**: Implementor will add this feature to registry
 
 **What to Test**:
 1. User asks UI question (e.g., "Where is the Inspector panel?")
 2. Assistant calls search_documentation tool
 3. Tool returns image data from vector DB
 4. Assistant answers using screenshot knowledge
-5. Screenshot filename not mentioned in response
 
 **Success Criteria**:
 - Script exits 0 (all checks pass)
-- Manual review: Answer quality is good
-- Feature works without user seeing implementation details
+- Feature works from user perspective
 
 **Test Creation**:
 Implementor will:
 - Create `tools/verify_screenshot_search.sh` with the checks above
-- Add entry to `spec/feature-tests.md` documenting the feature and test
 - Run the test and paste verification output
 ```
 
-## Feature: Chatbot Conversation Flow
-
-### Requirements
-[What the feature does from user perspective]
-
-### Verification Strategy
-
-**Test Type**: Agent-Interactive Procedure
-**Test Location**: Documented in `spec/feature-tests.md`
-
-**What to Test**:
-1. Agent starts chatbot: `./chatbot.py`
-2. Sends greeting: "Hello, what can you help with?"
-3. Verifies: Coherent capability summary response
-4. Sends specific request: "Help me with X"
-5. Verifies: Contextually appropriate response
-6. Tests context maintenance across conversation
-
-**Success Criteria**:
-- Agent can complete full flow without errors
-- Responses are coherent and contextually relevant
-- System maintains conversation context correctly
-
-**Test Creation**:
-Implementor will:
-- Document the agent-interactive procedure in `spec/feature-tests.md`
-- Run through the procedure and verify expected behaviors
-- Paste conversation transcript showing successful verification
-```
-
-**Why this matters**: Implementors need to know HOW to test, not just WHAT to test. Planning for testability upfront ensures features are verifiable. The verification strategy you define will become the entry in feature-tests.md.
+**Why this matters**: Implementors need to know HOW to test, not just WHAT to test. Planning for testability upfront ensures features are verifiable.
 
 ### `ongoing-changes/planning-status.md`
 **Purpose**: Track planning progress for next planner
@@ -770,10 +733,9 @@ Visual diagrams make spec review dramatically easier. Instantly seeing which com
 
 ### When to Use Diagrams
 
-**Work at Level 2 (Containers/Components)** - Match the C4 level of current-system.md:
-- Show major components being added/modified/removed
-- Don't go into internal class structures (that's Level 3, implementor's domain)
-- Focus on WHAT changes at the component level, not HOW it's implemented internally
+**Include diagrams that add information. Skip if empty or redundant.**
+
+Work at the appropriate C4 level - typically Level 2 (Containers) or Level 3 (Components). Show major components being added/modified/removed. Focus on WHAT changes, not internal implementation details.
 
 **Component Diagram with Change Highlighting** - ALWAYS for features touching 2+ components:
 - Show existing architecture (normal)
