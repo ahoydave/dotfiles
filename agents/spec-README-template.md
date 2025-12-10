@@ -59,6 +59,13 @@ Documentation follows the [C4 model](https://c4model.com/) - four levels of abst
 - Code walkthroughs ("first X, then Y, then Z")
 - Historical decisions (unless they constrain future work)
 
+### Explaining vs. Listing
+- **Don't just list components**—explain how they interact and why the design exists
+- A table of names with 3-word descriptions is an index, not documentation
+- For relationships (service dependencies, data flows), write prose that explains the *why* and *how*
+- **Show concrete data examples**—actual JSON/object structures with realistic values help more than abstract descriptions
+- When documenting data models, show what the serialized data looks like, not just the class hierarchy
+
 ### The Test
 **"Could someone plan a new feature without missing critical constraints or breaking existing behavior?"**
 - If yes → documentation is complete enough
@@ -75,6 +82,12 @@ Beyond C4 levels, include these when they add value:
 | State | Entity has meaningful lifecycle states | `stateDiagram-v2` |
 
 **The rule**: Include a diagram if it adds information. Skip if empty or redundant.
+
+### Diagram Content
+Boxes with just names are labels, not documentation. Every diagram element should convey meaning:
+- **C4 diagrams**: Use the description parameter—`Component(id, "Name", "Tech", "What it does")`
+- **Flowcharts**: Include brief descriptions in node labels—`service["<b>ServiceName</b><br>What it does"]`
+- **Show real values**: When illustrating data flow, use concrete examples (actual field names, realistic values) not abstract placeholders
 
 Docs: [C4 model](https://c4model.com/) | [Mermaid C4 syntax](https://mermaid.js.org/syntax/c4.html) | [Mermaid docs](https://mermaid.js.org/)
 
@@ -96,21 +109,23 @@ spec/
 
 ## Progressive Disclosure
 
-Keep `current-system.md` under 500 lines. Split to detail files when any section needs more than ~150 lines:
+**Shorter is better.** Don't fill space—stop when you've covered the essentials. Split early to keep files focused.
 
-| Level | Where | Target Size |
-|-------|-------|-------------|
-| Context + Containers + Components overview | `current-system.md` | 300-500 lines |
-| Component details | `system/components/*.md` | 200-400 lines each |
+| Level | Where | Max Size |
+|-------|-------|----------|
+| Context + Containers + Components overview | `current-system.md` | 300 lines ideal, 500 hard limit |
+| Component details | `system/components/*.md` | 150-250 lines each |
 | Complex flows | `system/flows/*.md` | As needed |
 | Domain models | `system/domain/*.md` | As needed |
+
+When a section grows past ~100 lines, consider splitting it to a detail file rather than expanding inline.
 
 ## Document Standards
 
 - **Filenames**: Lowercase with hyphens (`current-system.md`)
 - **YAML frontmatter**: Include metadata (date, git_commit, status)
 - **Navigation**: Cross-link between overview and detail docs
-- **Style**: Concise, technical, scannable. Bullet points over prose.
+- **Style**: Concise, technical, clear. Use the format that best explains the concept—tables for discrete facts (file locations, API endpoints), prose for relationships and reasoning, bullets for simple lists.
 
 ## What Does NOT Belong Here
 

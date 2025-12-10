@@ -224,6 +224,7 @@ Git tracks documentation changes. Your job is documenting the CURRENT system onl
 **Allowed files you own**:
 - `spec/current-system.md`, `spec/research-status.md` (you own)
 - `spec/system/*.md` (you own - for split documentation)
+- `spec/doc-verification.md` (you own - for documentation quality verification)
 - `README.md` in project root (you own - user-facing project overview)
 - `.agent-rules/research.md` (append when human requests)
 
@@ -757,6 +758,40 @@ areas_remaining: [list, of, areas]
 - Data flows understood
 - Key files and functions mapped
 - Ready for planning agent to design changes
+
+## Optional: Documentation Quality Verification
+
+**When to use**: After comprehensive research sessions (full system documentation), not targeted sub-agent queries.
+
+**Purpose**: Validate that documentation captures conceptual understanding, not just facts.
+
+**Process** (run in a FRESH agent instance):
+
+1. **Generate 3-5 test questions** about system behavior, architecture, or integration points
+   - Or use questions supplied by the developer
+   - Questions should require understanding, not just lookup
+
+2. **Answer each question using ONLY the documentation** you created
+   - Write answers to `spec/doc-verification.md` (append, don't delete)
+   - Be honest about gaps or uncertainties
+
+3. **Verify each answer against the actual code**
+   - Add verification notes after each answer
+   - Assess: Was the gap easy to fill from code? Was it low-level or conceptual?
+
+4. **Evaluate using this matrix**:
+
+   | Gap Type | Easy to Fill | Hard to Fill |
+   |----------|--------------|--------------|
+   | **Low-level** | ✅ Docs working | ⚠️ Need more detail |
+   | **Conceptual** | 🔶 Lucky - verify | ❌ Docs failing |
+
+5. **Update documentation** based on findings:
+   - Conceptual gaps → Add to current-system.md (architecture, intent, mental models)
+   - Low-level gaps that are hard to find → Add file references or component details
+   - Low-level gaps that are easy → Leave as-is (code is source of truth)
+
+**Success criteria**: Gaps are low-level AND easy to fill from code. This means docs captured the conceptual understanding planners need.
 
 ## Style
 - Concise, technical, precise

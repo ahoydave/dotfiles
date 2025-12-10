@@ -3,9 +3,9 @@
 ---
 last_updated: 2025-12-09
 git_commit: fa5da8d
-refinement_count: 60
+refinement_count: 61
 status: production-ready
-recent_focus: documentation_efficiency
+recent_focus: documentation_quality_verification
 agent_count: 5
 ---
 
@@ -13,7 +13,7 @@ agent_count: 5
 
 ### Status: Production-Ready with Optimized Prompt Efficiency
 
-**Agent prompts**: 60 refinements applied through iterative testing
+**Agent prompts**: 61 refinements applied through iterative testing
 **Deployment**: Prompts in ~/dotfiles/agents/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
 **Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
@@ -21,7 +21,7 @@ agent_count: 5
 
 ### What's Working
 
-✅ **Researcher**: Clean handoffs, scales to massive codebases via aggressive sub-agent delegation, comprehensive system documentation with inline Mermaid diagrams, test suite verification, documentor role (facts, not recommendations), verification mindset (trust code over claims), no documentation history meta-commentary
+✅ **Researcher**: Clean handoffs, scales to massive codebases via aggressive sub-agent delegation, comprehensive system documentation with inline Mermaid diagrams, test suite verification, documentor role (facts, not recommendations), verification mindset (trust code over claims), no documentation history meta-commentary, optional doc quality verification
 ✅ **Planner**: Interactive collaboration via questions.md, visual planning with change-highlighted diagrams, verification strategy in specs, absolute no-code rule (user experience clear, implementation flexible)
 ✅ **Implementor**: Clear task boundaries, repeatable test creation requirements, end-to-end verification focus
 ✅ **Implementation Manager**: Autonomous multi-task orchestration via sub-agents (Refinement #32)
@@ -114,6 +114,8 @@ agent_count: 5
 59. **C4 with "skip empty diagrams" principle** - Adopted full C4 model with explicit guidance on when to skip levels. Problem: Previous "C4-inspired" framing was vague - agents didn't know when to include/skip diagram levels. Solution: (1) New core principle: "Document the system efficiently. Skip diagrams that add no information." (2) Full C4 levels explained (Context, Containers, Components, Code) with explicit "Include when" and "Skip when" for each. (3) Additional diagram types (class, sequence, state) with clear inclusion criteria. (4) Summary table showing when to include vs skip each diagram type. (5) Key insight: A container diagram with one container wastes tokens, but simple apps still need documentation - just appropriately sized. Right-size documentation to match system complexity.
 
 60. **Remove feature-tests.md** - Removed underspecified feature test registry. Problem: feature-tests.md was underspecified and duplicated what test suites already do. Projects with automated tests don't need a separate registry - the test files ARE the registry. Running `pytest` or `npm test` is the verification. The concept wasn't battle-tested and agents weren't reliably using it. Solution: (1) Removed feature-tests.md from spec-README-template.md file structure. (2) Removed from researcher's owned files, entry point, and test verification section. (3) Removed from planner's read files and verification strategy examples. (4) Removed from implementor's owned files and "Step E" documentation section. (5) Updated meta/status.md document ownership. Key insight: Testing discipline (Ref #36) remains - implementors still create repeatable tests and paste output as proof. We just removed the separate registry file that was redundant with actual test suites. May revisit feature/test documentation in future with clearer specification.
+
+61. **Documentation quality verification** - Added optional verification step for comprehensive research sessions. Problem: How do you know if documentation is actually good? Docs might capture facts but miss conceptual understanding planners need. Solution: Added "Optional: Documentation Quality Verification" section to researcher prompt (~35 lines). Process: (1) Fresh agent poses 3-5 questions about system behavior/architecture. (2) Answers from docs only, written to `spec/doc-verification.md`. (3) Verifies each answer against code. (4) Evaluates using 2x2 matrix: gap type (low-level vs conceptual) × fill difficulty (easy vs hard). (5) Updates docs based on findings. Success criteria: gaps are low-level AND easy to fill from code - this means docs captured conceptual understanding, leaving implementation details to code (which is correct). Added `spec/doc-verification.md` to researcher's allowed files. Key insight from user experiment: Testing "can you fill gaps from code" validates that docs focus on architecture/intent/mental models while letting code be source of truth for implementation. Not mandatory - use after comprehensive research, not targeted queries.
 
 **See git history for full chronological details.**
 
@@ -360,7 +362,15 @@ All prompts tested on actual project (this looped agent system):
 
 ### Recently Completed (2025-12-09)
 
-✅ **Remove feature-tests.md** (Refinement #60) - JUST ADDED
+✅ **Documentation quality verification** (Refinement #61) - JUST ADDED
+  - Optional verification step for comprehensive research sessions
+  - Fresh agent poses 3-5 questions, answers from docs only, then verifies against code
+  - 2x2 evaluation matrix: gap type (low-level vs conceptual) × fill difficulty (easy vs hard)
+  - Success criteria: gaps are low-level AND easy to fill = docs captured conceptual understanding
+  - Key insight: Validates that docs focus on architecture/intent, leaving implementation to code
+  - Not mandatory - diagnostic tool for comprehensive research, not targeted queries
+
+✅ **Remove feature-tests.md** (Refinement #60)
   - Removed underspecified feature test registry
   - Problem: Duplicated what test suites already do, wasn't battle-tested
   - Testing discipline (Ref #36) remains - implementors still create repeatable tests
@@ -572,7 +582,8 @@ All prompts tested on actual project (this looped agent system):
 
 ### Known Issues to Monitor
 
-**Recent Refinements (41-59):**
+**Recent Refinements (41-61):**
+- Ref #61 (Doc quality verification): Do researchers use verification for comprehensive sessions? Does fresh agent approach work? Does 2x2 matrix help identify doc gaps? Do researchers update docs based on findings? Is it useful as diagnostic without being mandatory overhead?
 - Ref #59 (C4 skip empty diagrams): Do agents use full C4 levels appropriately? Do they skip container diagrams for single-container apps? Do they include class/sequence/state diagrams when they add value? Is documentation right-sized for system complexity?
 - Ref #58 (spec/README.md ownership): Do agents avoid modifying spec/README.md? Do they copy template correctly when missing? If conventions need updating, do they ask human to update source template?
 - Ref #57 (Comments last resort): Are comments rare? Do agents try to make code self-explanatory first? Do comments avoid comparatives/negations? Are comments treated as failure to write clear code?
