@@ -1,2 +1,2 @@
-prompt = "@{agents/commands/implementation-manager.md}\n\nTask: {{args}}"
+prompt = "@{../../agents/commands/implementation-manager.md}\n\nTask: {{args}}"
 description = "Engage the Implementation Manager Agent workflow"

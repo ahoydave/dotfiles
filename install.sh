@@ -87,6 +87,26 @@ echo "  ~/.claude/commands -> $DOTFILES_DIR/agents/commands"
 ln -sf "$DOTFILES_DIR/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 echo "  ~/.claude/statusline-command.sh -> $DOTFILES_DIR/claude/statusline-command.sh"
 
+# Gemini CLI configuration
+echo ""
+echo "Setting up Gemini CLI configuration..."
+
+# Ensure ~/.gemini directory exists
+mkdir -p "$HOME/.gemini"
+
+# Backup existing commands directory if it's not a symlink
+if [ -d "$HOME/.gemini/commands" ] && [ ! -L "$HOME/.gemini/commands" ]; then
+    mv "$HOME/.gemini/commands" "$HOME/.gemini/commands.backup.$(date +%Y%m%d_%H%M%S)"
+    echo "  Backed up ~/.gemini/commands"
+fi
+
+# Remove old symlinks if they exist
+rm -f "$HOME/.gemini/commands"
+
+# Create symlinks
+ln -sf "$DOTFILES_DIR/gemini/commands" "$HOME/.gemini/commands"
+echo "  ~/.gemini/commands -> $DOTFILES_DIR/gemini/commands"
+
 # Install vim-plug for vim
 echo ""
 echo "Installing vim-plug for vim..."

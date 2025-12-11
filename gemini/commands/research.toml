@@ -1,2 +1,2 @@
-prompt = "@{agents/commands/research.md}\n\nTask: {{args}}"
+prompt = "@{../../agents/commands/research.md}\n\nTask: {{args}}"
 description = "Engage the Research Agent workflow"

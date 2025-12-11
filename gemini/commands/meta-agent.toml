@@ -1,2 +1,2 @@
-prompt = "@{agents/commands/meta-agent.md}\n\nTask: {{args}}"
-description = "Engage the Meta Agent workflow"
+prompt = "@{../../agents/commands/meta-agent.md}\n\nTask: {{args}}"
+description = "Engage the Meta-Agent workflow"
