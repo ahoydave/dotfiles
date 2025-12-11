@@ -23,7 +23,7 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 - **Uses**: Task agents for codebase exploration
 - **When**: At project start, or after implementation to verify reality
 
-### Planner (`plan.md`)
+### Planner (`planning-agent.md`)
 - **Purpose**: Designs specs for new work (WHAT to build, not HOW)
 - **Owns**: `ongoing-changes/new-features.md`, `ongoing-changes/planning-status.md`, `ongoing-changes/questions.md`
 - **Uses**: Task agents for feasibility research, questions.md for human collaboration
@@ -78,7 +78,7 @@ flowchart TB
     subgraph plan["2. Planning Phase"]
         direction TB
         P1["Human describes<br>what they want"]
-        P2["/plan<br>Agent designs spec"]
+        P2["/planning-agent<br>Agent designs spec"]
         P3["Human reviews spec +<br>answers questions.md"]
         P4{Plan correct?}
         P1 --> P2 --> P3 --> P4
@@ -152,7 +152,7 @@ flowchart LR
 ~/dotfiles/claude/
   commands/
     research.md                - Research agent (invoke: /research)
-    plan.md                    - Planning agent (invoke: /plan)
+    planning-agent.md          - Planning agent (invoke: /planning-agent)
     implement.md               - Implementor agent (invoke: /implement)
     implementation-manager.md  - Manager agent (invoke: /implementation-manager)
     meta-agent.md              - Meta-agent (invoke: /meta-agent)
@@ -257,7 +257,7 @@ ongoing-changes/                - Temporary work-in-progress documents
 **If using Claude Code with slash commands:**
 ```
 /research                # Investigate or verify system
-/plan                    # Design new features
+/planning-agent          # Design new features
 /implement               # Build one task at a time
 /implementation-manager  # Orchestrate multiple tasks
 /meta-agent              # Refine agent system
@@ -266,7 +266,7 @@ ongoing-changes/                - Temporary work-in-progress documents
 **If using other agents or file references:**
 ```
 Please act as the researcher agent from ~/dotfiles/claude/commands/research.md
-Please act as the planner agent from ~/dotfiles/claude/commands/plan.md
+Please act as the planner agent from ~/dotfiles/claude/commands/planning-agent.md
 Please act as the implementor agent from ~/dotfiles/claude/commands/implement.md
 Please act as the manager agent from ~/dotfiles/claude/commands/implementation-manager.md
 Please act as the meta-agent from ~/dotfiles/claude/commands/meta-agent.md

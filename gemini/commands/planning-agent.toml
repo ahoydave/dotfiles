@@ -1,0 +1,2 @@
+prompt = "@{agents/commands/planning-agent.md}\n\nTask: {{args}}"
+description = "Engage the Planning Agent workflow"

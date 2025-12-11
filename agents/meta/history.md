@@ -78,7 +78,7 @@ For current status and recent refinements (41+), see `meta-status.md`.
 - Follow spec literally (ask if unclear)
 
 **System Integration:**
-- Slash commands (/research, /plan, /implement)
+- Slash commands (/research, /planning-agent, /implement)
 - Settings.json controls permissions
 - Implementation Manager for autonomous flow
 - YAML frontmatter for traceability

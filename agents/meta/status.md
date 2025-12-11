@@ -14,7 +14,7 @@ agent_count: 5
 ### Status: Production-Ready with Optimized Prompt Efficiency
 
 **Agent prompts**: 62 refinements applied through iterative testing
-**Deployment**: Prompts in ~/dotfiles/agents/commands/ (invoked via `/research`, `/plan`, `/implement`, `/implementation-manager` in any project)
+**Deployment**: Prompts in ~/dotfiles/agents/commands/ (invoked via `/research`, `/planning-agent`, `/implement`, `/implementation-manager` in any project)
 **Testing**: All agents tested on real projects, failures documented and addressed
 **Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
 **Recent focus**: Documentation efficiency - only document non-obvious information

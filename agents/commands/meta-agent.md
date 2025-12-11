@@ -23,7 +23,7 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 
 **Core Components** (all in `~/dotfiles/agents/`):
 - `commands/research.md` - Research agent prompt (invoke with `/research`)
-- `commands/plan.md` - Planning agent prompt (invoke with `/plan`)
+- `commands/planning-agent.md` - Planning agent prompt (invoke with `/planning-agent`)
 - `commands/implement.md` - Implementor agent prompt (invoke with `/implement`)
 - `commands/implementation-manager.md` - Manager agent prompt (invoke with `/implementation-manager`)
 - `commands/meta-agent.md` - This file (meta-agent prompt)
@@ -41,7 +41,7 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 1. Read `meta/status.md` in full - contains system state, development history, what's working, what fails
 2. Read any documents the user specifically mentioned
 3. **CRITICAL: Read ALL agent prompts** (in `agents/commands/`) to understand current state
-   - `research.md`, `plan.md`, `implement.md`, `implementation-manager.md`
+   - `research.md`, `planning-agent.md`, `implement.md`, `implementation-manager.md`
    - If prompts are too long to read comfortably, that's a problem to fix
    - Never rely on meta/status.md descriptions - always verify actual prompt content
    - You need firsthand knowledge of what agents are actually being told

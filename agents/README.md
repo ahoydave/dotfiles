@@ -8,7 +8,7 @@ Shared agent prompts for iterative software development. Works with Claude Code,
 agents/
 ├── commands/              # Agent prompts (symlinked to ~/.claude/commands, etc.)
 │   ├── research.md        # Investigate and document current system
-│   ├── plan.md            # Design specs collaboratively
+│   ├── planning-agent.md  # Design specs collaboratively
 │   ├── implement.md       # Build one atomic task per session
 │   ├── implementation-manager.md  # Autonomous multi-task orchestration
 │   └── meta-agent.md      # Refine the agent system itself
@@ -33,7 +33,7 @@ ln -sf ~/dotfiles/agents/commands ~/.claude/commands
 
 ## Usage
 
-Invoke agents with slash commands: `/research`, `/plan`, `/implement`, `/implementation-manager`, `/meta-agent`
+Invoke agents with slash commands: `/research`, `/planning-agent`, `/implement`, `/implementation-manager`, `/meta-agent`
 
 ## Documentation
 
