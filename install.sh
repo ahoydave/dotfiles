@@ -7,14 +7,19 @@ echo "Installing dotfiles..."
 echo "=========================================="
 echo ""
 
-DOTFILES_DIR="$HOME/dotfiles"
+# Detect the directory where this script lives
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$SCRIPT_DIR"
 
 # Check if we're in the right directory
 if [ ! -f "$DOTFILES_DIR/vim/vimrc" ]; then
     echo "Error: Could not find $DOTFILES_DIR/vim/vimrc"
-    echo "Make sure this repo is cloned to ~/dotfiles"
+    echo "Make sure you're running this script from the dotfiles repository root"
     exit 1
 fi
+
+echo "Using dotfiles from: $DOTFILES_DIR"
+echo ""
 
 # Backup existing configs
 echo "Backing up existing configs..."
@@ -91,6 +96,16 @@ echo "  ~/.claude/statusline-command.sh -> $DOTFILES_DIR/claude/statusline-comma
 echo ""
 echo "Setting up Gemini CLI configuration..."
 
+# Sync agent prompts to Gemini .toml format
+if [ -f "$DOTFILES_DIR/sync_gemini_commands.sh" ]; then
+    echo "  Syncing agent prompts to Gemini format..."
+    cd "$DOTFILES_DIR"
+    bash "$DOTFILES_DIR/sync_gemini_commands.sh"
+    cd - > /dev/null
+else
+    echo "  Warning: sync_gemini_commands.sh not found, skipping Gemini sync"
+fi
+
 # Ensure ~/.gemini directory exists
 mkdir -p "$HOME/.gemini"
 
@@ -145,7 +160,7 @@ echo "     brew install neovim fzf fd ripgrep lazygit"
 echo "     brew install pyright typescript-language-server"
 echo ""
 echo "  3. Create custom agent commands:"
-echo "     cd ~/dotfiles/agents/commands"
+echo "     cd $DOTFILES_DIR/agents/commands"
 echo "     cat > example.md << 'EOF'"
 echo "---"
 echo "description: Example custom command"
@@ -154,7 +169,7 @@ echo "This is an example command. Use \$1 for arguments."
 echo "EOF"
 echo ""
 echo "  4. Check the documentation:"
-echo "     cat ~/dotfiles/nvim/README.md"
-echo "     cat ~/dotfiles/nvim/QUICKREF.md"
+echo "     cat $DOTFILES_DIR/nvim/README.md"
+echo "     cat $DOTFILES_DIR/nvim/QUICKREF.md"
 echo ""
 

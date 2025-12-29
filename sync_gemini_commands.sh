@@ -38,20 +38,22 @@ for md_file in "$SRC_DIR"/*.md; do
         fi
     fi
 
-    # The prompt path is relative to the location of the TOML file.
-    # TOML: gemini/commands/implement.toml
-    # MD:   agents/commands/implement.md
-    # Relative path from gemini/commands/ is ../../agents/commands/
-    prompt_path="../../agents/commands/$filename"
-
     echo "  -> Generating $toml_file"
 
-    # Create the .toml file content.
-    # Note the double backslash for newline `\\n` is needed for `cat << EOL`.
-    cat > "$toml_file" << EOL
-prompt = "@{$prompt_path}\n\nTask: {{args}}"
-description = "Engage the ${agent_name} workflow"
-EOL
+    # Create the .toml file content by streaming. This is safer than using a variable with
+    # a here-doc, as it prevents the shell from interpreting special characters (`$`, `` ` ``, etc.)
+    # inside the markdown file content.
+    {
+        echo 'prompt = """'
+        # Append the raw content of the markdown file.
+        cat "$md_file"
+        # Append the task arguments, separated by a newline.
+        echo
+        echo 'Task: {{args}}'
+        echo '"""'
+        # The description includes the agent name, which needs to be expanded by the shell.
+        echo "description = \"Engage the ${agent_name} workflow\""
+    } > "$toml_file"
   fi
 done
 

@@ -24,16 +24,32 @@ agents/
 
 ## Setup
 
-**Claude Code:**
+Run the install script from the repository root:
 ```bash
-ln -sf ~/dotfiles/agents/commands ~/.claude/commands
+./install.sh
 ```
 
-**Gemini CLI / Cursor:** Link `commands/` to their respective config locations.
+This will automatically:
+- Symlink agent commands to `~/.claude/commands` (Claude Code)
+- Convert and symlink agent commands to `~/.gemini/commands` (Gemini CLI)
+- Set up vim/neovim configurations
+- Install vim-plug
+
+**Manual setup for other tools:**
+
+For Cursor or other AI coding tools, symlink `commands/` to their respective config locations:
+```bash
+# Example for Cursor (adjust path as needed)
+ln -sf "$(pwd)/agents/commands" ~/.cursor/commands
+```
 
 ## Usage
 
 Invoke agents with slash commands: `/research`, `/planning-agent`, `/implement`, `/implementation-manager`, `/meta-agent`
+
+## Updating Agent Prompts
+
+**For Gemini CLI users:** If you modify agent prompts in `agents/commands/*.md`, run `./sync_gemini_commands.sh` from the repository root to regenerate the `.toml` files. This is only needed when you update the prompts, not during initial setup (install.sh handles this automatically).
 
 ## Documentation
 
