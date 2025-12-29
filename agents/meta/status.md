@@ -1,15 +1,15 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2025-12-10
+last_updated: 2025-12-29
 git_commit: 076fc9f
-refinement_count: 62
+refinement_count: 63
 status: production-ready
-recent_focus: documentation_navigation_and_diagrams
+recent_focus: knowledge_cutoff_awareness
 agent_count: 5
 ---
 
-## Current State (2025-12-10)
+## Current State (2025-12-29)
 
 ### Status: Production-Ready with Optimized Prompt Efficiency
 
@@ -73,7 +73,11 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
-### Recent Refinements 41-53 (2025-11-10 to 2025-11-21)
+### Recent Refinements 41-63 (2025-11-10 to 2025-12-29)
+
+63. **Knowledge cutoff awareness** - Added "Your knowledge has a cutoff" principle to all 5 agent prompts. Problem: Agents assume their knowledge is current and treat absence of knowledge as evidence of absence. Solution: New system principle reminding agents to search for current documentation rather than assuming their knowledge is up to date. Covers both unfamiliar things (may exist) and familiar things (may have changed). Emphasizes proactive searching over asking. Added to System Principles section of research.md, planning-agent.md, implement.md, implementation-manager.md, and meta-agent.md for consistency.
+
+### Previous Refinements 41-53 (2025-11-10 to 2025-11-21)
 
 41. **Progressive disclosure** - Multi-level documentation structure. Overview in current-system.md (<500 lines), details split to components/flows. 60-75% token savings for typical tasks. (Enhanced with full C4 model in Refinement #59.)
 
@@ -592,7 +596,8 @@ All prompts tested on actual project (this looped agent system):
 
 ### Known Issues to Monitor
 
-**Recent Refinements (41-62):**
+**Recent Refinements (41-63):**
+- Ref #63 (Knowledge cutoff): Do agents search for current documentation rather than assuming their knowledge is current? Do they verify both unfamiliar concepts AND things they think they know about?
 - Ref #62 (Summary + link, diagram arrows): Do researchers write summaries that surface important points? Are detail docs free of surprises not in the summary? Do diagram arrows explain what flows (not just "relationship exists")? Could someone unfamiliar understand diagrams alone?
 - Ref #61 (Doc quality verification): Do researchers use verification for comprehensive sessions? Does fresh agent approach work? Does 2x2 matrix help identify doc gaps? Do researchers update docs based on findings? Is it useful as diagnostic without being mandatory overhead?
 - Ref #59 (C4 skip empty diagrams): Do agents use full C4 levels appropriately? Do they skip container diagrams for single-container apps? Do they include class/sequence/state diagrams when they add value? Is documentation right-sized for system complexity?

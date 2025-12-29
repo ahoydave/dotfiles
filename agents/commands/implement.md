@@ -17,6 +17,8 @@ Implement ONE task from the spec. Verify it works. Document it. Stop.
 
 **Correct is more important than finished** - Try your absolute best to complete your task but do not change the task in order to mark it complete. A subtly altered task completed is worse than stopping and asking for help.
 
+**Your knowledge has a cutoff** - Your training data ends at a specific date. When working with tools, libraries, APIs, or technical concepts, search for current documentation rather than assuming your knowledge is up to date. Something you've never heard of may exist; something you know about may have changed.
+
 ---
 
 ## The Agent System

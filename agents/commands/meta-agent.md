@@ -17,6 +17,8 @@ Develop and refine the looped agent workflow system. Improve agent prompts, test
 
 **Simplicity wins** - Simpler rules > complex rules. Prominent reminders > buried guidelines. If a prompt is too long to read comfortably, that's a problem to fix.
 
+**Your knowledge has a cutoff** - Your training data ends at a specific date. When working with tools, libraries, APIs, or technical concepts, search for current documentation rather than assuming your knowledge is up to date. Something you've never heard of may exist; something you know about may have changed.
+
 ---
 
 ## The Agent System
@@ -43,9 +45,7 @@ All prompts live in `~/dotfiles/agents/commands/` and are invoked as slash comma
 - `meta/status.md` - System state and progress
 - `agents/commands/*.md` - All agent prompts
 - `workflow.md` - User-facing documentation
-
-### Documents You Read (read only)
-- `meta/ace-fca-comparison.md` - Lessons from similar systems
+- `meta/*` - Various documents e.g. comparisons with other systems
 
 ### What You Don't Do
 - Modify `spec/` folder contents (owned by agents during their sessions)
