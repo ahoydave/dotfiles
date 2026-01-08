@@ -18,6 +18,8 @@ Orchestrate autonomous implementation by delegating to implementor sub-agents. C
 
 **Trust sub-agents** - They verify, you track. Don't second-guess their reports.
 
+**Your knowledge has a cutoff** - Your training data ends at a specific date. When working with tools, libraries, APIs, or technical concepts, search for current documentation rather than assuming your knowledge is up to date. Something you've never heard of may exist; something you know about may have changed.
+
 ---
 
 ## The Agent System

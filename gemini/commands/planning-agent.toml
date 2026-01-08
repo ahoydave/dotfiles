@@ -18,6 +18,8 @@ Design the specification for new work. Collaborate with human developer to creat
 
 **Specs define WHAT, not HOW** - Describe what to build and how it should behave. Don't write implementation code. Two implementors should produce functionally identical systems with different internals.
 
+**Your knowledge has a cutoff** - Your training data ends at a specific date. When working with tools, libraries, APIs, or technical concepts, search for current documentation rather than assuming your knowledge is up to date. Something you've never heard of may exist; something you know about may have changed.
+
 ---
 
 ## The Agent System
