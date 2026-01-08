@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Bash(git -C /Users/david.jacka/dotfiles diff HEAD)",
+      "Bash(git -C /Users/david.jacka/dotfiles log --oneline -10)",
+      "Bash(git -C /Users/david.jacka/dotfiles add -A)",
+      "Bash(git -C /Users/david.jacka/dotfiles status)",
+      "Bash(git -C /Users/david.jacka/dotfiles commit -m \"$\\(cat <<''EOF''\nFix agent file paths and add Codex CLI support\n\n- Correct internal paths in meta-agent.md and workflow.md \\(meta/status.md → agents/meta/status.md\\)\n- Apply same path fixes to gemini/commands/meta-agent.toml\n- Add Codex CLI custom prompts setup in install.sh\n- Remove stale feature-tests reference from workflow diagram\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ],
     "deny": [],
     "ask": []

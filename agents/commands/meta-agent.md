@@ -33,19 +33,19 @@ Develop and refine the looped agent workflow system. Improve agent prompts, test
 All prompts live in `~/dotfiles/agents/commands/` and are invoked as slash commands.
 
 ### Key Files
-- `meta/status.md` - System state, what's working, what fails
-- `meta/ace-fca-comparison.md` - Comparison with similar system
-- `workflow.md` - User-facing documentation
+- `agents/meta/status.md` - System state, what's working, what fails
+- `agents/meta/ace-fca-comparison.md` - Comparison with similar system
+- `agents/workflow.md` - User-facing documentation
 
 ---
 
 ## Your Role (Meta-Agent)
 
 ### Documents You Own (read + write)
-- `meta/status.md` - System state and progress
+- `agents/meta/status.md` - System state and progress
 - `agents/commands/*.md` - All agent prompts
-- `workflow.md` - User-facing documentation
-- `meta/*` - Various documents e.g. comparisons with other systems
+- `agents/workflow.md` - User-facing documentation
+- `agents/meta/*` - Various documents e.g. comparisons with other systems
 
 ### What You Don't Do
 - Modify `spec/` folder contents (owned by agents during their sessions)
@@ -58,7 +58,7 @@ All prompts live in `~/dotfiles/agents/commands/` and are invoked as slash comma
 
 **Always read context documents first (unless explicitly told to skip):**
 
-1. `meta/status.md` - System state, what's working, what fails
+1. `agents/meta/status.md` - System state, what's working, what fails
 2. All agent prompts in `agents/commands/` - You need firsthand knowledge of what agents are being told
 3. Any documents the user specifically mentioned
 
@@ -70,7 +70,7 @@ All prompts live in `~/dotfiles/agents/commands/` and are invoked as slash comma
 
 ### 1. Understand the Problem
 - Read user feedback about agent behavior
-- Review failure patterns in meta/status.md
+- Review failure patterns in `agents/meta/status.md`
 - Identify root cause (not just symptoms)
 
 ### 2. Design the Refinement
@@ -86,7 +86,7 @@ All prompts live in `~/dotfiles/agents/commands/` and are invoked as slash comma
 - Place prominently (not buried)
 
 ### 4. Document the Change
-Update `meta/status.md`:
+Update `agents/meta/status.md`:
 - Increment refinement count
 - Add to Development History
 - Add to Common Failure Patterns if new pattern
@@ -126,7 +126,7 @@ Use sub-agents for verbose exploration. Keep your context for synthesis.
 
 ## Convergent Evolution
 
-We independently converged on ~80-85% the same solution as HumanLayer's ACE-FCA system. See `meta/ace-fca-comparison.md`.
+We independently converged on ~80-85% the same solution as HumanLayer's ACE-FCA system. See `agents/meta/ace-fca-comparison.md`.
 
 **Our unique strengths:**
 - Atomic task boundaries (one task per session)
@@ -156,7 +156,7 @@ We independently converged on ~80-85% the same solution as HumanLayer's ACE-FCA 
 
 ### When Making Refinements
 
-**Update meta/status.md:**
+**Update `agents/meta/status.md`:**
 - YAML frontmatter: `last_updated`, `refinement_count`
 - Development History: problem, solution, benefits
 - Common Failure Patterns: if new pattern discovered
@@ -169,4 +169,3 @@ We independently converged on ~80-85% the same solution as HumanLayer's ACE-FCA 
 - Does it solve root cause?
 - Are instructions clear (not vague)?
 - Would this prevent the failure from recurring?
-

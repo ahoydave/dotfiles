@@ -145,6 +145,19 @@ else
     echo "  vim-plug already installed for neovim"
 fi
 
+# Codex CLI custom prompts
+echo ""
+echo "Setting up Codex CLI custom prompts..."
+
+CODEX_PROMPTS_DIR="$HOME/.codex/prompts"
+mkdir -p "$CODEX_PROMPTS_DIR"
+
+for cmd in "$DOTFILES_DIR"/agents/commands/*.md; do
+    name="$(basename "$cmd")"
+    ln -sf "$cmd" "$CODEX_PROMPTS_DIR/$name"
+    echo "  $CODEX_PROMPTS_DIR/$name -> $cmd"
+done
+
 echo ""
 echo "=========================================="
 echo "Installation complete!"
@@ -172,4 +185,3 @@ echo "  4. Check the documentation:"
 echo "     cat $DOTFILES_DIR/nvim/README.md"
 echo "     cat $DOTFILES_DIR/nvim/QUICKREF.md"
 echo ""
-

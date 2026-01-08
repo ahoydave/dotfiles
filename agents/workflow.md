@@ -43,7 +43,7 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 
 ### Meta-Agent (`meta-agent.md`)
 - **Purpose**: Refines the agent system itself (prompts, docs, workflow)
-- **Owns**: `meta-status.md`, agent command files, workflow documentation
+- **Owns**: `agents/meta/status.md`, agent command files, workflow documentation
 - **Uses**: Real project testing to validate refinements
 - **When**: When agent behavior needs improvement or documentation needs updates
 
@@ -132,10 +132,9 @@ flowchart LR
 
     Human -->|answers| Q
 
-    Implementor -->|reads| CS
-    Implementor -->|reads| NF
-    Implementor -->|writes| IP
-    Implementor -->|adds to| FT
+	Implementor -->|reads| CS
+	Implementor -->|reads| NF
+	Implementor -->|writes| IP
 ```
 
 **Key**: Agents don't assume who comes next. Each keeps their owned docs current for whoever needs them.
@@ -149,7 +148,7 @@ flowchart LR
 ## Document Structure
 
 ```
-~/dotfiles/claude/
+~/dotfiles/agents/
   commands/
     research.md                - Research agent (invoke: /research)
     planning-agent.md          - Planning agent (invoke: /planning-agent)
@@ -157,9 +156,9 @@ flowchart LR
     implementation-manager.md  - Manager agent (invoke: /implementation-manager)
     meta-agent.md              - Meta-agent (invoke: /meta-agent)
 
-  agent_workflow.md     - This file (user guide)
-  meta-status.md        - System state and development history (meta-agent)
-  ACE-FCA-COMPARISON.md - Lessons from similar systems
+  workflow.md                - This file (user guide)
+  meta/status.md             - System state and development history (meta-agent)
+  meta/ace-fca-comparison.md - Lessons from similar systems
 
 (In target projects - created by agents during usage)
 spec/                           - Permanent system documentation
@@ -265,11 +264,11 @@ ongoing-changes/                - Temporary work-in-progress documents
 
 **If using other agents or file references:**
 ```
-Please act as the researcher agent from ~/dotfiles/claude/commands/research.md
-Please act as the planner agent from ~/dotfiles/claude/commands/planning-agent.md
-Please act as the implementor agent from ~/dotfiles/claude/commands/implement.md
-Please act as the manager agent from ~/dotfiles/claude/commands/implementation-manager.md
-Please act as the meta-agent from ~/dotfiles/claude/commands/meta-agent.md
+Please act as the researcher agent from ~/dotfiles/agents/commands/research.md
+Please act as the planner agent from ~/dotfiles/agents/commands/planning-agent.md
+Please act as the implementor agent from ~/dotfiles/agents/commands/implement.md
+Please act as the manager agent from ~/dotfiles/agents/commands/implementation-manager.md
+Please act as the meta-agent from ~/dotfiles/agents/commands/meta-agent.md
 ```
 
 **Note**: Slash commands work with Claude Code CLI. Other agents (GPT-5, Gemini, etc.) may require different invocation methods.
