@@ -176,7 +176,7 @@ ongoing-changes/                - Temporary work-in-progress documents
 ### Document Ownership
 
 **spec/README.md** - Documentation standards (permanent, read-only)
-- Created by: Meta-agent (copied from template)
+- Created by: Researcher (initialized from template if missing)
 - Read by: All agents
 - **NEVER modified by agents** - this is a template file
 - If conventions need updating: Ask human to update `~/dotfiles/agents/spec-README-template.md`

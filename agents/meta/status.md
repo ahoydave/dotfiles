@@ -1,9 +1,9 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2025-12-29
+last_updated: 2026-01-10
 git_commit: 076fc9f
-refinement_count: 63
+refinement_count: 64
 status: production-ready
 recent_focus: knowledge_cutoff_awareness
 agent_count: 5
@@ -73,7 +73,9 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
-### Recent Refinements 41-63 (2025-11-10 to 2025-12-29)
+### Recent Refinements 41-64 (2025-11-10 to 2026-01-09)
+
+64. **Researcher initializes spec/README.md** - Researcher now creates `spec/README.md` if it's missing. Problem: Projects started without a spec/README.md lacked documentation standards, and agents didn't know how to initialize it. Solution: Embedded the standard template in `research.md` and added instructions to initialize it during the Entry Point phase if missing. Updated `workflow.md` to reflect researcher ownership of initialization. Key benefit: Consistent documentation standards from the first research session.
 
 63. **Knowledge cutoff awareness** - Added "Your knowledge has a cutoff" principle to all 5 agent prompts. Problem: Agents assume their knowledge is current and treat absence of knowledge as evidence of absence. Solution: New system principle reminding agents to search for current documentation rather than assuming their knowledge is up to date. Covers both unfamiliar things (may exist) and familiar things (may have changed). Emphasizes proactive searching over asking. Added to System Principles section of research.md, planning-agent.md, implement.md, implementation-manager.md, and meta-agent.md for consistency.
 
@@ -601,7 +603,7 @@ All prompts tested on actual project (this looped agent system):
 - Ref #62 (Summary + link, diagram arrows): Do researchers write summaries that surface important points? Are detail docs free of surprises not in the summary? Do diagram arrows explain what flows (not just "relationship exists")? Could someone unfamiliar understand diagrams alone?
 - Ref #61 (Doc quality verification): Do researchers use verification for comprehensive sessions? Does fresh agent approach work? Does 2x2 matrix help identify doc gaps? Do researchers update docs based on findings? Is it useful as diagnostic without being mandatory overhead?
 - Ref #59 (C4 skip empty diagrams): Do agents use full C4 levels appropriately? Do they skip container diagrams for single-container apps? Do they include class/sequence/state diagrams when they add value? Is documentation right-sized for system complexity?
-- Ref #58 (spec/README.md ownership): Do agents avoid modifying spec/README.md? Do they copy template correctly when missing? If conventions need updating, do they ask human to update source template?
+- Ref #58 (spec/README.md ownership): Do agents avoid modifying spec/README.md? If conventions need updating, do they ask human to update source template?
 - Ref #57 (Comments last resort): Are comments rare? Do agents try to make code self-explanatory first? Do comments avoid comparatives/negations? Are comments treated as failure to write clear code?
 - Ref #56 (Prompt compression round 2): Do agents still follow critical behavioral instructions after compression? **CRITICAL: Do agents still avoid documentation-as-history (this fights base model training)?** Do agents create Mermaid diagrams inline (workflow preserved)? Do agents read project-specific rules (format simplified)? Did compression harm any critical behaviors?
 - Ref #55 (Planner spawns researchers): Does planner spawn researcher for factual gaps vs ask human for decisions? Does planner use Task tool correctly with RESEARCH SUMMARY prompt? Does researcher return proper RESEARCH SUMMARY format (question, answer, spec updates with line numbers, key constraints)? Does researcher update spec/current-system.md before returning summary? Does planner read summary and continue, or read referenced spec sections for detail? Does this reduce friction for factual questions? Do planners still ask humans for design decisions?
