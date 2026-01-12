@@ -3,21 +3,21 @@
 ---
 last_updated: 2026-01-10
 git_commit: 076fc9f
-refinement_count: 64
+refinement_count: 65
 status: production-ready
-recent_focus: knowledge_cutoff_awareness
+recent_focus: prompt_caching_architecture
 agent_count: 5
 ---
 
-## Current State (2025-12-29)
+## Current State (2026-01-10)
 
-### Status: Production-Ready with Optimized Prompt Efficiency
+### Status: Migrating to Split-Prompt Architecture (Refinement #65)
 
-**Agent prompts**: 62 refinements applied through iterative testing
-**Deployment**: Prompts in ~/dotfiles/agents/commands/ (invoked via `/research`, `/planning-agent`, `/implement`, `/implementation-manager` in any project)
-**Testing**: All agents tested on real projects, failures documented and addressed
-**Documentation**: Complete workflow documentation split (agent_workflow.md for users, commands/meta-agent.md for meta-development)
-**Recent focus**: Documentation efficiency - only document non-obvious information
+**Agent prompts**: Transitioned to `agents/src/_core.md` + `agents/src/_[agent].md`
+**Build System**: `build_prompts.sh` concatenates parts -> `agents/commands/[agent].md` -> `sync_gemini_commands.sh`
+**Goal**: Maximize prompt caching (80% prefix reuse)
+**Deployment**: Production ready. Prompts in `agents/commands/` are now generated artifacts.
+**Testing**: Verified concatenation and TOML generation.
 
 ### What's Working
 
@@ -73,7 +73,9 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
-### Recent Refinements 41-64 (2025-11-10 to 2026-01-09)
+### Recent Refinements 65-65 (2026-01-10)
+
+65. **Prompt Splitting for Cache Efficiency** - Architected `agents/src/_core.md` + partials pattern. Problem: Monolithic agent prompts prevented prefix caching (0% reuse between agents). Solution: Extracted ~80% of content (Mission, Principles, System, Standards) into `_core.md`. Created `agents/src/_[role].md` for specific logic. Added `build_prompts.sh` to generate final slash commands. Benefit: ~80% cache hit rate for system prompt prefix, reducing latency and cost.
 
 64. **Researcher initializes spec/README.md** - Researcher now creates `spec/README.md` if it's missing. Problem: Projects started without a spec/README.md lacked documentation standards, and agents didn't know how to initialize it. Solution: Embedded the standard template in `research.md` and added instructions to initialize it during the Entry Point phase if missing. Updated `workflow.md` to reflect researcher ownership of initialization. Key benefit: Consistent documentation standards from the first research session.
 
