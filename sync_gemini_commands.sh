@@ -24,11 +24,18 @@ for md_file in "$SRC_DIR"/*.md; do
     base_filename="${filename%.md}"
     toml_file="$DEST_DIR/$base_filename.toml"
 
-    # Extract agent name from the first line (H1) of the markdown file.
-    # e.g. "# Implementor Agent" -> "Implementor Agent"
-    agent_name=$(grep -m 1 '^# ' "$md_file" | sed -e 's/^# //' -e 's/$//')
+    # Extract agent name. Prioritize "# Role: Name" format.
+    agent_name=$(grep -m 1 '^# Role: ' "$md_file" | sed -e 's/^# Role: //' -e 's/\$//')
 
-    # If no H1 found, create a name from the filename.
+    # If not found, check if the first H1 is NOT the core title before accepting it.
+    if [ -z "$agent_name" ]; then
+        first_h1=$(grep -m 1 '^# ' "$md_file" | sed -e 's/^# //' -e 's/\$//')
+        if [[ "$first_h1" != "Looped Agent System - Core Instructions" ]]; then
+            agent_name="$first_h1"
+        fi
+    fi
+
+    # If no valid name found yet, create a name from the filename.
     # e.g. "my-agent.md" -> "My Agent"
     if [ -z "$agent_name" ]; then
         agent_name=$(echo "$base_filename" | sed -e 's/-/ /g' -e 's/\b\(.\)/\u\1/g')

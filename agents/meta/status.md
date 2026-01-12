@@ -3,7 +3,7 @@
 ---
 last_updated: 2026-01-12
 git_commit: 076fc9f
-refinement_count: 66
+refinement_count: 67
 status: production-ready
 recent_focus: prompt_synchronization_discipline
 agent_count: 5
@@ -73,7 +73,9 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
-### Recent Refinements 65-66 (2026-01-12)
+### Recent Refinements 67 (2026-01-12)
+
+67. **Task Agent - General Purpose Implementation** - Added `task-agent` role. Problem: `implementor` is too rigid (requires `new-features.md`, specific process) for quick one-off tasks. Solution: Created `agents/src/_task-agent.md` for ad-hoc tasks driven directly by the prompt. Maintains core safety rules (verify, document, context budget) but removes the planning overhead.
 
 66. **Build and Sync Discipline** - Added rule to Meta-Agent to always run `./build_prompts.sh` before committing changes. Problem: Manually forgetting to build and sync prompts leads to stale artifacts in `agents/commands/` and `gemini/commands/`. Solution: Hardcoded the requirement into the Meta-Agent's "Specific Rules" and "Process" sections. Ensures prompt sources (`agents/src/`) and generated artifacts are always in sync.
 
