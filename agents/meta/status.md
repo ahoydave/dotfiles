@@ -1,11 +1,11 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2026-01-10
+last_updated: 2026-01-12
 git_commit: 076fc9f
-refinement_count: 65
+refinement_count: 66
 status: production-ready
-recent_focus: prompt_caching_architecture
+recent_focus: prompt_synchronization_discipline
 agent_count: 5
 ---
 
@@ -73,7 +73,9 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
-### Recent Refinements 65-65 (2026-01-10)
+### Recent Refinements 65-66 (2026-01-12)
+
+66. **Build and Sync Discipline** - Added rule to Meta-Agent to always run `./build_prompts.sh` before committing changes. Problem: Manually forgetting to build and sync prompts leads to stale artifacts in `agents/commands/` and `gemini/commands/`. Solution: Hardcoded the requirement into the Meta-Agent's "Specific Rules" and "Process" sections. Ensures prompt sources (`agents/src/`) and generated artifacts are always in sync.
 
 65. **Prompt Splitting for Cache Efficiency** - Architected `agents/src/_core.md` + partials pattern. Problem: Monolithic agent prompts prevented prefix caching (0% reuse between agents). Solution: Extracted ~80% of content (Mission, Principles, System, Standards) into `_core.md`. Created `agents/src/_[role].md` for specific logic. Added `build_prompts.sh` to generate final slash commands. Benefit: ~80% cache hit rate for system prompt prefix, reducing latency and cost.
 
