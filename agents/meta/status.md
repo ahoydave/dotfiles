@@ -2,8 +2,8 @@
 
 ---
 last_updated: 2026-01-15
-git_commit: 1bd5cc2
-refinement_count: 68
+git_commit: cf97b5b
+refinement_count: 69
 status: production-ready
 recent_focus: prompt_instruction_restoration
 agent_count: 5
@@ -11,12 +11,12 @@ agent_count: 5
 
 ## Current State (2026-01-15)
 
-### Status: Restored Critical Instructions (Refinement #68)
+### Status: Restored Critical Instructions (Refinement #68/69)
 
-**Focus**: Restored specific tool templates and process steps lost during the split-prompt reduction (Refinement #65).
+**Focus**: Restored specific tool templates, process steps, and detailed coding standards lost during reduction.
 **Fixes**:
 - **Manager**: Re-added specific "Task tool" template to prevent tool hallucination.
-- **Implementor**: Restored "Verification FIRST" step and strict "Coding Standards".
+- **Implementor**: Restored "Verification FIRST" step and strict "Coding Standards" (with examples).
 - **Planner/Researcher**: Restored specific artifacts standards (no code in specs, verification mindset).
 **Goal**: Balance token efficiency with operational reliability.
 
@@ -74,6 +74,13 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 69 (2026-01-15)
+
+69. **Restore Full Coding Standards** - Restored detailed coding standards to Implementor prompt. Problem: Condensed "high level" standards lost the concrete examples that prevented common failures (clever one-liners, history comments). Solution: Restored the full section with:
+    - **Clarity vs Cleverness**: Python `reduce` vs `for` loop example (shows "explicit flow over magic").
+    - **Comment Rules**: "No comparatives" rule and `MAX_RETRIES` example (shows valid vs invalid comments).
+    - **Complexity Budget**: Specific questions to ask before abstracting (forces justification).
+
 ### Recent Refinements 68 (2026-01-15)
 
 68. **Restore Critical Instructions** - Restored specific templates and process steps lost in Refinement #65. Problem: Excessive prompt reduction caused operational regressions (Manager hallucinating tools, Implementor skipping verification planning). Solution:
