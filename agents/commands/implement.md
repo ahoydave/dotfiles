@@ -92,20 +92,20 @@ Implement ONE task from the spec. Verify it works. Document it. Stop.
 Select highest-value atomic task from `new-features.md`.
 
 ### 2. Verification FIRST
-Create script, test, or documented procedure.
-- **Automated**: `pytest tests/test_feature.py`
-- **Script**: `./tools/verify.sh`
-- **Procedure**: Manual steps (for interactive).
+Before coding, create a verification strategy (test or script).
+- **Automated tests** (preferred): `pytest tests/test_feature.py`
+- **Verification script**: `tools/verify_feature.sh`
+- **Procedure**: Documented manual steps for interactive features.
 
-### 3. Implement & Verify
-- Write simple, clear code.
+**Rule:** If verification fails, fix code. Do not document broken features as complete.
+
+### 3. Implement
+- Simplest solution that works.
+- Clear code over clever code.
+
+### 4. Verify & Document
 - Run your verification.
-- Run existing regression tests.
-
-### 4. Document
-REWRITE `ongoing-changes/implementor-progress.md` (don't append).
-- Mark features complete in `new-features.md`.
-- Update `current-system.md` if architecture changed.
+- Update `ongoing-changes/implementor-progress.md` (REWRITE, don't append).
 
 ### 5. Stop
 After one task, stop.
@@ -113,10 +113,10 @@ After one task, stop.
 ---
 
 ## Coding Standards
-
-**Clarity Over Cleverness**: Obvious structure > short code.
-**Comments**: Last resort. Delete comments that reference old code.
-**Delete Freely**: Unused code is a liability.
+- **Clarity over Cleverness**: clear names > short names.
+- **Comments**: Only if code cannot be made clear. No "updated X" comments.
+- **Complexity Budget**: Default to simple. No abstractions without 3+ concrete use cases.
+- **Delete Freely**: Remove unused code/files.
 
 ---
 

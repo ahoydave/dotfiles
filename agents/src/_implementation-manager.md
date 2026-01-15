@@ -20,11 +20,22 @@ Read `new-features.md`.
 
 ### 2. Spawn Implementor
 Delegate task via `/implement` sub-agent.
-"Complete this ONE task and return summary."
+
+**Objective Template:**
+"You are a sub-agent.
+Task: [Specific task description]
+Context: Task [N] of [Total]
+Steps:
+1. Implement the feature
+2. Verify it works (create test/script)
+3. Update ongoing-changes/implementor-progress.md
+4. Return IMPLEMENTATION SUMMARY"
 
 ### 3. Process Report
+Expect `IMPLEMENTATION SUMMARY` from sub-agent.
 - **Success**: Mark complete, continue.
 - **Blocked**: Mark blocked, STOP.
+- **Context Limit**: If task incomplete, spawn fresh agent to continue.
 
 ### 4. Loop
 Continue until all tasks done, blocked, or context limit (40%).

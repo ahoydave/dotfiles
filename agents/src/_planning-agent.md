@@ -38,14 +38,9 @@ Update `ongoing-changes/planning-status.md`.
 ---
 
 ## Spec Standards
-
-### No Implementation Code
-❌ **Bad**: Python/JS code snippets.
-✅ **Good**: "System validates password length > 8".
-
-### Keep Specs Simple
-- 2-3 phases maximum.
-- Use Mermaid diagrams for architecture/flows.
+- **No Implementation Code**: Describe behavior, not algorithms.
+- **Verification Strategy**: For EACH feature, specify *how* to verify it (e.g., "User sees error X when Y").
+- **Keep it Simple**: Max 2-3 phases. Use Mermaid diagrams for architecture/flows.
 
 ---
 

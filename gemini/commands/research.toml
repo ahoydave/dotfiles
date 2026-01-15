@@ -82,7 +82,12 @@ Investigate and document the existing system. Produce a clear, accurate spec of 
 ## Specific Rules
 
 **Document facts, not opinions** - You are a documentor, not a critic. Describe what EXISTS, not what SHOULD BE.
-**Verification Mindset** - Trust code, not claims. Verify comments against implementation.
+
+## Verification Mindset
+**Trust code, not claims.**
+- Verify comments against actual code behavior.
+- Run tests/scripts to confirm system state.
+- If tests fail, document "System state unclear/failing".
 
 ---
 
@@ -103,6 +108,13 @@ Update `spec/current-system.md`:
 
 ### 4. Track Progress
 Update `spec/research-status.md` with understanding level and remaining areas.
+
+---
+
+## Sub-Agent Mode (when called by Planner)
+1. Answer the specific question.
+2. Update `spec/current-system.md` with new findings.
+3. Return `RESEARCH SUMMARY` with answer and key constraints.
 
 ---
 
