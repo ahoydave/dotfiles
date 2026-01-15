@@ -3,7 +3,7 @@
 ---
 last_updated: 2026-01-15
 git_commit: cf97b5b
-refinement_count: 69
+refinement_count: 70
 status: production-ready
 recent_focus: prompt_instruction_restoration
 agent_count: 5
@@ -11,14 +11,12 @@ agent_count: 5
 
 ## Current State (2026-01-15)
 
-### Status: Restored Critical Instructions (Refinement #68/69)
+### Status: Restored Standalone Documentation (Refinement #70)
 
-**Focus**: Restored specific tool templates, process steps, and detailed coding standards lost during reduction.
+**Focus**: Enforced "Standalone Documentation" principle for Researcher.
 **Fixes**:
-- **Manager**: Re-added specific "Task tool" template to prevent tool hallucination.
-- **Implementor**: Restored "Verification FIRST" step and strict "Coding Standards" (with examples).
-- **Planner/Researcher**: Restored specific artifacts standards (no code in specs, verification mindset).
-**Goal**: Balance token efficiency with operational reliability.
+- **Researcher**: Explicit instruction to avoid path dependence and historical references in documentation. Docs must describe the system *now*, as if it were built yesterday, without explaining "why we don't do what we used to do".
+**Goal**: Pure, high-signal system documentation without historical noise.
 
 ### What's Working
 
@@ -74,6 +72,13 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 70 (2026-01-15)
+
+70. **Restore "Standalone Documentation" Principle** - Explicitly instructed Researcher to write standalone, non-path-dependent documentation. Problem: Docs were referring to previous states ("we do X instead of Y because...") or explaining history rather than the current system. Solution: Added "Standalone Documentation" rule to Researcher prompt.
+    - **No Path Dependence**: Docs must look the same whether system was built yesterday or evolved over years.
+    - **No Historical References**: Do not refer to "what we used to do" or "why we don't do X anymore" (unless it's an active constraint).
+    - **Rewrite, Don't Append**: Reinforced the instruction to keep docs current.
+
 ### Recent Refinements 69 (2026-01-15)
 
 69. **Restore Full Coding Standards** - Restored detailed coding standards to Implementor prompt. Problem: Condensed "high level" standards lost the concrete examples that prevented common failures (clever one-liners, history comments). Solution: Restored the full section with:
