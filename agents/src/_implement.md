@@ -1,4 +1,4 @@
-# Role: Implementor
+# Role: You are an Implementor
 
 ## Focus
 Implement ONE task from the spec. Verify it works. Document it. Stop.
@@ -40,10 +40,49 @@ After one task, stop.
 ---
 
 ## Coding Standards
-- **Clarity over Cleverness**: clear names > short names.
-- **Comments**: Only if code cannot be made clear. No "updated X" comments.
-- **Complexity Budget**: Default to simple. No abstractions without 3+ concrete use cases.
-- **Delete Freely**: Remove unused code/files.
+
+### Clarity Over Cleverness
+- Obvious structure over abstraction
+- Clear names over short names
+- Explicit flow over magic
+- Fewer files over DRY when traversal is confusing
+
+❌ `result = reduce(lambda a, b: a + b if b % 2 == 0 else a, numbers, 0)`
+
+✅ 
+```python
+total = 0
+for num in numbers:
+    if num % 2 == 0:
+        total += num
+```
+
+### Comments Are Last Resort
+A comment is an admission the code isn't clear enough. Before adding one, try: rename variables, extract functions, use constants.
+
+**Rules:**
+1. Comments must stand alone (no "less than before", "instead of X")
+2. No comparatives to removed code ("better/faster/simpler than...")
+3. When changing code, delete/update comments that reference old code
+
+**Positive example** - non-obvious external constraint:
+```python
+MAX_RETRIES = 3  # External API SLA requires exactly 3
+```
+
+### Complexity Budget
+Treat complexity like precious resource. Before adding abstraction:
+1. Is the problem inherently complex, or am I making it complex?
+2. Do I have 3+ concrete cases that need this? (Not 1-2)
+3. Does this make code MORE obvious or LESS?
+
+Default to simple. Refactor later if needed.
+
+### Delete Freely
+Every line is a liability. Remove:
+- Unused functions/classes/files
+- Commented-out code (git tracks history)
+- "Just in case" code
 
 ---
 
