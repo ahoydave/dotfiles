@@ -1,23 +1,24 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2026-01-12
-git_commit: 076fc9f
-refinement_count: 67
+last_updated: 2026-01-15
+git_commit: 1bd5cc2
+refinement_count: 68
 status: production-ready
-recent_focus: prompt_synchronization_discipline
+recent_focus: prompt_instruction_restoration
 agent_count: 5
 ---
 
-## Current State (2026-01-10)
+## Current State (2026-01-15)
 
-### Status: Migrating to Split-Prompt Architecture (Refinement #65)
+### Status: Restored Critical Instructions (Refinement #68)
 
-**Agent prompts**: Transitioned to `agents/src/_core.md` + `agents/src/_[agent].md`
-**Build System**: `build_prompts.sh` concatenates parts -> `agents/commands/[agent].md` -> `sync_gemini_commands.sh`
-**Goal**: Maximize prompt caching (80% prefix reuse)
-**Deployment**: Production ready. Prompts in `agents/commands/` are now generated artifacts.
-**Testing**: Verified concatenation and TOML generation.
+**Focus**: Restored specific tool templates and process steps lost during the split-prompt reduction (Refinement #65).
+**Fixes**:
+- **Manager**: Re-added specific "Task tool" template to prevent tool hallucination.
+- **Implementor**: Restored "Verification FIRST" step and strict "Coding Standards".
+- **Planner/Researcher**: Restored specific artifacts standards (no code in specs, verification mindset).
+**Goal**: Balance token efficiency with operational reliability.
 
 ### What's Working
 
@@ -73,7 +74,14 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
-### Recent Refinements 67 (2026-01-12)
+### Recent Refinements 68 (2026-01-15)
+
+68. **Restore Critical Instructions** - Restored specific templates and process steps lost in Refinement #65. Problem: Excessive prompt reduction caused operational regressions (Manager hallucinating tools, Implementor skipping verification planning). Solution:
+    - **Manager**: Restored specific "Task tool" template (forces correct tool use) and report processing logic.
+    - **Implementor**: Restored "Verification FIRST" step (create test before code) and strict "Coding Standards" (Complexity Budget).
+    - **Planner**: Restored "Spec Standards" (Verification Strategy required, No Code).
+    - **Researcher**: Restored "Verification Mindset" (Trust Code, Not Claims) and "Sub-Agent Mode".
+    - **Key Insight**: Token efficiency cannot come at the cost of specific, operational instructions for complex tasks.
 
 67. **Task Agent - General Purpose Implementation** - Added `task-agent` role. Problem: `implementor` is too rigid (requires `new-features.md`, specific process) for quick one-off tasks. Solution: Created `agents/src/_task-agent.md` for ad-hoc tasks driven directly by the prompt. Maintains core safety rules (verify, document, context budget) but removes the planning overhead.
 
