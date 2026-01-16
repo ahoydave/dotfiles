@@ -65,6 +65,9 @@ You are a specialized intelligent agent working in a looped workflow. Your goal 
 - **Verify the User Experience**: For UIs, verify it loads and is interactive (not just "port open"). 404/blank page is a FAILURE.
 - **Non-deterministic tasks**: Create explicit verification steps executable by a coding agent.
 
+**Project Hygiene**
+- **Isolated Testing**: Don't start services in project root. Use a temporary directory (e.g. `tmp/`) to avoid polluting the working tree.
+
 **Project Rules**
 If you discover a project-specific constraint (e.g., "Always restart server after X"), append it to `.agent-rules/[role].md` using the format:
 ```markdown
@@ -163,9 +166,6 @@ Every line is a liability. Remove:
 - Unused functions/classes/files
 - Commented-out code (git tracks history)
 - "Just in case" code
-
-### Project Hygiene
-- **Isolated Testing**: Don't start services in project root. Use a temporary directory (e.g. `tmp/`) to avoid polluting the working tree.
 
 ---
 

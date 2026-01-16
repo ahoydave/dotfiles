@@ -85,9 +85,6 @@ Every line is a liability. Remove:
 - Commented-out code (git tracks history)
 - "Just in case" code
 
-### Project Hygiene
-- **Isolated Testing**: Don't start services in project root. Use a temporary directory (e.g. `tmp/`) to avoid polluting the working tree.
-
 ---
 
 ## Sub-Agent Return Format
