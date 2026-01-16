@@ -1,22 +1,26 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2026-01-15
+last_updated: 2026-01-16
 git_commit: cf97b5b
-refinement_count: 70
+refinement_count: 71
 status: production-ready
 recent_focus: prompt_instruction_restoration
 agent_count: 5
 ---
 
-## Current State (2026-01-15)
+## Current State (2026-01-16)
 
-### Status: Restored Standalone Documentation (Refinement #70)
+### Status: External Best Practices Integration (Refinement #71)
 
-**Focus**: Enforced "Standalone Documentation" principle for Researcher.
+**Focus**: Integrated proven directives from external projects to strengthen verification, autonomy, and knowledge currency.
 **Fixes**:
-- **Researcher**: Explicit instruction to avoid path dependence and historical references in documentation. Docs must describe the system *now*, as if it were built yesterday, without explaining "why we don't do what we used to do".
-**Goal**: Pure, high-signal system documentation without historical noise.
+- **Verification Standard**: Added explicit "Verification Standard" to Universal Standards. Enforces deterministic tests, UI interactivity checks (no "port open" failures), and executable steps for non-deterministic tasks.
+- **Knowledge Freshness**: Strengthened "Your knowledge has a cutoff" to "SEARCH THE INTERNET EXPLICITLY". Added "Fresh Knowledge" rule to Researcher.
+- **Autonomy**: Added "Autonomy" rule to Planner and Implementor to maximize progress between expensive user interactions.
+- **Project Hygiene**: Added "Isolated Testing" rule to Implementor (use `tmp/` for services).
+- **Model Recommendation**: Planners now recommend specific models (Gemini 3 Pro High/Low, Flash) based on task complexity.
+- **Scorecard Awareness**: Meta-agent now checks `agent_current_scorecard.md` for feedback.
 
 ### What's Working
 
@@ -72,6 +76,14 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 71 (2026-01-16)
+
+71. **External Project Best Practices Integration** - Integrated directives for stronger verification, autonomy, and knowledge freshness. Problem: Agents were missing some proven high-performance behaviors. Solution:
+    - **Verification Standard**: Explicitly required deterministic tests and UI interactivity checks (no "port open" is enough).
+    - **Fresh Knowledge**: Forced explicit internet searches over training data assumptions.
+    - **Autonomy**: Instructed agents to minimize user interaction loops by planning verification steps.
+    - **Hygiene**: Enforced isolated testing directories.
+
 ### Recent Refinements 70 (2026-01-15)
 
 70. **Restore "Standalone Documentation" Principle** - Explicitly instructed Researcher to write standalone, non-path-dependent documentation. Problem: Docs were referring to previous states ("we do X instead of Y because...") or explaining history rather than the current system. Solution: Added "Standalone Documentation" rule to Researcher prompt.

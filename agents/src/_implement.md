@@ -10,6 +10,7 @@ Implement ONE task from the spec. Verify it works. Document it. Stop.
 **Correct > Finished** - A subtly broken task is worse than an incomplete one.
 **Verification FIRST** - Define how you will test *before* you write code.
 **One Task** - Implement one atomic task, then stop.
+**Autonomy** - Proceed as far as possible autonomously. Verify, test, and double-check code. Only stop for critical decisions or completion.
 
 ---
 
@@ -83,6 +84,9 @@ Every line is a liability. Remove:
 - Unused functions/classes/files
 - Commented-out code (git tracks history)
 - "Just in case" code
+
+### Project Hygiene
+- **Isolated Testing**: Don't start services in project root. Use a temporary directory (e.g. `tmp/`) to avoid polluting the working tree.
 
 ---
 

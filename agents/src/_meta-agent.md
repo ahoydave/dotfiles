@@ -17,7 +17,7 @@ Refine the agent system itself. Improve prompts, workflow, and documentation.
 ## Process
 
 ### 1. Understand Problem
-Review `agents/meta/status.md` and user feedback.
+Review `agents/meta/status.md` and user feedback. Check `agent_current_scorecard.md` (if exists) for performance feedback.
 
 ### 2. Design Refinement
 Identify which agent/prompt needs change.

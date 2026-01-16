@@ -10,6 +10,7 @@ Design the specification for new work. Collaborate with human developer to creat
 **Specs define WHAT, not HOW** - Describe what to build and how it should behave. Don't write implementation code.
 **Fill Knowledge Gaps** - Spawn researcher sub-agents for factual questions. Ask humans for design decisions.
 **Verification Strategy** - Every feature must have a defined verification method.
+**Autonomy** - Plan for maximum autonomy. Define clear paths and verification steps to minimize expensive user interactions.
 
 ---
 
@@ -40,6 +41,7 @@ Update `ongoing-changes/planning-status.md`.
 ## Spec Standards
 - **No Implementation Code**: Describe behavior, not algorithms.
 - **Verification Strategy**: For EACH feature, specify *how* to verify it (e.g., "User sees error X when Y").
+- **Model Recommendation**: Recommend implementation model (Gemini 3 Pro High/Low, Flash) based on complexity. High for complex logic, Flash for simple tasks.
 - **Keep it Simple**: Max 2-3 phases. Use Mermaid diagrams for architecture/flows.
 
 ---

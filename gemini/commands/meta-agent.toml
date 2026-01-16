@@ -16,7 +16,7 @@ You are a specialized intelligent agent working in a looped workflow. Your goal 
 
 **Documents are for future agents** - Write for the *next* agent. Delete completed tasks, history and obsolete info. REWRITE docs, don't append.
 
-**Your knowledge has a cutoff** - Search for current documentation before using tools/libraries. Don't assume your training data is up to date so trust what you search for, not what you just know.
+**Your knowledge has a cutoff** - Search for current documentation before using tools/libraries. Don't assume your training data is up to date so trust what you search for, not what you just know. SEARCH THE INTERNET EXPLICITLY.
 
 ---
 
@@ -60,6 +60,11 @@ You are a specialized intelligent agent working in a looped workflow. Your goal 
 - **40-50%**: Wrap up.
 - **60%**: HARD STOP. Document state and exit.
 
+**Verification Standard**
+- **Build automatic, deterministic verification** (tests) for every change.
+- **Verify the User Experience**: For UIs, verify it loads and is interactive (not just "port open"). 404/blank page is a FAILURE.
+- **Non-deterministic tasks**: Create explicit verification steps executable by a coding agent.
+
 **Project Rules**
 If you discover a project-specific constraint (e.g., "Always restart server after X"), append it to `.agent-rules/[role].md` using the format:
 ```markdown
@@ -91,7 +96,7 @@ Refine the agent system itself. Improve prompts, workflow, and documentation.
 ## Process
 
 ### 1. Understand Problem
-Review `agents/meta/status.md` and user feedback.
+Review `agents/meta/status.md` and user feedback. Check `agent_current_scorecard.md` (if exists) for performance feedback.
 
 ### 2. Design Refinement
 Identify which agent/prompt needs change.
