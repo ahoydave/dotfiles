@@ -1,26 +1,22 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2026-01-16
-git_commit: cf97b5b
-refinement_count: 71
+last_updated: 2026-01-19
+git_commit: f43ea06
+refinement_count: 72
 status: production-ready
-recent_focus: prompt_instruction_restoration
+recent_focus: context_correctness
 agent_count: 5
 ---
 
-## Current State (2026-01-16)
+## Current State (2026-01-19)
 
-### Status: External Best Practices Integration (Refinement #71)
+### Status: Context Correctness (Refinement #72)
 
-**Focus**: Integrated proven directives from external projects to strengthen verification, autonomy, and knowledge currency.
+**Focus**: Removed irrelevant context instructions from Universal Process.
 **Fixes**:
-- **Verification Standard**: Added explicit "Verification Standard" to Universal Standards. Enforces deterministic tests, UI interactivity checks (no "port open" failures), and executable steps for non-deterministic tasks.
-- **Knowledge Freshness**: Strengthened "Your knowledge has a cutoff" to "SEARCH THE INTERNET EXPLICITLY". Added "Fresh Knowledge" rule to Researcher.
-- **Autonomy**: Added "Autonomy" rule to Planner and Implementor to maximize progress between expensive user interactions.
-- **Project Hygiene**: Added "Isolated Testing" rule to Implementor (use `tmp/` for services).
-- **Model Recommendation**: Planners now recommend specific models (Gemini 3 Pro High/Low, Flash) based on task complexity.
-- **Scorecard Awareness**: Meta-agent now checks `agent_current_scorecard.md` for feedback.
+- **Context Pollution**: Removed `agents/meta/status.md` from the "Read Context" step in `agents/src/_core.md`.
+- **Role Specificity**: The Meta-Agent still reads this file via its specific process instructions, but other agents (Planner, Implementor, etc.) no longer hallucinate or search for this file which typically doesn't exist in target projects.
 
 ### What's Working
 
@@ -76,6 +72,10 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 72 (2026-01-19)
+
+72. **Remove Meta-Status from Universal Context** - Removed `agents/meta/status.md` from the universal "Read Context" step. Problem: All agents were instructed to read this file, but it only exists in the dotfiles repo (the meta-agent's domain) or is irrelevant to their function. Solution: Removed it from `agents/src/_core.md`. Meta-Agent still reads it via specific instructions. Reduces context pollution and hallucination risks for standard agents.
+
 ### Recent Refinements 71 (2026-01-16)
 
 71. **External Project Best Practices Integration** - Integrated directives for stronger verification, autonomy, and knowledge freshness. Problem: Agents were missing some proven high-performance behaviors. Solution:
