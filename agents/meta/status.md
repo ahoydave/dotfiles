@@ -2,21 +2,21 @@
 
 ---
 last_updated: 2026-01-19
-git_commit: f43ea06
-refinement_count: 72
+git_commit: 59a6445
+refinement_count: 73
 status: production-ready
-recent_focus: context_correctness
+recent_focus: workflow_reliability
 agent_count: 5
 ---
 
 ## Current State (2026-01-19)
 
-### Status: Context Correctness (Refinement #72)
+### Status: Workflow Reliability (Refinement #73)
 
-**Focus**: Removed irrelevant context instructions from Universal Process.
+**Focus**: Fixed sub-agent spawning mechanism in Implementation Manager.
 **Fixes**:
-- **Context Pollution**: Removed `agents/meta/status.md` from the "Read Context" step in `agents/src/_core.md`.
-- **Role Specificity**: The Meta-Agent still reads this file via its specific process instructions, but other agents (Planner, Implementor, etc.) no longer hallucinate or search for this file which typically doesn't exist in target projects.
+- **Sub-agent Launch**: Implementation Manager now explicitly uses `run_shell_command` with the `implement` command instead of the `delegate_to_agent` tool (or ambiguous `/implement` shorthand).
+- **Control Flow**: Ensures the manager waits for the sub-agent process to complete and receiving the report via stdout/summary, rather than losing control to a skill invocation that doesn't return.
 
 ### What's Working
 
@@ -72,6 +72,10 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 73 (2026-01-19)
+
+73. **Force Shell Command for Sub-Agents** - Updated Implementation Manager to explicitly use `run_shell_command` with the `implement` command for spawning sub-agents. Problem: The manager was using the `delegate_to_agent` tool (aka "Claude skill") which failed to return control to the manager after execution, breaking the orchestration loop. Solution: Replaced the ambiguous `/implement` instruction with a specific "Command Template" using `run_shell_command`. This ensures the manager runs the sub-agent as a subprocess and captures the result.
+
 ### Recent Refinements 72 (2026-01-19)
 
 72. **Remove Meta-Status from Universal Context** - Removed `agents/meta/status.md` from the universal "Read Context" step. Problem: All agents were instructed to read this file, but it only exists in the dotfiles repo (the meta-agent's domain) or is irrelevant to their function. Solution: Removed it from `agents/src/_core.md`. Meta-Agent still reads it via specific instructions. Reduces context pollution and hallucination risks for standard agents.

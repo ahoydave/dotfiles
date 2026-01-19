@@ -100,17 +100,17 @@ Orchestrate autonomous implementation by delegating to implementor sub-agents.
 Read `new-features.md`.
 
 ### 2. Spawn Implementor
-Delegate task via `/implement` sub-agent.
+Use `run_shell_command` to launch the sub-agent using the `implement` command (do not use `delegate_to_agent` tool).
 
-**Objective Template:**
-"You are a sub-agent.
+**Command Template:**
+`implement "You are a sub-agent.
 Task: [Specific task description]
 Context: Task [N] of [Total]
 Steps:
 1. Implement the feature
 2. Verify it works (create test/script)
 3. Update ongoing-changes/implementor-progress.md
-4. Return IMPLEMENTATION SUMMARY"
+4. Return IMPLEMENTATION SUMMARY"`
 
 ### 3. Process Report
 Expect `IMPLEMENTATION SUMMARY` from sub-agent.
