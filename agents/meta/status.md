@@ -2,8 +2,8 @@
 
 ---
 last_updated: 2026-01-19
-git_commit: 59a6445
-refinement_count: 73
+git_commit: e4c9a10
+refinement_count: 74
 status: production-ready
 recent_focus: workflow_reliability
 agent_count: 5
@@ -11,12 +11,13 @@ agent_count: 5
 
 ## Current State (2026-01-19)
 
-### Status: Workflow Reliability (Refinement #73)
+### Status: Workflow Reliability (Refinement #74)
 
-**Focus**: Fixed sub-agent spawning mechanism in Implementation Manager.
+**Focus**: Fixed sub-agent spawning to support both Claude and Gemini CLIs.
 **Fixes**:
-- **Sub-agent Launch**: Implementation Manager now explicitly uses `run_shell_command` with the `implement` command instead of the `delegate_to_agent` tool (or ambiguous `/implement` shorthand).
-- **Control Flow**: Ensures the manager waits for the sub-agent process to complete and receiving the report via stdout/summary, rather than losing control to a skill invocation that doesn't return.
+- **Smart Launch**: Implementation Manager now detects the available CLI (`claude` or `gemini`) and uses the appropriate syntax (`claude -p "/implement ..."` or `gemini implement "..."`).
+- **Path Independence**: Removes the assumption that `implement` exists as a standalone executable in the PATH.
+- **Control Flow**: Maintains the `run_shell_command` approach to ensure subprocess control, avoiding the `delegate_to_agent` hang issue.
 
 ### What's Working
 
@@ -72,6 +73,10 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 74 (2026-01-19)
+
+74. **Smart CLI Detection for Sub-Agents** - Updated Implementation Manager to detect and use the correct CLI (`claude` or `gemini`). Problem: Previous fix assumed `implement` was in the PATH, but it's typically a slash command or Gemini subcommand. Solution: Added logic to check for `gemini` (use `gemini implement`) or `claude` (use `claude -p /implement`). Ensures correct execution regardless of which CLI is hosting the session.
+
 ### Recent Refinements 73 (2026-01-19)
 
 73. **Force Shell Command for Sub-Agents** - Updated Implementation Manager to explicitly use `run_shell_command` with the `implement` command for spawning sub-agents. Problem: The manager was using the `delegate_to_agent` tool (aka "Claude skill") which failed to return control to the manager after execution, breaking the orchestration loop. Solution: Replaced the ambiguous `/implement` instruction with a specific "Command Template" using `run_shell_command`. This ensures the manager runs the sub-agent as a subprocess and captures the result.
