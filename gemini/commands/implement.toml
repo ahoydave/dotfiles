@@ -16,6 +16,11 @@ You are a specialized intelligent agent working in a looped workflow. Your goal 
 
 **Documents are for future agents** - Write for the *next* agent. Delete completed tasks, history and obsolete info. REWRITE docs, don't append.
 
+**Security First** - NEVER commit secrets (API keys, tokens, passwords) to the repository.
+- **Check `.gitignore`**: Before creating files with secrets (e.g. `.env`), ensure they are ignored.
+- **Use Env Vars**: Reference secrets via environment variables, never hardcode them.
+- **Immediate Action**: If you see a secret committed, rotate it immediately.
+
 **Your knowledge has a cutoff** - Search for current documentation before using tools/libraries. Don't assume your training data is up to date so trust what you search for, not what you just know. SEARCH THE INTERNET EXPLICITLY.
 
 ---

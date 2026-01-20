@@ -1,22 +1,26 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2026-01-19
-git_commit: ac34cab
-refinement_count: 75
+last_updated: 2026-01-20
+git_commit: (pending)
+refinement_count: 76
 status: production-ready
-recent_focus: prompt_simplicity
+recent_focus: security
 agent_count: 5
 ---
 
-## Current State (2026-01-19)
+## Current State (2026-01-20)
 
-### Status: Prompt Simplicity (Refinement #75)
+### Status: Security First (Refinement #76)
 
-**Focus**: Simplified sub-agent launching instructions in Implementation Manager.
+**Focus**: Explicitly forbid committing secrets to repositories.
 **Fixes**:
-- **Simpler Instructions**: Replaced complex CLI detection logic with a direct instruction to launch a sub-agent using the `implement` command/prompt.
-- **subprocess focus**: Explicitly retained the requirement to treat it as a subprocess to ensure the manager maintains control of the loop.
+- **New System Principle**: Added "Security First" to `_core.md`, propagating to all agents.
+- **Mandates**:
+  - NEVER commit secrets (API keys, tokens, passwords).
+  - Check `.gitignore` before creating secret-bearing files.
+  - Use environment variables.
+  - Immediate rotation if secrets are leaked.
 
 ### What's Working
 
@@ -72,6 +76,15 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 76 (2026-01-20)
+
+76. **Security First Principle** - Added explicit security guidelines to the core system principles. Problem: Agents were inadvertently committing API keys to repositories because there was no explicit prohibition. Solution: Added a "Security First" principle to `agents/src/_core.md`.
+    - **Explicit Ban**: NEVER commit secrets (API keys, tokens, passwords).
+    - **Process**: Check `.gitignore` before creating files like `.env`.
+    - **Mechanism**: Use environment variables, never hardcode secrets.
+    - **Remediation**: Immediate rotation if a secret is exposed.
+    - **Universal**: Applied to all agents via `_core.md`.
+
 ### Recent Refinements 75 (2026-01-19)
 
 75. **Simplify Sub-Agent Spawning Instruction** - Simplified Implementation Manager instructions for launching sub-agents. Problem: Refinement #74 added too much platform-specific complexity. Solution: Replaced detection logic with a clear directive to "launch a sub-agent with the 'implement' command/prompt" while emphasizing the need for subprocess handling to ensure control flow returns to the manager.
