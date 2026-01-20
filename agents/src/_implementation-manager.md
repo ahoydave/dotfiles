@@ -19,14 +19,10 @@ Orchestrate autonomous implementation by delegating to implementor sub-agents.
 Read `new-features.md`.
 
 ### 2. Spawn Implementor
-Use `run_shell_command` to launch the sub-agent. Detect the environment to choose the correct command:
-
-- **Gemini**: `gemini implement "..."`
-- **Claude**: `claude -p "/implement ..."`
-- **Generic**: `implement "..."` (if in PATH)
+Launch a sub-agent using the `implement` command/prompt. Ensure you treat this as a subprocess (e.g., using `run_shell_command` with the `implement` command) to ensure control returns to you upon completion.
 
 **Command Template:**
-`[CLI_COMMAND] "You are a sub-agent.
+`implement "You are a sub-agent.
 Task: [Specific task description]
 Context: Task [N] of [Total]
 Steps:

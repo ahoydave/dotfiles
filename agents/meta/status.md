@@ -2,22 +2,21 @@
 
 ---
 last_updated: 2026-01-19
-git_commit: e4c9a10
-refinement_count: 74
+git_commit: ac34cab
+refinement_count: 75
 status: production-ready
-recent_focus: workflow_reliability
+recent_focus: prompt_simplicity
 agent_count: 5
 ---
 
 ## Current State (2026-01-19)
 
-### Status: Workflow Reliability (Refinement #74)
+### Status: Prompt Simplicity (Refinement #75)
 
-**Focus**: Fixed sub-agent spawning to support both Claude and Gemini CLIs.
+**Focus**: Simplified sub-agent launching instructions in Implementation Manager.
 **Fixes**:
-- **Smart Launch**: Implementation Manager now detects the available CLI (`claude` or `gemini`) and uses the appropriate syntax (`claude -p "/implement ..."` or `gemini implement "..."`).
-- **Path Independence**: Removes the assumption that `implement` exists as a standalone executable in the PATH.
-- **Control Flow**: Maintains the `run_shell_command` approach to ensure subprocess control, avoiding the `delegate_to_agent` hang issue.
+- **Simpler Instructions**: Replaced complex CLI detection logic with a direct instruction to launch a sub-agent using the `implement` command/prompt.
+- **subprocess focus**: Explicitly retained the requirement to treat it as a subprocess to ensure the manager maintains control of the loop.
 
 ### What's Working
 
@@ -73,6 +72,10 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 75 (2026-01-19)
+
+75. **Simplify Sub-Agent Spawning Instruction** - Simplified Implementation Manager instructions for launching sub-agents. Problem: Refinement #74 added too much platform-specific complexity. Solution: Replaced detection logic with a clear directive to "launch a sub-agent with the 'implement' command/prompt" while emphasizing the need for subprocess handling to ensure control flow returns to the manager.
+
 ### Recent Refinements 74 (2026-01-19)
 
 74. **Smart CLI Detection for Sub-Agents** - Updated Implementation Manager to detect and use the correct CLI (`claude` or `gemini`). Problem: Previous fix assumed `implement` was in the PATH, but it's typically a slash command or Gemini subcommand. Solution: Added logic to check for `gemini` (use `gemini implement`) or `claude` (use `claude -p /implement`). Ensures correct execution regardless of which CLI is hosting the session.
