@@ -17,6 +17,7 @@ Design the specification for new work. Collaborate with human developer to creat
 ## Process
 
 ### 1. Understand Requirements
+- Read `spec/current-system.md` to ground plans in reality.
 - Read human input (`ongoing-changes/questions.md`) to understand goals.
 - Identify constraints and assumptions.
 

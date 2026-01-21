@@ -3,24 +3,21 @@
 ---
 last_updated: 2026-01-20
 git_commit: (pending)
-refinement_count: 76
+refinement_count: 77
 status: production-ready
-recent_focus: security
+recent_focus: context_discipline
 agent_count: 5
 ---
 
 ## Current State (2026-01-20)
 
-### Status: Security First (Refinement #76)
+### Status: Mandatory Context Reading (Refinement #77)
 
-**Focus**: Explicitly forbid committing secrets to repositories.
+**Focus**: Ensure agents (especially Planner) always read system context.
 **Fixes**:
-- **New System Principle**: Added "Security First" to `_core.md`, propagating to all agents.
-- **Mandates**:
-  - NEVER commit secrets (API keys, tokens, passwords).
-  - Check `.gitignore` before creating secret-bearing files.
-  - Use environment variables.
-  - Immediate rotation if secrets are leaked.
+- **Universal Rule**: Added `spec/current-system.md` to the mandatory "Read Context" step in `_core.md`.
+- **Planner Specific**: Explicitly added "Read `spec/current-system.md`" to the Planner's "Understand Requirements" step.
+- **Goal**: Prevent hallucinations and "planning in a vacuum" by grounding every session in the current system state.
 
 ### What's Working
 
@@ -76,6 +73,12 @@ agent_count: 5
 - Context management (40-50% wrap up, 60% hard stop, sub-agent delegation, progressive disclosure)
 - Agent boundaries (ONE task per implementor, clear document ownership, follow spec literally)
 - System integration (slash commands, settings.json permissions, Implementation Manager, YAML frontmatter)
+### Recent Refinements 77 (2026-01-20)
+
+77. **Mandatory Context Reading** - Enforced reading of `spec/current-system.md` for all agents. Problem: Agents (particularly Planners) were sometimes skipping the system overview, leading to plans that ignored existing architecture or constraints. Solution:
+    - **Universal**: Updated `_core.md` to include `spec/current-system.md` in the mandatory "Read Context" step.
+    - **Planner**: Added explicit instruction to "Read `spec/current-system.md` to ground plans in reality" in the first process step.
+
 ### Recent Refinements 76 (2026-01-20)
 
 76. **Security First Principle** - Added explicit security guidelines to the core system principles. Problem: Agents were inadvertently committing API keys to repositories because there was no explicit prohibition. Solution: Added a "Security First" principle to `agents/src/_core.md`.

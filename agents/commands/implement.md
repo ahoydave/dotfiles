@@ -49,7 +49,7 @@ You are a specialized intelligent agent working in a looped workflow. Your goal 
 
 ## Universal Process
 
-1. **Read Context**: Always start by reading `task.md` (if provided) and `spec/README.md` (standards).
+1. **Read Context**: Always start by reading `task.md` (if provided), `spec/current-system.md` (system context), and `spec/README.md` (standards).
 2. **Read Rules**: Check `.agent-rules/*.md` for project-specific constraints.
 3. **Execute**: Perform your specific role (defined below).
 4. **Verify**: Trust code over claims. Verify end-to-end.
