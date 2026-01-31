@@ -1,0 +1,69 @@
+#!/bin/bash
+# sprite-copy: Copy files to the currently active sprite via SSH tunnel
+
+set -e
+
+if [ -z "$1" ]; then
+    echo "Usage: sprite-copy <source> [destination]"
+    echo "Destination defaults to ~/"
+    exit 1
+fi
+
+SOURCE="$1"
+DEST="${2:-~}"
+
+if [ ! -e "$SOURCE" ]; then
+    echo "Error: Source '$SOURCE' does not exist"
+    exit 1
+fi
+
+# Get the current sprite name from .sprite file (searches current dir and parents)
+get_current_sprite() {
+    local dir="$PWD"
+    while [ "$dir" != "/" ]; do
+        if [ -f "$dir/.sprite" ]; then
+            jq -r '.sprite // empty' "$dir/.sprite" 2>/dev/null
+            return
+        fi
+        dir="$(dirname "$dir")"
+    done
+    # Fallback to home directory
+    if [ -f "$HOME/.sprite" ]; then
+        jq -r '.sprite // empty' "$HOME/.sprite" 2>/dev/null
+    fi
+}
+
+CURRENT_SPRITE=$(get_current_sprite)
+
+if [ -z "$CURRENT_SPRITE" ]; then
+    echo "Error: No active sprite. Run 'sprite use <name>' first."
+    exit 1
+fi
+
+echo "Copying to sprite: $CURRENT_SPRITE"
+
+# Start SSH proxy in background (local port 2222 -> remote port 22)
+echo "Starting SSH tunnel..."
+sprite proxy 2222:22 &
+PROXY_PID=$!
+
+# Give the proxy a moment to start
+sleep 2
+
+# Cleanup function
+cleanup() {
+    if [ -n "$PROXY_PID" ]; then
+        kill "$PROXY_PID" 2>/dev/null || true
+    fi
+}
+trap cleanup EXIT
+
+# Copy using scp
+echo "Copying $SOURCE to $DEST..."
+if [ -d "$SOURCE" ]; then
+    scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 2222 "$SOURCE" "sprite@localhost:$DEST"
+else
+    scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P 2222 "$SOURCE" "sprite@localhost:$DEST"
+fi
+
+echo "Done!"

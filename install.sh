@@ -145,6 +145,30 @@ else
     echo "  vim-plug already installed for neovim"
 fi
 
+# Sprite helper scripts
+echo ""
+echo "Setting up Sprite helper scripts..."
+
+SCRIPTS_BIN="$HOME/.local/bin"
+mkdir -p "$SCRIPTS_BIN"
+
+for script in "$DOTFILES_DIR"/scripts/sprite-*; do
+    if [ -f "$script" ]; then
+        name="$(basename "$script")"
+        # Remove old symlink if it exists
+        rm -f "$SCRIPTS_BIN/$name"
+        ln -sf "$script" "$SCRIPTS_BIN/$name"
+        echo "  $SCRIPTS_BIN/$name -> $script"
+    fi
+done
+
+# Check if ~/.local/bin is in PATH
+if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+    echo ""
+    echo "  Note: Add ~/.local/bin to your PATH if not already done:"
+    echo "    export PATH=\"\$HOME/.local/bin:\$PATH\""
+fi
+
 # Codex CLI custom prompts
 echo ""
 echo "Setting up Codex CLI custom prompts..."
@@ -184,4 +208,8 @@ echo ""
 echo "  4. Check the documentation:"
 echo "     cat $DOTFILES_DIR/nvim/README.md"
 echo "     cat $DOTFILES_DIR/nvim/QUICKREF.md"
+echo ""
+echo "  5. For sprite scripts, install dependencies:"
+echo "     brew install jq"
+echo "     # Also install the sprite CLI from https://sprites.dev"
 echo ""

@@ -1,0 +1,48 @@
+#!/bin/bash
+# sprite-create-ssh: Create a sprite with SSH access configured
+
+set -e
+
+if [ -z "$1" ]; then
+    echo "Usage: sprite-create-ssh <sprite-name>"
+    exit 1
+fi
+
+SPRITE_NAME="$1"
+SSH_PUB_KEY="$HOME/.ssh/id_ed25519.pub"
+
+# Fallback to RSA if ed25519 doesn't exist
+if [ ! -f "$SSH_PUB_KEY" ]; then
+    SSH_PUB_KEY="$HOME/.ssh/id_rsa.pub"
+fi
+
+if [ ! -f "$SSH_PUB_KEY" ]; then
+    echo "Error: No SSH public key found at ~/.ssh/id_ed25519.pub or ~/.ssh/id_rsa.pub"
+    echo "Generate one with: ssh-keygen -t ed25519"
+    exit 1
+fi
+
+echo "Creating sprite: $SPRITE_NAME"
+sprite create "$SPRITE_NAME"
+
+echo "Setting $SPRITE_NAME as active sprite..."
+sprite use "$SPRITE_NAME"
+
+echo "Copying SSH public key to sprite..."
+SSH_KEY_CONTENT=$(cat "$SSH_PUB_KEY")
+
+# Create .ssh directory with correct permissions and add the public key
+sprite exec -- bash -c "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
+sprite exec -- bash -c "echo '$SSH_KEY_CONTENT' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+
+echo "Installing and starting SSH server on sprite..."
+sprite exec -- bash -c "sudo apt-get update -qq && sudo apt-get install -y -qq openssh-server"
+sprite exec -- bash -c "sudo service ssh start"
+
+echo ""
+echo "Sprite '$SPRITE_NAME' is ready!"
+echo ""
+echo "Available commands:"
+echo "  sprite-copy <file>     Copy files to the sprite"
+echo "  sprite console         Open interactive shell"
+echo "  sprite exec <cmd>      Run a command on the sprite"

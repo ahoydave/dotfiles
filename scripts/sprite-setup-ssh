@@ -1,0 +1,59 @@
+#!/bin/bash
+# sprite-setup-ssh: Set up SSH access on an existing sprite
+
+set -e
+
+SSH_PUB_KEY="$HOME/.ssh/id_ed25519.pub"
+
+# Fallback to RSA if ed25519 doesn't exist
+if [ ! -f "$SSH_PUB_KEY" ]; then
+    SSH_PUB_KEY="$HOME/.ssh/id_rsa.pub"
+fi
+
+if [ ! -f "$SSH_PUB_KEY" ]; then
+    echo "Error: No SSH public key found at ~/.ssh/id_ed25519.pub or ~/.ssh/id_rsa.pub"
+    echo "Generate one with: ssh-keygen -t ed25519"
+    exit 1
+fi
+
+# Get the current sprite name from .sprite file
+get_current_sprite() {
+    local dir="$PWD"
+    while [ "$dir" != "/" ]; do
+        if [ -f "$dir/.sprite" ]; then
+            jq -r '.sprite // empty' "$dir/.sprite" 2>/dev/null
+            return
+        fi
+        dir="$(dirname "$dir")"
+    done
+    if [ -f "$HOME/.sprite" ]; then
+        jq -r '.sprite // empty' "$HOME/.sprite" 2>/dev/null
+    fi
+}
+
+CURRENT_SPRITE=$(get_current_sprite)
+
+if [ -z "$CURRENT_SPRITE" ]; then
+    echo "Error: No active sprite. Run 'sprite use <name>' first."
+    exit 1
+fi
+
+echo "Setting up SSH on sprite: $CURRENT_SPRITE"
+
+echo "Checking current user on sprite..."
+SPRITE_USER=$(sprite exec -- whoami 2>/dev/null | tr -d '\n')
+echo "Sprite user: $SPRITE_USER"
+
+echo "Installing OpenSSH server..."
+sprite exec -- bash -c "sudo apt-get update -qq && sudo apt-get install -y -qq openssh-server"
+
+echo "Copying SSH public key..."
+SSH_KEY_CONTENT=$(cat "$SSH_PUB_KEY")
+sprite exec -- bash -c "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
+sprite exec -- bash -c "echo '$SSH_KEY_CONTENT' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && sort -u -o ~/.ssh/authorized_keys ~/.ssh/authorized_keys"
+
+echo "Starting SSH server..."
+sprite exec -- bash -c "sudo service ssh start"
+
+echo ""
+echo "SSH setup complete! You can now use sprite-copy"
