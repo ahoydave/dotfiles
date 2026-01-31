@@ -1,0 +1,79 @@
+#!/bin/bash
+# sprite-copy-to: Recursively copy current directory contents to sprite directory
+# Usage: sprite-copy-to [--delete] [target-dir]
+#   target-dir defaults to ~/ if not specified
+
+set -e
+
+# Parse arguments
+DELETE_FLAG=""
+SPRITE_DIR="~/"
+
+for arg in "$@"; do
+    if [ "$arg" = "--delete" ]; then
+        DELETE_FLAG="--delete"
+        echo "Delete mode: Will remove files on sprite that don't exist locally"
+    else
+        SPRITE_DIR="$arg"
+    fi
+done
+
+# Handle path that was already expanded by shell
+# If it starts with your local home, it was probably meant to be ~ on the sprite
+if [[ "$SPRITE_DIR" == "$HOME"* ]]; then
+    # Convert /Users/david.jacka/app to ~/app
+    SPRITE_DIR="~${SPRITE_DIR#$HOME}"
+    echo "Note: Converted local path to sprite path: $SPRITE_DIR"
+fi
+
+# Get the current sprite name from .sprite file (searches current dir and parents)
+get_current_sprite() {
+    local dir="$PWD"
+    while [ "$dir" != "/" ]; do
+        if [ -f "$dir/.sprite" ]; then
+            jq -r '.sprite // empty' "$dir/.sprite" 2>/dev/null
+            return
+        fi
+        dir="$(dirname "$dir")"
+    done
+    # Fallback to home directory
+    if [ -f "$HOME/.sprite" ]; then
+        jq -r '.sprite // empty' "$HOME/.sprite" 2>/dev/null
+    fi
+}
+
+CURRENT_SPRITE=$(get_current_sprite)
+
+if [ -z "$CURRENT_SPRITE" ]; then
+    echo "Error: No active sprite. Run 'sprite use <name>' first."
+    exit 1
+fi
+
+echo "Copying current directory to sprite: $CURRENT_SPRITE"
+echo "Target directory: $SPRITE_DIR"
+
+# Create target directory on sprite if it doesn't exist
+echo "Ensuring target directory exists..."
+sprite exec -- bash -c "mkdir -p $SPRITE_DIR"
+
+# Start SSH proxy in background (local port 2222 -> remote port 22)
+echo "Starting SSH tunnel..."
+sprite proxy 2222:22 &
+PROXY_PID=$!
+
+# Give the proxy a moment to start
+sleep 2
+
+# Cleanup function
+cleanup() {
+    if [ -n "$PROXY_PID" ]; then
+        kill "$PROXY_PID" 2>/dev/null || true
+    fi
+}
+trap cleanup EXIT
+
+# Copy current directory contents recursively to sprite directory
+echo "Syncing contents of $PWD to sprite:$SPRITE_DIR..."
+rsync -avz $DELETE_FLAG -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 2222" ./ "sprite@localhost:$SPRITE_DIR"
+
+echo "Done!"
