@@ -145,15 +145,16 @@ else
     echo "  vim-plug already installed for neovim"
 fi
 
-# Sprite helper scripts
+# Helper scripts
 echo ""
-echo "Setting up Sprite helper scripts..."
+echo "Setting up helper scripts..."
 
 SCRIPTS_BIN="$HOME/.local/bin"
 mkdir -p "$SCRIPTS_BIN"
 
-for script in "$DOTFILES_DIR"/scripts/sprite-*; do
-    if [ -f "$script" ]; then
+# Symlink all executable scripts from the scripts directory
+for script in "$DOTFILES_DIR"/scripts/*; do
+    if [ -f "$script" ] && [ -x "$script" ]; then
         name="$(basename "$script")"
         # Remove old symlink if it exists
         rm -f "$SCRIPTS_BIN/$name"
