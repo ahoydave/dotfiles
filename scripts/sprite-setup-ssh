@@ -4,6 +4,8 @@
 set -e
 
 SSH_PUB_KEY="$HOME/.ssh/id_ed25519.pub"
+GITHUB_PRIV_KEY="$HOME/.ssh/sprite-github"
+GITHUB_PUB_KEY="$HOME/.ssh/sprite-github.pub"
 
 # Fallback to RSA if ed25519 doesn't exist
 if [ ! -f "$SSH_PUB_KEY" ]; then
@@ -14,6 +16,12 @@ if [ ! -f "$SSH_PUB_KEY" ]; then
     echo "Error: No SSH public key found at ~/.ssh/id_ed25519.pub or ~/.ssh/id_rsa.pub"
     echo "Generate one with: ssh-keygen -t ed25519"
     exit 1
+fi
+
+if [ ! -f "$GITHUB_PRIV_KEY" ]; then
+    echo "Warning: GitHub SSH key not found at $GITHUB_PRIV_KEY"
+    echo "GitHub access from sprite will not be available."
+    echo "Generate with: ssh-keygen -t ed25519 -f ~/.ssh/sprite-github"
 fi
 
 # Get the current sprite name from .sprite file
@@ -44,8 +52,8 @@ echo "Checking current user on sprite..."
 SPRITE_USER=$(sprite exec -- whoami 2>/dev/null | tr -d '\n')
 echo "Sprite user: $SPRITE_USER"
 
-echo "Installing OpenSSH server..."
-sprite exec -- bash -c "sudo apt-get update -qq && sudo apt-get install -y -qq openssh-server"
+echo "Installing OpenSSH server and rsync..."
+sprite exec -- bash -c "sudo apt-get update -qq && sudo apt-get install -y -qq openssh-server rsync"
 
 echo "Copying SSH public key..."
 SSH_KEY_CONTENT=$(cat "$SSH_PUB_KEY")
@@ -55,5 +63,35 @@ sprite exec -- bash -c "echo '$SSH_KEY_CONTENT' >> ~/.ssh/authorized_keys && chm
 echo "Starting SSH server..."
 sprite exec -- bash -c "sudo service ssh start"
 
+# Copy GitHub private key if it exists
+if [ -f "$GITHUB_PRIV_KEY" ]; then
+    echo ""
+    echo "Copying GitHub SSH private key..."
+    GITHUB_KEY_CONTENT=$(cat "$GITHUB_PRIV_KEY")
+    sprite exec -- bash -c "echo '$GITHUB_KEY_CONTENT' > ~/.ssh/sprite-github && chmod 600 ~/.ssh/sprite-github"
+
+    echo "Configuring Git to use sprite-github key..."
+    # Only add GitHub config if it doesn't already exist
+    sprite exec -- bash -c "
+        if ! grep -q 'Host github.com' ~/.ssh/config 2>/dev/null; then
+            cat >> ~/.ssh/config << 'EOF'
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/sprite-github
+    IdentitiesOnly yes
+EOF
+            chmod 600 ~/.ssh/config
+        fi
+    "
+
+    echo ""
+    echo "GitHub SSH key installed!"
+    echo "Add this public key to your GitHub account:"
+    echo ""
+    cat "$GITHUB_PUB_KEY"
+    echo ""
+fi
+
 echo ""
-echo "SSH setup complete! You can now use sprite-copy"
+echo "SSH setup complete! You can now use sprite-copy, sprite-copy-to, and sprite-copy-from"
