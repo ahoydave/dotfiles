@@ -1,0 +1,65 @@
+#!/bin/bash
+# dc-claude: Connect to dev container and run Claude
+# Usage: dc-claude
+
+set -e
+
+# Check if devcontainer CLI is installed
+if ! command -v devcontainer &> /dev/null; then
+    echo "devcontainer CLI not found. Installing..."
+    if ! command -v npm &> /dev/null; then
+        echo "Error: npm is required to install devcontainer CLI"
+        echo "Please install Node.js first: https://nodejs.org/"
+        exit 1
+    fi
+    npm install -g @devcontainers/cli
+    echo "devcontainer CLI installed successfully!"
+    echo ""
+    echo "Please run dc-claude again (the CLI needs to be in your PATH)"
+    exit 0
+fi
+
+# Find .devcontainer folder (search current dir and parents)
+find_devcontainer() {
+    local dir="$PWD"
+    while [ "$dir" != "/" ]; do
+        if [ -d "$dir/.devcontainer" ] || [ -f "$dir/.devcontainer.json" ]; then
+            echo "$dir"
+            return 0
+        fi
+        dir="$(dirname "$dir")"
+    done
+    return 1
+}
+
+WORKSPACE_FOLDER=$(find_devcontainer) || true
+
+if [ -z "$WORKSPACE_FOLDER" ]; then
+    echo "Error: No .devcontainer folder found in current directory or parent directories"
+    echo "Make sure you're in a directory with a dev container configuration"
+    exit 1
+fi
+
+echo "Found dev container at: $WORKSPACE_FOLDER"
+echo "Starting/connecting to dev container..."
+echo ""
+
+# Start the container (idempotent - won't restart if already running)
+devcontainer up --workspace-folder "$WORKSPACE_FOLDER"
+
+echo ""
+echo "Container is ready!"
+echo ""
+echo "Launching Claude..."
+
+# Get terminal dimensions
+COLS=$(tput cols 2>/dev/null || echo 80)
+ROWS=$(tput lines 2>/dev/null || echo 24)
+
+# Pass TERM and terminal dimensions for proper terminal handling
+devcontainer exec \
+  --workspace-folder "$WORKSPACE_FOLDER" \
+  --remote-env "TERM=${TERM:-xterm-256color}" \
+  --terminal-columns "$COLS" \
+  --terminal-rows "$ROWS" \
+  claude --dangerously-skip-permissions

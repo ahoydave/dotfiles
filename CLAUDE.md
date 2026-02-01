@@ -1,16 +1,18 @@
-# Claude Code Integration
+# Agent Instructions
 
-This directory contains my personal dotfiles configuration, with a focus on optimizing workflows for using coding agents and general AI agents effectively from the command line.
+## On Startup
+Read `README.md` first to understand repo structure.
 
-## Purpose
+## Documentation
+Update `README.md` when changes affect user setup or workflow. Keep it:
+- Getting started focused (overview, not implementation details)
+- Concise (details belong in code or component-specific docs)
 
-Claude is helping me set up and configure this environment to:
+## Installation
+After adding features, run `./install.sh` to install. Keep install script idempotent.
 
-- Streamline interactions with AI coding agents from the terminal
-- Create efficient workflows for common development tasks
-- Integrate AI agent capabilities with existing command-line tools
-- Document best practices and patterns for agent-assisted development
-
-## Work in Progress
-
-This is an active project where configurations and documentation are being developed and refined over time.
+Install should handle:
+- Symlinking dotfiles to proper locations
+- All executable scripts in `scripts/`
+- Agent commands to `~/.claude/commands`
+- Settings to appropriate config directories

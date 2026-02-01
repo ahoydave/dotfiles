@@ -12,6 +12,11 @@ Personal development environment configuration.
 - `agents/` - Shared agent prompts and workflow documentation
 - `claude/` - Claude Code-specific settings
 
+**Helper Scripts**: Dev container and sprite utilities
+- `dc-connect` - Connect to dev containers with interactive shell
+- `dc-claude` - Launch Claude in dev container
+- `sprite-*` - Sprite management scripts
+
 ## Installation
 
 ### Neovim Setup
@@ -61,6 +66,18 @@ Five specialized agents for iterative software development. Works with Claude Co
 - `/meta-agent` - Refine the agent system itself
 
 **Documentation:** See `agents/workflow.md`
+
+## Helper Scripts
+
+Dev container scripts (requires `@devcontainers/cli`):
+- `dc-connect` - Connect to or start dev container, open interactive shell
+- `dc-claude` - Connect to dev container and launch Claude
+
+Sprite utilities (requires `jq` and sprite CLI):
+- `sprite-copy-to` / `sprite-copy-from` - File transfer to/from sprites
+- `sprite-setup-ssh` / `sprite-create-ssh` - SSH key management
+
+Scripts auto-install to `~/.local/bin/` via `./install.sh`
 
 ## Usage
 
