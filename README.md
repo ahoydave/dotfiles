@@ -39,7 +39,7 @@ ln -sf ~/dotfiles/agents/commands ~/.claude/commands
 ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
 ```
 
-Available agents: `/research`, `/plan`, `/implement`, `/implementation-manager`
+Available agents: `/research`, `/planning-agent`, `/implement`, `/implementation-manager`
 
 For Gemini CLI or Cursor, link `agents/commands/` to their respective config locations.
 
@@ -57,11 +57,11 @@ For Gemini CLI or Cursor, link `agents/commands/` to their respective config loc
 
 ## Agent System
 
-Five specialized agents for iterative software development. Works with Claude Code, Gemini CLI, Cursor, or any AI coding tool.
+Four specialized agents for iterative software development. Works with Claude Code, Gemini CLI, Cursor, or any AI coding tool.
 
 **Agents:**
 - `/research` - Investigate system, verify implementations, document current state
-- `/plan` - Design specs collaboratively with humans via questions.md
+- `/planning-agent` - Design specs collaboratively with humans via questions.md
 - `/implement` - Build one atomic task per session with mandatory testing
 - `/implementation-manager` - Autonomous multi-task orchestration
 
@@ -86,7 +86,7 @@ Scripts auto-install to `~/.local/bin/` via `./install.sh`
 
 **Neovim:** Press `<leader>` (space) for commands, see `.config/nvim/QUICKREF.md`
 
-**Claude Code:** Invoke with `/research`, `/plan`, `/implement` slash commands
+**Claude Code:** Invoke with `/research`, `/planning-agent`, `/implement` slash commands
 
 **Updating:** `cd ~/dotfiles && git pull` (symlinks update immediately)
 

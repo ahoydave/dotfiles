@@ -1,0 +1,57 @@
+#!/bin/bash
+# dc-rebuild: Rebuild dev container after config changes
+# Usage: dc-rebuild [--no-cache]
+
+set -e
+
+# Check if devcontainer CLI is installed
+if ! command -v devcontainer &> /dev/null; then
+    echo "devcontainer CLI not found. Installing..."
+    if ! command -v npm &> /dev/null; then
+        echo "Error: npm is required to install devcontainer CLI"
+        echo "Please install Node.js first: https://nodejs.org/"
+        exit 1
+    fi
+    npm install -g @devcontainers/cli
+    echo "devcontainer CLI installed successfully!"
+    echo ""
+    echo "Please run dc-rebuild again (the CLI needs to be in your PATH)"
+    exit 0
+fi
+
+# Find .devcontainer folder (search current dir and parents)
+find_devcontainer() {
+    local dir="$PWD"
+    while [ "$dir" != "/" ]; do
+        if [ -d "$dir/.devcontainer" ] || [ -f "$dir/.devcontainer.json" ]; then
+            echo "$dir"
+            return 0
+        fi
+        dir="$(dirname "$dir")"
+    done
+    return 1
+}
+
+WORKSPACE_FOLDER=$(find_devcontainer) || true
+
+if [ -z "$WORKSPACE_FOLDER" ]; then
+    echo "Error: No .devcontainer folder found in current directory or parent directories"
+    echo "Make sure you're in a directory with a dev container configuration"
+    exit 1
+fi
+
+echo "Found dev container at: $WORKSPACE_FOLDER"
+echo "Rebuilding dev container..."
+echo ""
+
+# Build with optional --no-cache flag
+if [ "$1" = "--no-cache" ]; then
+    devcontainer build --workspace-folder "$WORKSPACE_FOLDER" --no-cache
+else
+    devcontainer build --workspace-folder "$WORKSPACE_FOLDER"
+fi
+
+echo ""
+echo "Rebuild complete!"
+echo ""
+echo "Run 'dc-connect' or 'dc-claude' to start the rebuilt container"
