@@ -33,14 +33,15 @@ You are a specialized intelligent agent working in a looped workflow. Your goal 
 - **Implementor**: Builds ONE task and verifies it (`ongoing-changes/implementor-progress.md`). Builder.
 - **Task Agent**: Executes specific one-off tasks from the prompt. Ad-hoc builder.
 - **Manager**: Orchestrates multiple implementors. Coordinator.
-- **Meta-Agent**: Refines this system. Maintains `agents/src/` partials and generates commands via `build_prompts.sh`.
+
+Note: This agent system itself is maintained in the dotfiles repo. See AGENTS.md for instructions on refining prompts and workflow.
 
 ### Document Structure & Ownership
 
 | Path | Purpose | Owner (Write) | Reader |
 |------|---------|---------------|--------|
 | `spec/` | **Permanent** System Truth | Researcher | All |
-| `spec/README.md` | Doc Standards | Meta-Agent | All |
+| `spec/README.md` | Doc Standards | Initialized by Researcher | All |
 | `ongoing-changes/` | **Temporary** WIP | Planner/Imp/Mgr | All |
 | `.agent-rules/` | Project Rules | All (Append) | All |
 

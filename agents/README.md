@@ -10,8 +10,7 @@ agents/
 │   ├── research.md        # Investigate and document current system
 │   ├── planning-agent.md  # Design specs collaboratively
 │   ├── implement.md       # Build one atomic task per session
-│   ├── implementation-manager.md  # Autonomous multi-task orchestration
-│   └── meta-agent.md      # Refine the agent system itself
+│   └── implementation-manager.md  # Autonomous multi-task orchestration
 │
 ├── workflow.md            # User-facing workflow documentation
 ├── spec-folder-spec.md    # Template for project spec/ folder conventions
@@ -20,6 +19,8 @@ agents/
     ├── status.md          # Current system state and progress
     ├── history.md         # Archived refinements
     └── ace-fca-comparison.md  # Comparison with similar systems
+
+For working on the agent system itself, see AGENTS.md in the repository root.
 ```
 
 ## Setup
@@ -45,7 +46,9 @@ ln -sf "$(pwd)/agents/commands" ~/.cursor/commands
 
 ## Usage
 
-Invoke agents with slash commands: `/research`, `/planning-agent`, `/implement`, `/implementation-manager`, `/meta-agent`
+Invoke agents with slash commands: `/research`, `/planning-agent`, `/implement`, `/implementation-manager`
+
+To work on the agent system itself, see `AGENTS.md` in the repository root.
 
 ## Updating Agent Prompts
 

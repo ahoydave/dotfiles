@@ -1,17 +1,17 @@
 # Looped Agent Workflow System
 
-**Version**: 1.2
-**Last Updated**: 2025-11-20
+**Version**: 1.3
+**Last Updated**: 2026-02-02
 
-**Recent improvements**: Updated all documentation for 5-agent system (research, plan, implement, manager, meta-agent), corrected all cross-references, improved clarity and token efficiency
+**Recent improvements**: Consolidated meta-agent instructions into AGENTS.md; clarified 4-agent workflow system for project work (research, plan, implement, manager)
 
 ## What This Is
 
-A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops to research, plan, and implement software projects. Five specialized agent prompts work together through shared documentation, with clean handoffs between sessions.
+A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops to research, plan, and implement software projects. Four specialized agent prompts work together through shared documentation, with clean handoffs between sessions.
 
 **The Problem**: Coding agents have finite context (e.g., 200k tokens for Claude Sonnet). Complex projects need multiple sessions with clean handoffs and minimal context bloat.
 
-**The Solution**: Five specialized agents with clear document ownership, token-efficient status docs, and sub-agent delegation for verbose work.
+**The Solution**: Four specialized agents with clear document ownership, token-efficient status docs, and sub-agent delegation for verbose work.
 
 ---
 
@@ -41,11 +41,7 @@ A system for using coding agent instances (Claude, GPT-5, Gemini, etc.) in loops
 - **Uses**: Implementor agents for task execution
 - **When**: For multi-task workflows where human oversight isn't needed per task
 
-### Meta-Agent (`meta-agent.md`)
-- **Purpose**: Refines the agent system itself (prompts, docs, workflow)
-- **Owns**: `agents/meta/status.md`, agent command files, workflow documentation
-- **Uses**: Real project testing to validate refinements
-- **When**: When agent behavior needs improvement or documentation needs updates
+**Note**: To work on the agent system itself (refining prompts, docs, workflow), see `AGENTS.md` in the repository root.
 
 ---
 
@@ -154,11 +150,13 @@ flowchart LR
     planning-agent.md          - Planning agent (invoke: /planning-agent)
     implement.md               - Implementor agent (invoke: /implement)
     implementation-manager.md  - Manager agent (invoke: /implementation-manager)
-    meta-agent.md              - Meta-agent (invoke: /meta-agent)
 
   workflow.md                - This file (user guide)
-  meta/status.md             - System state and development history (meta-agent)
+  meta/status.md             - System state and development history
   meta/ace-fca-comparison.md - Lessons from similar systems
+
+~/dotfiles/
+  AGENTS.md                  - Instructions for working on agent system itself
 
 (In target projects - created by agents during usage)
 spec/                           - Permanent system documentation
@@ -259,7 +257,6 @@ ongoing-changes/                - Temporary work-in-progress documents
 /planning-agent          # Design new features
 /implement               # Build one task at a time
 /implementation-manager  # Orchestrate multiple tasks
-/meta-agent              # Refine agent system
 ```
 
 **If using other agents or file references:**
@@ -268,8 +265,9 @@ Please act as the researcher agent from ~/dotfiles/agents/commands/research.md
 Please act as the planner agent from ~/dotfiles/agents/commands/planning-agent.md
 Please act as the implementor agent from ~/dotfiles/agents/commands/implement.md
 Please act as the manager agent from ~/dotfiles/agents/commands/implementation-manager.md
-Please act as the meta-agent from ~/dotfiles/agents/commands/meta-agent.md
 ```
+
+**To work on the agent system itself:** See `AGENTS.md` in the repository root for instructions.
 
 **Note**: Slash commands work with Claude Code CLI. Other agents (GPT-5, Gemini, etc.) may require different invocation methods.
 
