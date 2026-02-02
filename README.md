@@ -15,6 +15,7 @@ Personal development environment configuration.
 **Helper Scripts**: Dev container and sprite utilities
 - `dc-connect` - Connect to dev containers with interactive shell
 - `dc-claude` - Launch Claude in dev container
+- `dc-rebuild` - Rebuild dev container after config changes
 - `sprite-*` - Sprite management scripts
 
 ## Installation
@@ -38,7 +39,7 @@ ln -sf ~/dotfiles/agents/commands ~/.claude/commands
 ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
 ```
 
-Available agents: `/research`, `/plan`, `/implement`, `/implementation-manager`, `/meta-agent`
+Available agents: `/research`, `/plan`, `/implement`, `/implementation-manager`
 
 For Gemini CLI or Cursor, link `agents/commands/` to their respective config locations.
 
@@ -63,7 +64,8 @@ Five specialized agents for iterative software development. Works with Claude Co
 - `/plan` - Design specs collaboratively with humans via questions.md
 - `/implement` - Build one atomic task per session with mandatory testing
 - `/implementation-manager` - Autonomous multi-task orchestration
-- `/meta-agent` - Refine the agent system itself
+
+**Working on the agent system:** See `AGENTS.md` for meta-agent instructions.
 
 **Documentation:** See `agents/workflow.md`
 
@@ -72,6 +74,7 @@ Five specialized agents for iterative software development. Works with Claude Co
 Dev container scripts (requires `@devcontainers/cli`):
 - `dc-connect` - Connect to or start dev container, open interactive shell
 - `dc-claude` - Connect to dev container and launch Claude
+- `dc-rebuild` - Rebuild container after changing devcontainer.json or Dockerfile
 
 Sprite utilities (requires `jq` and sprite CLI):
 - `sprite-copy-to` / `sprite-copy-from` - File transfer to/from sprites
