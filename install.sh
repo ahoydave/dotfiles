@@ -59,30 +59,37 @@ mkdir -p "$DOTFILES_DIR/agents/commands"
 # Ensure ~/.claude directory exists
 mkdir -p "$HOME/.claude"
 
-# Backup existing settings.json if it's not a symlink
+# Backup existing files if they're not already symlinks
+if [ -f "$HOME/.claude/CLAUDE.md" ] && [ ! -L "$HOME/.claude/CLAUDE.md" ]; then
+    mv "$HOME/.claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md.backup.$(date +%Y%m%d_%H%M%S)"
+    echo "  Backed up ~/.claude/CLAUDE.md"
+fi
+
 if [ -f "$HOME/.claude/settings.json" ] && [ ! -L "$HOME/.claude/settings.json" ]; then
     mv "$HOME/.claude/settings.json" "$HOME/.claude/settings.json.backup.$(date +%Y%m%d_%H%M%S)"
     echo "  Backed up ~/.claude/settings.json"
 fi
 
-# Backup existing commands directory if it's not a symlink
 if [ -d "$HOME/.claude/commands" ] && [ ! -L "$HOME/.claude/commands" ]; then
     mv "$HOME/.claude/commands" "$HOME/.claude/commands.backup.$(date +%Y%m%d_%H%M%S)"
     echo "  Backed up ~/.claude/commands"
 fi
 
-# Backup existing statusline script if it's not a symlink
 if [ -f "$HOME/.claude/statusline-command.sh" ] && [ ! -L "$HOME/.claude/statusline-command.sh" ]; then
     mv "$HOME/.claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh.backup.$(date +%Y%m%d_%H%M%S)"
     echo "  Backed up ~/.claude/statusline-command.sh"
 fi
 
 # Remove old symlinks if they exist
+rm -f "$HOME/.claude/CLAUDE.md"
 rm -f "$HOME/.claude/settings.json"
 rm -f "$HOME/.claude/commands"
 rm -f "$HOME/.claude/statusline-command.sh"
 
 # Create symlinks
+ln -sf "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+echo "  ~/.claude/CLAUDE.md -> $DOTFILES_DIR/claude/CLAUDE.md"
+
 ln -sf "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
 echo "  ~/.claude/settings.json -> $DOTFILES_DIR/claude/settings.json"
 

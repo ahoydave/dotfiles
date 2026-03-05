@@ -1,29 +1,37 @@
 # Meta-Agent System Status
 
 ---
-last_updated: 2026-01-20
+last_updated: 2026-03-04
 git_commit: (pending)
-refinement_count: 77
+refinement_count: 78
 status: production-ready
-recent_focus: context_discipline
-agent_count: 5
+recent_focus: consolidation-to-3-modes
+agent_count: 2
 ---
 
-## Current State (2026-01-20)
+## Current State (2026-03-04)
 
-### Status: Mandatory Context Reading (Refinement #77)
+### Status: Consolidation to 3-Mode Model (Refinement #78)
 
-**Focus**: Ensure agents (especially Planner) always read system context.
-**Fixes**:
-- **Universal Rule**: Added `spec/current-system.md` to the mandatory "Read Context" step in `_core.md`.
-- **Planner Specific**: Explicitly added "Read `spec/current-system.md`" to the Planner's "Understand Requirements" step.
-- **Goal**: Prevent hallucinations and "planning in a vacuum" by grounding every session in the current system state.
+**Focus**: Simplified from 5 agents to 2 sub-agents + main session. Retired Researcher, Planner, Task Agent.
+
+**Rationale**: Projects with strong CLAUDE.md ambient context don't need bootstrapping agents. The main session handles investigation, exploration, and planning. Sub-agents are used only for structured implementation work.
+
+**Changes**:
+- Retired `_research.md`, `_planning-agent.md`, `_task-agent.md` → archived in `agents/src/archive/`
+- Rewrote `_implement.md` with explicit 4-phase TDD workflow (Specify → Design → Implement → Refactor)
+- Updated `_core.md`: removed old 5-agent list, added E2E test preference to verification standard
+- Updated `_implementation-manager.md`: added TDD gate, updated plan doc references
+- Global `~/.claude/CLAUDE.md`: added TDD-as-sensory-feedback section and 3-mode agent workflow section
+
+**3 Modes**:
+1. **Main session** — investigation, planning, small changes (CLAUDE.md gives ambient context)
+2. **`/implement`** — single task, 4-phase TDD, verify, stop
+3. **`/manage`** — orchestrate multiple `/implement` workers
 
 ### What's Working
 
-✅ **Researcher**: Clean handoffs, scales to massive codebases via aggressive sub-agent delegation, comprehensive system documentation with inline Mermaid diagrams, test suite verification, documentor role (facts, not recommendations), verification mindset (trust code over claims), no documentation history meta-commentary, optional doc quality verification
-✅ **Planner**: Interactive collaboration via questions.md, visual planning with change-highlighted diagrams, verification strategy in specs, absolute no-code rule (user experience clear, implementation flexible)
-✅ **Implementor**: Clear task boundaries, repeatable test creation requirements, end-to-end verification focus
+✅ **Implementor**: 4-phase TDD workflow (Specify → Design → Implement → Refactor), E2E tests preferred, one task per session
 ✅ **Implementation Manager**: Autonomous multi-task orchestration via sub-agents (Refinement #32)
   - Eliminates human friction between tasks
   - Minimal context (stays <30% throughout)
