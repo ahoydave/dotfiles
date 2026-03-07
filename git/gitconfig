@@ -1,0 +1,15 @@
+[core]
+    pager = delta
+[delta]
+    navigate = true
+    side-by-side = true
+[interactive]
+    diffFilter = delta --color-only
+[user]
+	name = David Jacka
+	email = ahoy.dave@gmail.com
+
+[includeIf "gitdir:~/repos/"]
+    path = ~/.gitconfig-work
+[includeIf "gitdir:~/studio/"]
+    path = ~/.gitconfig-work

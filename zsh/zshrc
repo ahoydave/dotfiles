@@ -4,9 +4,9 @@ export PATH="/opt/homebrew/opt/trash/bin:$PATH"
 
 # Prompt & tools
 eval "$(starship init zsh)"
-eval "$(zoxide init zsh)"
 eval "$(fzf --zsh)"
 eval "$(mise activate zsh)"
+eval "$(zoxide init zsh)"
 
 # Aliases
 alias ls='eza'

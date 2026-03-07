@@ -67,6 +67,12 @@ else
 fi
 
 # ------------------------------------------
+# Git configuration
+echo ""
+echo "Setting up git..."
+symlink "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
+symlink "$DOTFILES_DIR/git/gitconfig-work" "$HOME/.gitconfig-work"
+
 # Ghostty
 # ------------------------------------------
 echo ""

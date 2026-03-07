@@ -260,7 +260,27 @@ Maccy preferences: set history to ~50 entries, enable "Paste automatically".
 
 ---
 
-## 10. Verify
+## 10. Git identity
+
+Global config and work override are managed by dotfiles and installed via `./install.sh`.
+
+The `~/.gitconfig` uses `includeIf` to automatically apply the work email for repos under `~/repos/` and `~/studio/`:
+
+```
+~/.gitconfig        → personal email (ahoy.dave@gmail.com) for everything
+~/.gitconfig-work   → work email (david.jacka@unity3d.com) for ~/repos/ and ~/studio/
+```
+
+No per-repo setup needed. Verify it's working:
+
+```bash
+cd ~/repos/any-work-repo && git config user.email   # unity email
+cd ~/dotfiles && git config user.email               # gmail
+```
+
+---
+
+## 11. Verify
 
 ```bash
 nvim --version
