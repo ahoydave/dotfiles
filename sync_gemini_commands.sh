@@ -25,11 +25,11 @@ for md_file in "$SRC_DIR"/*.md; do
     toml_file="$DEST_DIR/$base_filename.toml"
 
     # Extract agent name. Prioritize "# Role: Name" format.
-    agent_name=$(grep -m 1 '^# Role: ' "$md_file" | sed -e 's/^# Role: //' -e 's/\$//')
+    agent_name=$(grep -m 1 '^# Role: ' "$md_file" | sed -e 's/^# Role: //' -e 's/\$//' || true)
 
     # If not found, check if the first H1 is NOT the core title before accepting it.
     if [ -z "$agent_name" ]; then
-        first_h1=$(grep -m 1 '^# ' "$md_file" | sed -e 's/^# //' -e 's/\$//')
+        first_h1=$(grep -m 1 '^# ' "$md_file" | sed -e 's/^# //' -e 's/\$//' || true)
         if [[ "$first_h1" != "Looped Agent System - Core Instructions" ]]; then
             agent_name="$first_h1"
         fi

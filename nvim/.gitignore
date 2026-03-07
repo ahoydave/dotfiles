@@ -1,10 +1,8 @@
-# Plugin directories
-plugged/
-.local/
-
-# Swap and backup files
-*.swp
-*.swo
-*~
-.netrwhist
-
+tt.*
+.tests
+doc/tags
+debug
+.repro
+foo.*
+*.log
+data

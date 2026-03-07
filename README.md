@@ -18,6 +18,10 @@ Personal development environment configuration.
 - `dc-rebuild` - Rebuild dev container after config changes
 - `sprite-*` - Sprite management scripts
 
+## New Machine Setup
+
+See [setup.md](setup.md) for the full from-scratch MacBook setup guide.
+
 ## Installation
 
 ### Neovim Setup

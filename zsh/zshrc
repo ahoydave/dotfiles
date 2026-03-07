@@ -1,0 +1,17 @@
+# Path
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="/opt/homebrew/opt/trash/bin:$PATH"
+
+# Prompt & tools
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
+eval "$(fzf --zsh)"
+eval "$(mise activate zsh)"
+
+# Aliases
+alias ls='eza'
+alias ll='eza -la'
+alias cat='bat'
+alias cd='z'
+alias rm='echo "use trash or /bin/rm"; false'
+alias yoco='claude --dangerously-skip-permissions'
