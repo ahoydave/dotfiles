@@ -2,12 +2,6 @@
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="/opt/homebrew/opt/trash/bin:$PATH"
 
-# Prompt & tools
-eval "$(starship init zsh)"
-eval "$(fzf --zsh)"
-eval "$(mise activate zsh)"
-eval "$(zoxide init zsh)"
-
 # Aliases
 alias ls='eza'
 alias ll='eza -la'
@@ -15,3 +9,19 @@ alias cat='bat'
 alias cd='z'
 alias rm='echo "use trash or /bin/rm"; false'
 alias yoco='claude --dangerously-skip-permissions'
+
+# Prompt & tools
+eval "$(starship init zsh)"
+eval "$(fzf --zsh)"
+eval "$(mise activate zsh)"
+
+# History prefix search (up/down arrow)
+autoload -U up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
+
+# IMPORTANT: zoxide init must be last — it will complain if anything runs after it
+eval "$(zoxide init zsh)"
+
