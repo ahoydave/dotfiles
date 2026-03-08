@@ -1,15 +1,33 @@
 {
+  "env": {
+    "MCP_TOOL_TIMEOUT": "120000"
+  },
   "permissions": {
-    "ask": [
-      "Bash(sudo:*)"
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:npmjs.com)",
+      "WebFetch(domain:pypi.org)",
+      "WebFetch(domain:crates.io)",
+      "WebFetch(domain:docs.rs)",
+      "WebFetch(domain:developer.mozilla.org)",
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:docs.python.org)",
+      "WebFetch(domain:registry.npmjs.org)"
     ],
     "deny": [
       "Bash(rm -rf ~:*)",
       "Bash(rm -rf /:*)",
       "Bash(rm -r ~:*)",
       "Bash(rm -r /:*)",
+      "Bash(/bin/rm:*)",
       "Bash(git push -f:*)",
       "Bash(git push --force:*)"
+    ],
+    "ask": [
+      "Bash(sudo:*)"
     ],
     "defaultMode": "bypassPermissions"
   },
@@ -35,5 +53,8 @@
     "command": "~/.claude/statusline-command.sh"
   },
   "alwaysThinkingEnabled": true,
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "enabledPlugins": {
+    "pyright-lsp@claude-plugins-official": true
+  }
 }
