@@ -22,31 +22,32 @@ echo "Using dotfiles from: $DOTFILES_DIR"
 echo ""
 
 # ------------------------------------------
-# Helper: create a symlink, backing up any
-# existing real file/dir first. Idempotent.
-# Usage: symlink <target> <link>
+# Helper: copy a file or directory.
+# Directories are replaced in full. Idempotent.
+# Usage: deploy <source> <dest>
 # ------------------------------------------
-symlink() {
-    local target="$1"
-    local link="$2"
+deploy() {
+    local source="$1"
+    local dest="$2"
 
-    # If it exists and is NOT already a symlink, back it up
-    if [ -e "$link" ] && [ ! -L "$link" ]; then
-        mv "$link" "${link}.backup.$(date +%Y%m%d_%H%M%S)"
-        echo "  Backed up $link"
+    # Remove existing symlink so cp doesn't see source == dest
+    [ -L "$dest" ] && rm "$dest"
+
+    if [ -d "$source" ]; then
+        rm -rf "$dest"
+        cp -r "$source" "$dest"
+    else
+        mkdir -p "$(dirname "$dest")"
+        cp "$source" "$dest"
     fi
-
-    # Remove existing symlink (or nothing) and create fresh
-    rm -rf "$link"
-    ln -sf "$target" "$link"
-    echo "  $link -> $target"
+    echo "  $dest <- $source"
 }
 
 # ------------------------------------------
 # Shell
 # ------------------------------------------
 echo "Setting up shell..."
-symlink "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
+deploy "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
 
 # ------------------------------------------
 # Vim / Neovim
@@ -54,8 +55,8 @@ symlink "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
 echo ""
 echo "Setting up vim/neovim..."
 mkdir -p "$HOME/.config"
-symlink "$DOTFILES_DIR/vim/vimrc" "$HOME/.vimrc"
-symlink "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
+deploy "$DOTFILES_DIR/vim/vimrc" "$HOME/.vimrc"
+deploy "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 
 # vim-plug for vim
 if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
@@ -70,15 +71,15 @@ fi
 # Git configuration
 echo ""
 echo "Setting up git..."
-symlink "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
-symlink "$DOTFILES_DIR/git/gitconfig-work" "$HOME/.gitconfig-work"
+deploy "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
+deploy "$DOTFILES_DIR/git/gitconfig-work" "$HOME/.gitconfig-work"
 
 # Ghostty
 # ------------------------------------------
 echo ""
 echo "Setting up Ghostty..."
 mkdir -p "$HOME/.config/ghostty"
-symlink "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"
+deploy "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"
 
 # ------------------------------------------
 # Claude Code
@@ -87,10 +88,10 @@ echo ""
 echo "Setting up Claude Code..."
 mkdir -p "$HOME/.claude"
 mkdir -p "$DOTFILES_DIR/agents/commands"
-symlink "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-symlink "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
-symlink "$DOTFILES_DIR/agents/commands" "$HOME/.claude/commands"
-symlink "$DOTFILES_DIR/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
+deploy "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+deploy "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
+deploy "$DOTFILES_DIR/agents/commands" "$HOME/.claude/commands"
+deploy "$DOTFILES_DIR/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 
 # ------------------------------------------
 # Gemini CLI
@@ -104,7 +105,7 @@ if [ -f "$DOTFILES_DIR/sync_gemini_commands.sh" ]; then
     cd - > /dev/null
 fi
 mkdir -p "$HOME/.gemini"
-symlink "$DOTFILES_DIR/gemini/commands" "$HOME/.gemini/commands"
+deploy "$DOTFILES_DIR/gemini/commands" "$HOME/.gemini/commands"
 
 # ------------------------------------------
 # Helper scripts
@@ -116,7 +117,7 @@ mkdir -p "$SCRIPTS_BIN"
 for script in "$DOTFILES_DIR"/scripts/*; do
     if [ -f "$script" ] && [ -x "$script" ]; then
         name="$(basename "$script")"
-        symlink "$script" "$SCRIPTS_BIN/$name"
+        deploy "$script" "$SCRIPTS_BIN/$name"
     fi
 done
 
@@ -129,7 +130,7 @@ CODEX_PROMPTS_DIR="$HOME/.codex/prompts"
 mkdir -p "$CODEX_PROMPTS_DIR"
 for cmd in "$DOTFILES_DIR"/agents/commands/*.md; do
     name="$(basename "$cmd")"
-    symlink "$cmd" "$CODEX_PROMPTS_DIR/$name"
+    deploy "$cmd" "$CODEX_PROMPTS_DIR/$name"
 done
 
 # ------------------------------------------
@@ -145,7 +146,7 @@ for plist in "$DOTFILES_DIR"/launchd/*.plist; do
     label="${name%.plist}"
     dest="$LAUNCH_AGENTS_DIR/$name"
 
-    symlink "$plist" "$dest"
+    deploy "$plist" "$dest"
 
     # Unload first (ignore error if not loaded), then load
     launchctl unload "$dest" 2>/dev/null || true
