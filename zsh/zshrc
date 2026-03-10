@@ -9,6 +9,7 @@ alias cat='bat'
 alias cd='z'
 alias rm='echo "use trash or /bin/rm"; false'
 alias yoco='claude --dangerously-skip-permissions'
+alias unity='open -a "Unity Hub"'
 
 # Prompt & tools
 eval "$(starship init zsh)"
