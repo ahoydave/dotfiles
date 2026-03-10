@@ -6,6 +6,7 @@ Personal dotfiles and global agent system configuration.
 
 Key areas:
 - `claude/` — global Claude Code config (`CLAUDE.md`, `settings.json`, `statusline-command.sh`)
+- `skills/` — personal Claude Code skills, deployed to `~/.claude/skills/`
 - `agents/commands/` — standalone slash commands (`sync-cursor-rules`)
 - `agents/src/archive/` — retired agent prompts replaced by superpowers plugin
 

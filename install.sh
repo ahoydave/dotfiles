@@ -93,6 +93,13 @@ deploy "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
 deploy "$DOTFILES_DIR/agents/commands" "$HOME/.claude/commands"
 deploy "$DOTFILES_DIR/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 
+# Personal skills
+mkdir -p "$HOME/.claude/skills"
+for skill_dir in "$DOTFILES_DIR"/skills/*/; do
+    name="$(basename "$skill_dir")"
+    deploy "$skill_dir" "$HOME/.claude/skills/$name"
+done
+
 # ------------------------------------------
 # Gemini CLI
 # ------------------------------------------
