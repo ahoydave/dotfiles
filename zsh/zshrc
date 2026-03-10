@@ -23,6 +23,19 @@ zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
 
+# Ghostty: auto-color background based on directory hash
+if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+    function _ghostty_dir_color() {
+        local hash=$(echo -n "$PWD" | md5 | cut -c1-6)
+        local r=$(( 16#${hash:0:2} / 4 ))
+        local g=$(( 16#${hash:2:2} / 4 ))
+        local b=$(( 16#${hash:4:2} / 4 ))
+        printf "\e]11;rgb:%02x/%02x/%02x\e\\" "$r" "$g" "$b"
+    }
+    chpwd_functions+=(_ghostty_dir_color)
+    _ghostty_dir_color
+fi
+
 # IMPORTANT: zoxide init must be last — it will complain if anything runs after it
 eval "$(zoxide init zsh)"
 
