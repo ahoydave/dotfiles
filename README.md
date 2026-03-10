@@ -2,95 +2,59 @@
 
 Personal development environment configuration.
 
-## Contents
-
-**Neovim Configuration**: Portable vim/neovim setup optimized for code review
-- `.vimrc` - Works on any server (plain vim)
-- `.config/nvim/` - Full neovim with LSP, plugins, fuzzy finding
-
-**Agent System**: Looped agent workflow for software development (Claude, Gemini, Cursor)
-- `agents/` - Shared agent prompts and workflow documentation
-- `claude/` - Claude Code-specific settings
-
-**Helper Scripts**: Dev container and sprite utilities
-- `dc-connect` - Connect to dev containers with interactive shell
-- `dc-claude` - Launch Claude in dev container
-- `dc-rebuild` - Rebuild dev container after config changes
-- `sprite-*` - Sprite management scripts
-
 ## New Machine Setup
 
 See [setup.md](setup.md) for the full from-scratch MacBook setup guide.
 
 ## Installation
 
-### Neovim Setup
-
 ```bash
-# Clone and run installer
 git clone https://github.com/ahoydave/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
 
-Installs: symlinks to `.vimrc` and `.config/nvim/`, vim-plug plugin manager
+`install.sh` copies everything to the correct locations (no symlinks). Run it again after any changes.
 
-### Agent System
+## Contents
 
-For Claude Code, symlink to `~/.claude/`:
-```bash
-ln -sf ~/dotfiles/agents/commands ~/.claude/commands
-ln -sf ~/dotfiles/claude/settings.json ~/.claude/settings.json
-```
+### Shell & Terminal
+- `zsh/zshrc` → `~/.zshrc`
+- `ghostty/config` → `~/.config/ghostty/config`
 
-Available agents: `/research`, `/planning-agent`, `/implement`, `/implementation-manager`
+### Vim / Neovim
+- `vim/vimrc` → `~/.vimrc` — portable, works on any server with plain vim
+- `nvim/` → `~/.config/nvim/` — full neovim with LSP, plugins, fuzzy finding
 
-For Gemini CLI or Cursor, link `agents/commands/` to their respective config locations.
+Prerequisites for full setup: `brew install neovim fzf fd ripgrep lazygit pyright typescript-language-server`
 
-## Neovim Configuration
+See `nvim/README.md` and `nvim/QUICKREF.md` for details.
 
-**Two-tier design:**
-- **Portable** (`.vimrc`): Plain vim, works anywhere, basic editing + git
-- **Full** (`init.vim`): Neovim + LSP, fuzzy finding, lazygit (sources `.vimrc`)
+### Git
+- `git/gitconfig` → `~/.gitconfig`
+- `git/gitconfig-work` → `~/.gitconfig-work`
 
-**Prerequisites:**
-- Minimal: vim (usually pre-installed)
-- Full: `brew install neovim fzf fd ripgrep lazygit pyright typescript-language-server`
+### Claude Code
+- `claude/CLAUDE.md` → `~/.claude/CLAUDE.md` — global agent instructions
+- `claude/settings.json` → `~/.claude/settings.json`
+- `agents/commands/` → `~/.claude/commands/` — slash commands (`/sync-cursor-rules`)
+- `skills/` → `~/.claude/skills/` — personal skills (devcontainer-setup, system-documentation, unity-development, unity-jira)
 
-**Details:** See `.config/nvim/README.md` and `.config/nvim/QUICKREF.md`
+Implementation workflows are provided by the [superpowers](https://github.com/bkrabach/claude-code-superpowers) plugin.
 
-## Agent System
+### Gemini CLI & Codex CLI
+- `gemini/commands/` → `~/.gemini/commands/`
+- Agent commands are also synced to `~/.codex/prompts/`
 
-Four specialized agents for iterative software development. Works with Claude Code, Gemini CLI, Cursor, or any AI coding tool.
+### Helper Scripts → `~/.local/bin/`
+- `dc-connect` / `dc-claude` / `dc-rebuild` — dev container management (requires `@devcontainers/cli`)
+- `sprite-*` — sprite management scripts
 
-**Agents:**
-- `/research` - Investigate system, verify implementations, document current state
-- `/planning-agent` - Design specs collaboratively with humans via questions.md
-- `/implement` - Build one atomic task per session with mandatory testing
-- `/implementation-manager` - Autonomous multi-task orchestration
+### Launchd
+- `launchd/*.plist` → `~/Library/LaunchAgents/` — loaded automatically by install.sh
 
-**Working on the agent system:** See `AGENTS.md` for meta-agent instructions.
+## Principles
 
-**Documentation:** See `agents/workflow.md`
-
-## Helper Scripts
-
-Dev container scripts (requires `@devcontainers/cli`):
-- `dc-connect` - Connect to or start dev container, open interactive shell
-- `dc-claude` - Connect to dev container and launch Claude
-- `dc-rebuild` - Rebuild container after changing devcontainer.json or Dockerfile
-
-Sprite utilities (requires `jq` and sprite CLI):
-- `sprite-copy-to` / `sprite-copy-from` - File transfer to/from sprites
-- `sprite-setup-ssh` / `sprite-create-ssh` - SSH key management
-
-Scripts auto-install to `~/.local/bin/` via `./install.sh`
-
-## Usage
-
-**Neovim:** Press `<leader>` (space) for commands, see `.config/nvim/QUICKREF.md`
-
-**Claude Code:** Invoke with `/research`, `/planning-agent`, `/implement` slash commands
-
-**Updating:** `cd ~/dotfiles && git pull` (symlinks update immediately)
-
+- Simplicity wins — if a prompt is too long, it's a bug
+- Test agent prompt changes on real projects before committing
+- REWRITE docs, don't append
