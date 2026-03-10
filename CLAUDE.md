@@ -6,22 +6,19 @@ Personal dotfiles and global agent system configuration.
 
 Key areas:
 - `claude/` — global Claude Code config (`CLAUDE.md`, `settings.json`, `statusline-command.sh`)
-- `agents/src/` — agent prompt source files (edit these, not `agents/commands/`)
-- `agents/commands/` — built prompts, symlinked to `~/.claude/commands/` (generated, do not edit)
+- `agents/commands/` — standalone slash commands (`sync-cursor-rules`)
+- `agents/src/archive/` — retired agent prompts replaced by superpowers plugin
 
-## Updating Agent Prompts
+## Agent Workflow
 
-1. Edit source files in `agents/src/`: `_core.md`, `_implement.md`, `_implementation-manager.md`
-2. Retired agents are in `agents/src/archive/`
-3. Run `./build_prompts.sh` to regenerate `agents/commands/` and `gemini/commands/`
-4. Verify output in `agents/commands/`
-5. Update `agents/meta/status.md` with a refinement summary
+Implementation workflows are provided by the **superpowers plugin**. System documentation uses the `system-documentation` personal skill (`~/.claude/skills/system-documentation/`). See `claude/superpowers-vs-implementation-manager.md` for migration context.
 
-**Never edit `agents/commands/` directly — those files are generated.**
+Custom commands in `agents/commands/`:
+- `/sync-cursor-rules` — sync Claude Code rules to Cursor IDE
 
 ## Installation
 
-`./install.sh` symlinks everything to the correct locations:
+`./install.sh` copies everything to the correct locations:
 - `claude/CLAUDE.md` → `~/.claude/CLAUDE.md`
 - `claude/settings.json` → `~/.claude/settings.json`
 - `agents/commands/` → `~/.claude/commands/`
